@@ -1,0 +1,73 @@
+.main-nav {
+  display: none;
+}
+
+.offcanvas-header .btn-close {
+  background-color: white;
+}
+
+.offcanvas-end {
+  width: 300px;
+}
+
+
+#offcanvasNavbar {
+  background-color: var(--ds-black);
+}
+
+.nav-email {
+  color: var(--ds-white);
+  margin-left: 5px;
+  font-weight: 400;
+}
+
+.discover-link {
+  color: var(--ds-white);
+  font-size: 24px;
+  font-weight: 700;
+  text-decoration: underline;
+  font-family: var(--ds-roboto-mono);
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+
+.faq-link,
+.profile-link {
+  color: var(--ds-white);
+  font-size: 24px;
+  font-weight: 700;
+  font-family: var(--ds-roboto-mono);
+  margin-top: 25px;
+  cursor: pointer;
+}
+
+.login-link {
+  background-color: var(--ds-white);
+  padding: 5px 10px;
+  border-radius: 4px;
+  border: 1px solid #2F2F2F;
+  margin-top: 25px;
+  cursor: pointer;
+}
+
+.logout-link {
+  font-weight: 300;
+  margin-top: 50px;
+  color: var(--ds-white);
+  cursor: pointer;
+}
+
+
+
+
+
+
+
+
+@media (max-width: 670px) {
+  .main-nav {
+    display: block;
+  }
+
+
+}

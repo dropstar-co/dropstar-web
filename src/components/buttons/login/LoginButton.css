@@ -1,0 +1,10 @@
+.login-btn {
+  border-radius: 10px;
+  border: 1px solid #000000;
+  background-color: #fff;
+  /* padding: 3px 35px; */
+  width: 153px;
+  height: 36px;
+  box-sizing: border-box;
+  /* outline: none; */
+}
