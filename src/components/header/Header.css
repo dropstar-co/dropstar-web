@@ -1,0 +1,22 @@
+.faq {
+  margin-left: 50px;
+  margin-right: 50px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.header-logo {
+  cursor: pointer;
+}
+
+.discover {
+  text-decoration: underline;
+  text-transform: capitalize;
+  cursor: pointer;
+}
+
+@media (max-width: 670px) {
+  .nav-sub-header {
+    display: none;
+  }
+}
