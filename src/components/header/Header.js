@@ -1,24 +1,45 @@
-import React from "react";
 import "./Header.css";
-import Logo from "../../assets/svg/logo.svg";
+
+import React, { useState } from "react";
+
+import Avatar from "../../assets/svg/user.svg";
+import { Dropdown } from "react-bootstrap";
+import DropdownMenu from "../dropdown-menu/DropdownMenu";
+// import Hr from "../hr/hr";
 import LoginButton from "../buttons/login/LoginButton";
-import Hr from "../hr/hr";
+import Logo from "../../assets/svg/logo.svg";
+import { useHistory } from "react-router-dom";
 
 const Header = () => {
+  const history = useHistory();
+  const [showMenu, setShowMenu] = useState(false);
+
+  const ToggleShowMenu = () => setShowMenu(!showMenu);
+
   return (
-    <div className="nav-sub-header">
-      <div className="d-flex justify-content-between align-items-center flex-wrap">
-        <div className="header-logo">
-          <img src={Logo} alt="dropstar logo" />
+    <>
+      <div className="nav-sub-header">
+        <div className="d-flex justify-content-between align-items-center flex-wrap">
+          <div className="header-logo">
+            <img src={Logo} alt="dropstar logo" />
+          </div>
+          <div className="d-flex align-items-center">
+            <div className="discover" onClick={() => history.push('/discover')}>Discover</div>
+            <div className="faq">FAQ</div>
+            {/* <span className="me-2">Myemail@Email.com</span>
+            <img
+              src={Avatar}
+              alt="user"
+              className="user-image"
+              onClick={ToggleShowMenu}
+            /> */}
+            <LoginButton text="Login" />
+          </div>
         </div>
-        <div className="d-flex align-items-center">
-          <div className="discover">Discover</div>
-          <div className="faq">FAQ</div>
-          <LoginButton text="Login" />
-        </div>
+        <hr className='horizontal-line' />
       </div>
-      <Hr />
-    </div>
+      {showMenu && <DropdownMenu />}
+    </>
   );
 };
 

@@ -2,7 +2,7 @@
   /* Primary Color */
   --ds-primary: #7749F8;
   --ds-primary-dark: #5227CC;
-  --ds-primary-light: #EBE5FC;
+  --ds-primary-light: #22E073;
 
   /* Secondary Color */
   --ds-secondary: #007DFF;
@@ -46,18 +46,20 @@ body {
   color: var(--ds-white) !important;
 }
 
-/* button.accordion-button::after {
-  background-image: url(./assets/svg/arrow.svg);
-} */
+.carousel-indicators {
+  bottom: -40px;
+}
 
-/* button.accordion-button.collapsed::after {
-  background-image: url(./assets/svg/arrow.svg);
-  width: 20px;
-} */
+.carousel-indicators [data-bs-target] {
+  height: 10px !important;
+  background-color: var(--ds-black);
+  width: 10px;
+  border-radius: 50%;
+}
 
-
-
-
+.carousel-indicators .active {
+  opacity: 1;
+}
 
 
 
