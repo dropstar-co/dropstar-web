@@ -12,24 +12,25 @@ const publicRoutes = (
 const privateRoutes = (
   <>
     <PrivateRoutes path="/profile" component={Profile} />
-    <PrivateRoutes path="/pages/details/:ndfId" component={NFTDetailsPage} />
+    <PrivateRoutes path="/details/:ndfId" component={NFTDetailsPage} />
   </>
 );
 
-const App = () => {
-  return (
-    <>
-      {privateRoutes}
-      {publicRoutes}
-    </>
-  );
-};
+// const App = () => {
+//   return (
+//     <>
+//       {privateRoutes}
+//       {publicRoutes}
+//     </>
+//   );
+// };
 
 const Routes = () => {
   return (
-    <Router>
-      <App />
-    </Router>
+    <>
+    {privateRoutes}
+    {publicRoutes}
+    </>
   );
 };
 

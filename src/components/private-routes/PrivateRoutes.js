@@ -1,6 +1,7 @@
 import { Redirect, Route } from "react-router-dom";
 
 const PrivateRoutes = ({ component: Component, ...rest }) => {
+  console.log("I am rendering")
   return (
     <Route
       {...rest}
@@ -9,7 +10,7 @@ const PrivateRoutes = ({ component: Component, ...rest }) => {
           <Component {...props} />
         ) : (
           <Redirect
-            to={{ pathname: "/discover", state: { from: props.location } }}
+            to="/discover"
           />
         )
       }

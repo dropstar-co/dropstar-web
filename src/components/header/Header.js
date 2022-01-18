@@ -9,8 +9,13 @@ import DropdownMenu from "../dropdown-menu/DropdownMenu";
 import LoginButton from "../buttons/login/LoginButton";
 import Logo from "../../assets/svg/logo.svg";
 import { useHistory } from "react-router-dom";
-
+import venlyHelpers from '../../helpers/venly'
 const Header = () => {
+  const onClick = async () => {
+    console.log("You clicked on me")
+    const ve = await venlyHelpers.login() 
+    console.log(ve)
+  }
   const history = useHistory();
   const [showMenu, setShowMenu] = useState(false);
 
@@ -33,7 +38,7 @@ const Header = () => {
               className="user-image"
               onClick={ToggleShowMenu}
             /> */}
-            <LoginButton text="Login" />
+            <LoginButton handleClick={onClick} text="Login" />
           </div>
         </div>
         <hr className='horizontal-line' />
