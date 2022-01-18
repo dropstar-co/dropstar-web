@@ -1,0 +1,146 @@
+.profile-page {
+  display: flex;
+}
+
+.profile-page-avatar-container {
+  margin-top: 30px;
+}
+
+.profile-page-profile-avatar {
+  width: 200px;
+  height: 200px;
+}
+
+.profile-page-link {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.profile-page-description {
+  font-family: var(--ds-open-sans);
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--ds-primary-light);
+}
+
+.profile-page-custom-hr {
+  width: 25%;
+  opacity: 1;
+  margin-top: -1px;
+}
+
+.profile-page-right-side {
+  flex: 1;
+  margin-top: 30px;
+  margin-bottom: 50px;
+}
+
+.profile-page-title,
+.profile-page-title-2 {
+  font-family: var(--ds-roboto-mono);
+  font-weight: bold;
+  font-size: 16px;
+  line-height: 21px;
+  color: var(--ds-black);
+}
+
+.profile-page-title-2 {
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.profile-page-balance-amount {
+  font-family: var(--ds-roboto-mono);
+  font-weight: bold;
+  font-size: 32px;
+  line-height: 42px;
+  color: var(--ds-black);
+}
+
+.profile-page-lower-section {
+  margin-top: 100px;
+}
+
+.profile-page-claim-nft {
+  margin-right: 250px;
+  display: flex;
+  align-items: center;
+}
+
+.profile-page-nft-bal {
+  margin-right: 50px;
+}
+
+.profile-page-lower-section-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.profile-page-date-time {
+  font-family: var(--ds-open-sans);
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--ds-black);
+}
+
+@media (max-width: 1100px) {
+  .profile-page-claim-nft {
+    margin-right: 0px;
+  }
+
+  .profile-page-nft-bal {
+    margin-right: 10px;
+  }
+}
+
+@media (max-width: 950px) {
+  .profile-page-custom-hr {
+    width: 50%;
+  }
+
+  .profile-page-claim-nft {
+    flex-direction: column;
+  }
+
+  .profile-page-nft-bal {
+    margin-bottom: 10px;
+  }
+}
+
+@media (max-width: 768px) {
+  .profile-page-custom-hr {
+    width: 75%;
+  }
+
+  .profile-page {
+    flex-direction: column;
+  }
+
+  .profile-page-avatar-container {
+    display: flex;
+    align-items: center;
+  }
+
+  .profile-page-avatar-container {
+    margin-right: 0px !important;
+  }
+
+  .profile-page-profile-avatar {
+    margin-right: 20px;
+    width: 150px;
+    height: 150px;
+  }
+
+  .profile-page-balance-amount {
+    font-size: 27px;
+  }
+}
+
+@media (max-width: 375px) {
+  .profile-page-profile-avatar {
+    width: 90px;
+    height: 90px;
+  }
+}

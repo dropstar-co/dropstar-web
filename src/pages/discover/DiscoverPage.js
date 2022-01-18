@@ -1,10 +1,17 @@
-import React from "react";
-
-import AsideComponent from "../../components/aside-component/AsideComponent";
-
 import "./DiscoverPage.css";
 
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
+import AsideComponent from "../../components/aside-component/AsideComponent";
+import { dummyDataOne } from "../../utils/dummyData";
+
 const DiscoverPage = () => {
+  const dispatch = useDispatch();
+  
+  useEffect(() => {
+    
+  }, [])
   return (
     <>
       <h4 className="page-title">Discover</h4>
