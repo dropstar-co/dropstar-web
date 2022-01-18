@@ -1,18 +1,20 @@
-import { Navbar, Container, Offcanvas } from "react-bootstrap";
+import "./NavigationBar.css";
+
+import { Container, Navbar, Offcanvas } from "react-bootstrap";
 
 import Footer from "../../pages/footer/Footer";
-
-import "./NavigationBar.css";
 import Logo from "../../assets/svg/logo.svg";
 import User from "../../assets/svg/user.svg";
+import { useHistory } from "react-router-dom";
 
 const NavigationBar = () => {
+   const history = useHistory();
   return (
     <>
       <Navbar expand={false} className="main-nav">
         <Container>
           <div />
-          <Navbar.Brand href="/">
+          <Navbar.Brand href="/discover">
             <img src={Logo} alt="dropstar logo" />
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="offcanvasNavbar" />
@@ -31,9 +33,19 @@ const NavigationBar = () => {
               </div>
               <div className="d-flex ms-5">
                 <div className="d-flex flex-column align-items-end">
-                  <div className="discover-link">Discover</div>
+                  <div
+                    className="discover-link"
+                    onClick={() => history.push("/discover")}
+                  >
+                    Discover
+                  </div>
                   <div className="faq-link">FAQ</div>
-                  <div className="profile-link">Profile</div>
+                  <div
+                    className="profile-link"
+                    onClick={() => history.push("/profile")}
+                  >
+                    Profile
+                  </div>
                   <div className="login-link">Login</div>
                   <div className="logout-link">Log out</div>
                 </div>

@@ -14,6 +14,11 @@
   text-transform: capitalize;
   cursor: pointer;
 }
+.horizontal-line {
+  /* color: var(--ds-black);
+  border: 1px solid var(--ds-black); */
+  opacity: 1;
+}
 
 @media (max-width: 670px) {
   .nav-sub-header {
