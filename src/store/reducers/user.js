@@ -1,5 +1,10 @@
 import * as actionTypes from "../actions/user/types";
 
+
+// user { 
+//   id:
+// }
+
 const INITIAL_STATE = {
   status: "initial",
   loading: false,
