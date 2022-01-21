@@ -22,7 +22,7 @@ export const fetchNfts = (nftId) => {
     try {
       dispatch(setNftLoading(true));
       const response = await axios(
-        axiosPayload(`${BASE_URL}/nfts/${nftId}`, "", "get")
+        axiosPayload(`${BASE_URL}nfts/${nftId}`, "", "get")
       );
       dispatch(setNftStatus("fetching"));
       if (response && response.status === 200) {
