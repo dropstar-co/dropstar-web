@@ -9,7 +9,6 @@
 
 .background-image-container {
   display: flex;
-  background-image: url(../../assets/images/background.svg);
   background-clip: content-box;
   background-position: center;
   background-size: cover;

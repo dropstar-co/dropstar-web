@@ -26,7 +26,7 @@ export const fetchArtists = () => {
     try {
       dispatch(setLoading(true));
       const response = await axios(
-        axiosPayload(`${BASE_URL}/discover`, "", "get")
+        axiosPayload(`${BASE_URL}discover`, "", "get")
       );
       dispatch(setStatus("fetching"));
       if (response && response.status === 200) {

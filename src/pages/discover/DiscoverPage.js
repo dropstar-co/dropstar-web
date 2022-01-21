@@ -36,6 +36,7 @@ const DiscoverPage = () => {
           <div
             className="background-image-container"
             onClick={() => history.push(`/nfts/${currentArtist?.id}`)}
+            style={{backgroundImage: `url(${currentArtist?.Artist?.ImageLink})`}}
           >
             <div className="text-wrapper">
               <h5 className="nft-title">{currentArtist?.name}</h5>
