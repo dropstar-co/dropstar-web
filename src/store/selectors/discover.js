@@ -1,1 +1,3 @@
-export const getVideoData = store => store.discover.videoData;
+export const getLoadingStatus = store => store.discover.loading;
+export const getArtists = (store) => store.discover.artists;
+export const getCurrentArtist = (store) => store.discover.currentArtist;

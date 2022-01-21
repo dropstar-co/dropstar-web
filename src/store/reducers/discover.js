@@ -1,30 +1,35 @@
 import * as ActionTypes from "../actions/discover/types";
 
 const INITIAL_STATE = {
-  videoData: {
-    videoUrl: "",
-    videoTitle: "",
-    videoAuthor: "",
-  },
-  currentVideoData: {},
+  status: "initial",
+  loading: false,
+  artists: [],
+  currentArtist: {},
 };
 
 const discoverReducer = (state = INITIAL_STATE, action) => {
   const { payload } = action;
   switch (action.type) {
-    case ActionTypes.SET_VIDEO_DATA:
+    case ActionTypes.SET_STATUS:
       return {
-        videoData: {
-          videoUrl: payload.url,
-          videoTitle: payload.title,
-          videoAuthor: payload.author,
-        },
+        ...state,
+        status: payload,
       };
-    case ActionTypes.SET_CURRENT_VIDEO_DATA:
-    return {
-      ...state,
-      currentVideoData: payload
-    }
+    case ActionTypes.SET_LOADING:
+      return {
+        ...state,
+        loading: payload,
+      };
+    case ActionTypes.SET_ARTISTS:
+      return {
+        ...state,
+        artists: payload,
+      };
+    case ActionTypes.SET_CURRENT_ARTIST:
+      return {
+        ...state,
+        currentArtist: payload,
+      };
     default:
       return state;
   }

@@ -10,7 +10,6 @@
   width: 300px;
 }
 
-
 #offcanvasNavbar {
   background-color: var(--ds-black);
 }
@@ -21,31 +20,32 @@
   font-weight: 400;
 }
 
-.discover-link {
+a.common {
+  text-decoration: none;
   color: var(--ds-white);
-  font-size: 24px;
   font-weight: 700;
-  text-decoration: underline;
   font-family: var(--ds-roboto-mono);
+  font-size: 20px;
+}
+
+a.common.active {
+  text-decoration: underline;
+}
+
+.discover-link {
   margin-bottom: 10px;
-  cursor: pointer;
 }
 
 .faq-link,
 .profile-link {
-  color: var(--ds-white);
-  font-size: 24px;
-  font-weight: 700;
-  font-family: var(--ds-roboto-mono);
   margin-top: 25px;
-  cursor: pointer;
 }
 
 .login-link {
   background-color: var(--ds-white);
   padding: 5px 10px;
   border-radius: 4px;
-  border: 1px solid #2F2F2F;
+  border: 1px solid #2f2f2f;
   margin-top: 25px;
   cursor: pointer;
 }
@@ -57,17 +57,8 @@
   cursor: pointer;
 }
 
-
-
-
-
-
-
-
 @media (max-width: 670px) {
   .main-nav {
     display: block;
   }
-
-
 }

@@ -1,33 +1,32 @@
 import * as actionTypes from "../actions/user/types";
 
-
-// user { 
-//   userID: ()
-//   firstName 
-//   lastName 
-//   email 
-//   hasMasterPin
-// }
-
-
-// USER_LOADING  //  -  not too important
-// USER_LOADED // 
-// USER_LOGOUT  // 
-// // LOAD_PROFILE  - 
-
-
 const INITIAL_STATE = {
-  status: "initial",
-  loading: false,
+  isAuthenticated: false,
+  userProfile: {
+    email: "",
+    firstName: "",
+    lastName: "",
+    hasMasterPin: false,
+  },
 };
 
 const userReducer = (state = INITIAL_STATE, action) => {
   const { payload } = action;
   switch (action.type) {
-    case actionTypes.SET_STATUS:
+    case actionTypes.SET_USER_AUTH:
       return {
         ...state,
-        status: payload,
+        isAuthenticated: payload,
+      };
+    case actionTypes.SET_USER_PROFILE:
+      return {
+        ...state,
+        userProfile: {
+          email: payload.email,
+          firstName: payload.firstName,
+          lastName: payload.lastName,
+          hasMasterPin: payload.hasMasterPin,
+        },
       };
     default:
       return state;

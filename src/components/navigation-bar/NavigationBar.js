@@ -5,10 +5,18 @@ import { Container, Navbar, Offcanvas } from "react-bootstrap";
 import Footer from "../../pages/footer/Footer";
 import Logo from "../../assets/svg/logo.svg";
 import User from "../../assets/svg/user.svg";
-import { useHistory } from "react-router-dom";
+import { NavLink } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { getUserProfile } from "../../store/selectors/user";
+import venlyHelpers from "../../helpers/venly";
 
-const NavigationBar = () => {
-   const history = useHistory();
+const NavigationBar = ({ userIsAuthenticated }) => {
+  const profile = useSelector(getUserProfile);
+
+  const handleLogin = async () => {
+    const ve = await venlyHelpers.login();
+    console.log(ve);
+  };
   return (
     <>
       <Navbar expand={false} className="main-nav">
@@ -27,27 +35,33 @@ const NavigationBar = () => {
               <Offcanvas.Title id="offcanvasNavbarLabel"></Offcanvas.Title>
             </Offcanvas.Header>
             <Offcanvas.Body className="mt-3">
-              <div className="d-flex align-items-center mb-5">
-                <img src={User} alt="user" />
-                <div className="nav-email">myemail@email.com</div>
-              </div>
+              {userIsAuthenticated && (
+                <div className="d-flex align-items-center mb-5">
+                  <img src={User} alt="user" />
+                  <div className="nav-email">{profile?.email}</div>
+                </div>
+              )}
               <div className="d-flex ms-5">
                 <div className="d-flex flex-column align-items-end">
-                  <div
-                    className="discover-link"
-                    onClick={() => history.push("/discover")}
-                  >
+                  <NavLink className="discover-link common" to="/discover">
                     Discover
-                  </div>
-                  <div className="faq-link">FAQ</div>
-                  <div
-                    className="profile-link"
-                    onClick={() => history.push("/profile")}
-                  >
-                    Profile
-                  </div>
-                  <div className="login-link">Login</div>
-                  <div className="logout-link">Log out</div>
+                  </NavLink>
+                  <NavLink className="faq-link common" to="/faq">
+                    FAQ
+                  </NavLink>
+                  {userIsAuthenticated && (
+                    <NavLink className="profile-link common" to="/profile">
+                      Profile
+                    </NavLink>
+                  )}
+                  {!userIsAuthenticated && (
+                    <div className="login-link" onClick={handleLogin}>
+                      Login
+                    </div>
+                  )}
+                  {userIsAuthenticated && (
+                    <div className="logout-link">Log out</div>
+                  )}
                 </div>
               </div>
             </Offcanvas.Body>
