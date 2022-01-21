@@ -1,35 +1,38 @@
-import { Route, Switch } from "react-router-dom";
-import  { useEffect } from 'react'
-import DiscoverPage from "./pages/discover/DiscoverPage";
+import { Switch } from "react-router-dom";
+import { useEffect, useState } from "react";
 import Header from "./components/header/Header";
 import MainFooter from "./pages/desktop-footer/MainFooter";
-import NFTDetailsPage from "./pages/nft-details/NFTDetailsPage";
 import NavigationBar from "./components/navigation-bar/NavigationBar";
-import Profile from "./pages/profile/Profile";
 import venlyHelpers from "./helpers/venly";
 import Routes from "./Routes";
-
+import { useDispatch } from "react-redux";
+import { setUserProfile } from "./store/actions/user";
 
 const App = () => {
-  // on the private route
+  const dispatch = useDispatch();
+  const [userAuth, setUserAuth] = useState(false);
+
   useEffect(() => {
     const gets = async () => {
-      const isAuth = await venlyHelpers.checkAuth()
-      console.log(isAuth.isAuthenticated)
-      localStorage.setItem('dstoken',isAuth.isAuthenticated)
-    }
-    gets()
-    
-  }, [])
+      console.log("HERE 111111");
+      const isAuth = await venlyHelpers.checkAuth();
+      console.log("HERE 222222");
+      setUserAuth(isAuth?.isAuthenticated);
+      console.log("YES IS AUTH", isAuth?.isAuthenticated);
+      dispatch(setUserProfile({ email: isAuth?.auth?.idTokenParsed?.email }));
+      // dispatch(setUserAuth(isAuth.isAuthenticated));
+      // dispatch(setUserAuth(true));
+      localStorage.setItem("dstoken", isAuth.isAuthenticated);
+    };
+    gets();
+  }, []);
+
   return (
     <div>
-      <Header />
-      <NavigationBar />
+      <Header userIsAuthenticated={userAuth} />
+      <NavigationBar userIsAuthenticated={userAuth} />
       <Switch>
         <Routes />
-        {/* <Route exact path="/discover" component={DiscoverPage} />
-        <Route exact path="/details" component={NFTDetailsPage} />
-        <Route exact path="/profile" component={Profile} /> */}
       </Switch>
       <div className="app-footer">
         <MainFooter />
