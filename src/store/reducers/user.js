@@ -1,8 +1,9 @@
 import * as actionTypes from "../actions/user/types";
 
 const INITIAL_STATE = {
-  isAuthenticated: false,
+  isUserAuthenticated: false,
   userProfile: {
+    userId: "",
     email: "",
     firstName: "",
     lastName: "",
@@ -13,15 +14,21 @@ const INITIAL_STATE = {
 const userReducer = (state = INITIAL_STATE, action) => {
   const { payload } = action;
   switch (action.type) {
-    case actionTypes.SET_USER_AUTH:
+    case actionTypes.SET_USER_AUTH_STATE:
       return {
         ...state,
-        isAuthenticated: payload,
+        isUserAuthenticated: payload,
+      };
+    case actionTypes.FETCH_LOGGED_IN_USER:
+      return {
+        ...state,
+        userProfile: {...state.userProfile, ...payload},
       };
     case actionTypes.SET_USER_PROFILE:
       return {
         ...state,
         userProfile: {
+          userId: payload.userId,
           email: payload.email,
           firstName: payload.firstName,
           lastName: payload.lastName,

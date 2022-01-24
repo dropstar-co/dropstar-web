@@ -1,34 +1,51 @@
 import "./NFTDetailsPage.css";
 
 import { Button, Form } from "react-bootstrap";
+import { fetchNfts, fetchNftsBids } from "../../store/actions/nfts";
+import { getNfts, getNtftsBids } from "../../store/selectors/nfts";
+import { setUserAuthState, setUserProfile } from "../../store/actions/user";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useState } from "react";
 
 import { CarouselData } from "../../utils/dummyData";
 import ClockIcon from "../../assets/svg/clock.svg";
+import ConfirmBid from "../confirm-bid/ConfirmBid";
+import Loader from "../Spinner";
 import NFTPageCarousel from "../../components/carosel/NFTPageCarousel";
 import TopHeading from "./TopHeading";
-import { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchNfts } from "../../store/actions/nfts";
-import { getNftsLoadingStatus, getNfts } from "../../store/selectors/nfts";
-import Loader from "../Spinner";
+import { getAppLoadingState } from "../../store/selectors/loader";
+import { getUserAuthState } from "../../store/selectors/user";
 import venlyHelpers from "../../helpers/venly";
-import ConfirmBid from "../confirm-bid/ConfirmBid";
 
 const NFTDetailsPage = ({ match }) => {
+  const [amount, setAmount] = useState(0);
   const [modalShow, setModalShow] = useState(false);
   let nftsId = match.params.nftsId;
   const dispatch = useDispatch();
-  const loading = useSelector(getNftsLoadingStatus);
+  const loading = useSelector(getAppLoadingState);
   const nftsDetails = useSelector(getNfts);
-  const isUserAuthenticated = localStorage.getItem("dstoken");
+  const nftsBids = useSelector(getNtftsBids);
+  const isUserAuthenticated = useSelector(getUserAuthState);
 
   const handleLogin = async () => {
     const ve = await venlyHelpers.login();
-    console.log(ve);
+    if (ve?.userId && ve?.email) {
+      dispatch(setUserAuthState(true));
+      dispatch(
+        setUserProfile({
+          userId: ve?.userId,
+          email: ve?.email,
+          firstName: ve?.firstName,
+          lastName: ve?.lastName,
+          hasMasterPin: ve?.hasMasterPin,
+        })
+      );
+    }
   };
 
   useEffect(() => {
     dispatch(fetchNfts(nftsId));
+    dispatch(fetchNftsBids(nftsId));
   }, []);
 
   if (loading) {
@@ -48,7 +65,7 @@ const NFTDetailsPage = ({ match }) => {
             className="video-frame"
             width="560"
             height="282"
-            src="https://www.youtube.com/embed/fYd-esC2Iw4?controls=0"
+            src={nftsDetails?.SampleVideoLink}
             title="YouTube video player"
             frameBorder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -89,15 +106,21 @@ const NFTDetailsPage = ({ match }) => {
                       type="number"
                       placeholder="0.05"
                       className="py-2"
+                      onChange={(e) => setAmount(e.target.value)}
                     />
                   </Form.Group>
                 </Form>
-                <Button className="ms-4 py-2 pe-md-5" variant="dark" onClick={() => setModalShow(true)}>
+                <Button
+                  className="ms-4 py-2 pe-md-5"
+                  variant="dark"
+                  onClick={() => setModalShow(true)}
+                  disabled={amount < nftsDetails?.minimumBidETH}
+                >
                   Place Bid
                 </Button>
               </div>
               <div className="text-muted mt-2" style={{ fontSize: "10px" }}>
-                Minimum bid is 0.05 MATIC (170.78 EUR)
+                Minimum bid is {nftsDetails?.minimumBidETH} MATIC (170.78 EUR)
               </div>
             </>
           )}
@@ -134,8 +157,11 @@ const NFTDetailsPage = ({ match }) => {
         title={nftsDetails?.name}
         socialLink={nftsDetails?.Artist?.SocialLink}
         socialLabel={nftsDetails?.Artist?.SocialLabel}
+        nftId={nftsId}
         show={modalShow}
+        minBid={nftsDetails?.minimumBidETH}
         onHide={() => setModalShow(false)}
+        amount={amount}
       />
     </>
   );

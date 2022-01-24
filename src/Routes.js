@@ -1,8 +1,8 @@
-import { Route } from "react-router-dom";
 import DiscoverPage from "./pages/discover/DiscoverPage";
 import NFTDetailsPage from "./pages/nft-details/NFTDetailsPage";
-import Profile from "./pages/profile/Profile";
 import PrivateRoutes from "./components/private-routes";
+import Profile from "./pages/profile/Profile";
+import { Route } from "react-router-dom";
 
 const publicRoutes = (
   <>
@@ -19,8 +19,9 @@ const privateRoutes = (
 const Routes = () => {
   return (
     <>
-      {privateRoutes}
       {publicRoutes}
+      {privateRoutes}
+      
     </>
   );
 };

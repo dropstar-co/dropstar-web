@@ -1,21 +1,40 @@
-import { Dropdown } from "react-bootstrap";
-import { useHistory, NavLink } from "react-router-dom";
-import React, { useState } from "react";
+import "./Header.css";
 
+import { NavLink, useHistory } from "react-router-dom";
+import React, { useState } from "react";
+import { getUserAuthState, getUserProfile } from "../../store/selectors/user";
+import { setUserAuthState, setUserProfile } from "../../store/actions/user";
+import { useDispatch, useSelector } from "react-redux";
+
+import Avatar from "../../assets/svg/user.svg";
+import { Dropdown } from "react-bootstrap";
 import LoginButton from "../buttons/login/LoginButton";
+import Logo from "../../assets/svg/logo.svg";
 import MenuDropdown from "../menu-dropdown/MenuDropdown";
+import { fetchLoggedInUser } from "../../store/actions/user";
 import venlyHelpers from "../../helpers/venly";
 
-import "./Header.css";
-import Avatar from "../../assets/svg/user.svg";
-import Logo from "../../assets/svg/logo.svg";
-
-const Header = ({ userIsAuthenticated }) => {
+const Header = () => {
   const history = useHistory();
+  const dispatch = useDispatch();
+  const isUserAuthenticated = useSelector(getUserAuthState);
+  const profile = useSelector(getUserProfile);
 
   const handleLogin = async () => {
     const ve = await venlyHelpers.login();
-    console.log(ve);
+    if(ve.userId && ve?.email) {
+      dispatch(fetchLoggedInUser({ Email: ve?.email, VenlyUID: ve?.userId }));
+      dispatch(setUserAuthState(true));
+      dispatch(
+        setUserProfile({
+          userId: ve?.userId,
+          email: ve?.email,
+          firstName: ve?.firstName,
+          lastName: ve?.lastName,
+          hasMasterPin: ve?.hasMasterPin,
+        })
+      );
+    }
   };
 
   const [showMenu, setShowMenu] = useState(false);
@@ -37,7 +56,8 @@ const Header = ({ userIsAuthenticated }) => {
             <NavLink to="/faq" className="faq">
               FAQ
             </NavLink>
-            {userIsAuthenticated && (
+            {isUserAuthenticated&& (<span>{profile?.email}</span>)}
+            {isUserAuthenticated && (
               <Dropdown>
                 <Dropdown.Toggle id="dropdown-custom-1">
                   <img
@@ -50,7 +70,7 @@ const Header = ({ userIsAuthenticated }) => {
                 <MenuDropdown />
               </Dropdown>
             )}
-            {!userIsAuthenticated && (
+            {!isUserAuthenticated && (
               <LoginButton handleClick={handleLogin} text="Login" />
             )}
           </div>
