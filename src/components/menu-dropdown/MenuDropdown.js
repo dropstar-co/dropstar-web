@@ -1,19 +1,28 @@
-import React from "react";
-import { Dropdown } from "react-bootstrap";
 import "./MenuDropdown.css";
-import { withRouter } from "react-router-dom";
-import venlyHelpers from "../../helpers/venly";
 
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
+import { Dropdown } from "react-bootstrap";
+import Loader from "../../pages/Spinner";
+import { getAppLoadingState } from "../../store/selectors/loader";
+import { setAppLoading } from "../../store/actions/appLoader";
+import venlyHelpers from "../../helpers/venly";
+import { withRouter } from "react-router-dom";
 
 const MenuDropdown = ({ history }) => {
-  const handleLogout = async () => {
-    await venlyHelpers.logOut();
+  const dispatch = useDispatch();
 
+  const handleLogout = async () => {
+    dispatch(setAppLoading(true));
+    // await venlyHelpers.logOut();
     const isAuth = await venlyHelpers.checkAuth();
+    localStorage.setItem("dstoken", isAuth?.isAuthenticated);
+    dispatch(setAppLoading(false));
     window.location = "/discover";
-    console.log("AFTER LOG OUT", isAuth.isAuthenticated);
-    return await venlyHelpers.logOut()
+    return await venlyHelpers.logOut();
   };
+
   return (
     <Dropdown.Menu align="end">
       <Dropdown.Header>MY PROFILE</Dropdown.Header>

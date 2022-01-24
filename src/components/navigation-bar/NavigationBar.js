@@ -1,22 +1,43 @@
 import "./NavigationBar.css";
 
 import { Container, Navbar, Offcanvas } from "react-bootstrap";
+import { getUserAuthState, getUserProfile } from "../../store/selectors/user";
+import { setUserAuthState, setUserProfile } from '../../store/actions/user';
+import { useDispatch, useSelector } from "react-redux";
 
 import Footer from "../../pages/footer/Footer";
 import Logo from "../../assets/svg/logo.svg";
-import User from "../../assets/svg/user.svg";
 import { NavLink } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { getUserProfile } from "../../store/selectors/user";
+import User from "../../assets/svg/user.svg";
 import venlyHelpers from "../../helpers/venly";
 
-const NavigationBar = ({ userIsAuthenticated }) => {
+const NavigationBar = () => {
+  const dispatch = useDispatch();
   const profile = useSelector(getUserProfile);
+  const isUserAuthenticated = useSelector(getUserAuthState);
 
   const handleLogin = async () => {
     const ve = await venlyHelpers.login();
-    console.log(ve);
+    if(ve.userId && ve?.email) {
+      dispatch(setUserAuthState(true));
+      dispatch(
+        setUserProfile({
+          userId: ve?.userId,
+          email: ve?.email,
+          firstName: ve?.firstName,
+          lastName: ve?.lastName,
+          hasMasterPin: ve?.hasMasterPin,
+        })
+      );
+    }
   };
+  const handleLogout = async () => {
+    await venlyHelpers.logOut();
+    const isAuth = await venlyHelpers.checkAuth();
+    localStorage.setItem("dstoken", isAuth?.isAuthenticated);
+    return await venlyHelpers.logOut()
+  };
+
   return (
     <>
       <Navbar expand={false} className="main-nav">
@@ -35,7 +56,7 @@ const NavigationBar = ({ userIsAuthenticated }) => {
               <Offcanvas.Title id="offcanvasNavbarLabel"></Offcanvas.Title>
             </Offcanvas.Header>
             <Offcanvas.Body className="mt-3">
-              {userIsAuthenticated && (
+              {isUserAuthenticated && (
                 <div className="d-flex align-items-center mb-5">
                   <img src={User} alt="user" />
                   <div className="nav-email">{profile?.email}</div>
@@ -49,18 +70,18 @@ const NavigationBar = ({ userIsAuthenticated }) => {
                   <NavLink className="faq-link common" to="/faq">
                     FAQ
                   </NavLink>
-                  {userIsAuthenticated && (
+                  {isUserAuthenticated && (
                     <NavLink className="profile-link common" to="/profile">
                       Profile
                     </NavLink>
                   )}
-                  {!userIsAuthenticated && (
+                  {!isUserAuthenticated && (
                     <div className="login-link" onClick={handleLogin}>
                       Login
                     </div>
                   )}
-                  {userIsAuthenticated && (
-                    <div className="logout-link">Log out</div>
+                  {isUserAuthenticated && (
+                    <div className="logout-link" onClick={handleLogout}>Log out</div>
                   )}
                 </div>
               </div>

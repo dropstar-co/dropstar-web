@@ -1,7 +1,7 @@
 import * as actionTypes from "./types";
 
-export const setUserAuth = (payload) => ({
-  type: actionTypes.SET_USER_AUTH,
+export const setUserAuthState = (payload) => ({
+  type: actionTypes.SET_USER_AUTH_STATE,
   payload,
 });
 

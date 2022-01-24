@@ -1,43 +1,40 @@
-import { Switch } from "react-router-dom";
+import { setUserAuthState, setUserProfile } from "./store/actions/user";
 import { useEffect, useState } from "react";
+
 import Header from "./components/header/Header";
+import Loader from "./pages/Spinner";
 import MainFooter from "./pages/desktop-footer/MainFooter";
 import NavigationBar from "./components/navigation-bar/NavigationBar";
-import venlyHelpers from "./helpers/venly";
 import Routes from "./Routes";
+import { Switch } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { setUserProfile } from "./store/actions/user";
-import Loader from "./pages/Spinner";
+import venlyHelpers from "./helpers/venly";
 
 const App = () => {
   const dispatch = useDispatch();
-  const [userAuth, setUserAuth] = useState(false);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setLoading(true)
     const gets = async () => {
-      console.log("HERE 111111");
       const isAuth = await venlyHelpers.checkAuth();
-      console.log("HERE 222222");
-      setUserAuth(isAuth?.isAuthenticated);
-
-      console.log(await isAuth.auth && await venlyHelpers.loadProfile())
-      // dispatch(setUserProfile({ email: isAuth?.auth?.idTokenParsed?.email }));
-
-      isAuth && localStorage.setItem("dstoken", isAuth.isAuthenticated);
+      dispatch(setUserAuthState(isAuth?.isAuthenticated));
+      console.log('HERE IN THE APP COMP..', await isAuth.auth && await venlyHelpers.loadProfile());
+      console.log('AFTER LOGOUT', isAuth);
+      dispatch(setUserProfile({ email: isAuth?.auth?.idTokenParsed?.email }));
+      isAuth && localStorage.setItem("dstoken", isAuth?.isAuthenticated);
     };
     gets();
     setLoading(false)
-    
   }, []);
+  
   if(loading){
     return <Loader />
   }
   return (
     <div>
-      <Header userIsAuthenticated={userAuth} />
-      <NavigationBar userIsAuthenticated={userAuth} />
+      <Header />
+      <NavigationBar />
       <Switch>
         <Routes />
       </Switch>

@@ -1,2 +1,2 @@
-export const getAuthState = (store) => store.user.isAuthenticated;
+export const getUserAuthState = (store) => store.user.isUserAuthenticated;
 export const getUserProfile = (store) => store.user.userProfile;

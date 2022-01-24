@@ -1,22 +1,22 @@
 import "./DiscoverPage.css";
 
 import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-
-import AsideComponent from "../../components/aside-component/AsideComponent";
-import { fetchArtists } from "../../store/actions/discover";
-import { useHistory} from 'react-router-dom';
 import {
-  getLoadingStatus,
   getArtists,
   getCurrentArtist,
 } from "../../store/selectors/discover";
+import { useDispatch, useSelector } from "react-redux";
+
+import AsideComponent from "../../components/aside-component/AsideComponent";
 import Loader from "../Spinner";
+import { fetchArtists } from "../../store/actions/discover";
+import { getAppLoadingState } from "../../store/selectors/loader";
+import { useHistory } from 'react-router-dom';
 
 const DiscoverPage = () => {
   const dispatch = useDispatch();
   const history = useHistory();
-  const loading = useSelector(getLoadingStatus);
+  const loading = useSelector(getAppLoadingState);
   const artists = useSelector(getArtists);
   const currentArtist = useSelector(getCurrentArtist);
 

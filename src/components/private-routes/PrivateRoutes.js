@@ -5,7 +5,8 @@ const PrivateRoutes = ({ component: Component, ...rest }) => {
     <Route
       {...rest}
       render={(props) =>
-        localStorage.getItem("dstoken") ? (
+        
+        localStorage.getItem("dstoken") === true ? (
           <Component {...props} />
         ) : (
           <Redirect
