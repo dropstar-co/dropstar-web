@@ -2,6 +2,7 @@ import * as ActionTypes from "../actions/nfts/types";
 
 const INITIAL_STATE = {
   status: "initial",
+  nftsBids: [],
   nfts: {},
 };
 
@@ -12,6 +13,11 @@ const nftsReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         status: payload,
+      };
+    case ActionTypes.SET_NFTS_BIDS:
+      return {
+        ...state,
+        nftsBids: payload,
       };
     case ActionTypes.SET_NFTS:
       return {

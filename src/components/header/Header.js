@@ -11,6 +11,7 @@ import { Dropdown } from "react-bootstrap";
 import LoginButton from "../buttons/login/LoginButton";
 import Logo from "../../assets/svg/logo.svg";
 import MenuDropdown from "../menu-dropdown/MenuDropdown";
+import { fetchLoggedInUser } from "../../store/actions/user";
 import venlyHelpers from "../../helpers/venly";
 
 const Header = () => {
@@ -21,8 +22,8 @@ const Header = () => {
 
   const handleLogin = async () => {
     const ve = await venlyHelpers.login();
-    // call getUserLogin(venlyId, enail)
     if(ve.userId && ve?.email) {
+      dispatch(fetchLoggedInUser({ Email: ve?.email, VenlyUID: ve?.userId }));
       dispatch(setUserAuthState(true));
       dispatch(
         setUserProfile({

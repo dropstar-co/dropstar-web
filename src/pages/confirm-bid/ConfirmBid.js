@@ -1,23 +1,44 @@
-import { Modal, Button, Form } from "react-bootstrap";
 import "./ConfirmBid.css";
+
+import { Button, Modal } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
+
 import Image from "../../assets/images/background.svg";
+import { getNtftsStatus } from "../../store/selectors/nfts";
+import { getUserProfile } from "../../store/selectors/user";
+import { postBid } from "../../store/actions/nfts";
 import { useState } from "react";
 
 const ConfirmBid = (props) => {
+  const dispatch = useDispatch();
   const [agree, setAgree] = useState(false);
   const [showCongratMessage, setShowCongratMessage] = useState(false);
+  const userProfile = useSelector(getUserProfile);
+  const status = useSelector(getNtftsStatus);
 
   const handleChange = (e) => {
     setAgree(e.target.checked);
   };
 
-  const handleShowCongratMessage = () => setShowCongratMessage(true);
-  
+  const handleBidConfirmation = () => {
+    const data = {
+      userID: userProfile?.id,
+      nftID: props?.nftId,
+      AmountETH: props.amount,
+      isWinner: false,
+      DateBid: "2022-01-23",
+    };
+    dispatch(postBid(data));
+    if (status === "completed") {
+      setShowCongratMessage(true);
+    }
+  };
+
   const handleFinalClose = () => {
     props.onHide();
     setShowCongratMessage(false);
     setAgree(!agree);
-  }
+  };
 
   return (
     <Modal {...props} aria-labelledby="contained-modal-title-vcenter" centered>
@@ -44,7 +65,11 @@ const ConfirmBid = (props) => {
             </p>
             <div className="close-button-wrapper">
               <div className="d-grid gap-2">
-                <Button className="px-5" variant="dark" onClick={handleFinalClose}>
+                <Button
+                  className="px-5"
+                  variant="dark"
+                  onClick={handleFinalClose}
+                >
                   Close
                 </Button>
               </div>
@@ -76,7 +101,7 @@ const ConfirmBid = (props) => {
                 className="px-5"
                 disabled={!agree}
                 variant="dark"
-                onClick={handleShowCongratMessage}
+                onClick={handleBidConfirmation}
               >
                 Confirm Bid
               </Button>

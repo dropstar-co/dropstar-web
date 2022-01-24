@@ -19,6 +19,11 @@ const userReducer = (state = INITIAL_STATE, action) => {
         ...state,
         isUserAuthenticated: payload,
       };
+    case actionTypes.FETCH_LOGGED_IN_USER:
+      return {
+        ...state,
+        userProfile: {...state.userProfile, ...payload},
+      };
     case actionTypes.SET_USER_PROFILE:
       return {
         ...state,

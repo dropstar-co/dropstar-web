@@ -1,7 +1,8 @@
 import "./NFTDetailsPage.css";
 
 import { Button, Form } from "react-bootstrap";
-import { getNfts, getNftsLoadingStatus } from "../../store/selectors/nfts";
+import { fetchNfts, fetchNftsBids } from "../../store/actions/nfts";
+import { getNfts, getNtftsBids } from "../../store/selectors/nfts";
 import { setUserAuthState, setUserProfile } from "../../store/actions/user";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
@@ -12,17 +13,18 @@ import ConfirmBid from "../confirm-bid/ConfirmBid";
 import Loader from "../Spinner";
 import NFTPageCarousel from "../../components/carosel/NFTPageCarousel";
 import TopHeading from "./TopHeading";
-import { fetchNfts } from "../../store/actions/nfts";
 import { getAppLoadingState } from "../../store/selectors/loader";
 import { getUserAuthState } from "../../store/selectors/user";
 import venlyHelpers from "../../helpers/venly";
 
 const NFTDetailsPage = ({ match }) => {
+  const [amount, setAmount] = useState(0);
   const [modalShow, setModalShow] = useState(false);
   let nftsId = match.params.nftsId;
   const dispatch = useDispatch();
   const loading = useSelector(getAppLoadingState);
   const nftsDetails = useSelector(getNfts);
+  const nftsBids = useSelector(getNtftsBids);
   const isUserAuthenticated = useSelector(getUserAuthState);
 
   const handleLogin = async () => {
@@ -43,6 +45,7 @@ const NFTDetailsPage = ({ match }) => {
 
   useEffect(() => {
     dispatch(fetchNfts(nftsId));
+    dispatch(fetchNftsBids(nftsId));
   }, []);
 
   if (loading) {
@@ -103,6 +106,7 @@ const NFTDetailsPage = ({ match }) => {
                       type="number"
                       placeholder="0.05"
                       className="py-2"
+                      onChange={(e) => setAmount(e.target.value)}
                     />
                   </Form.Group>
                 </Form>
@@ -110,6 +114,7 @@ const NFTDetailsPage = ({ match }) => {
                   className="ms-4 py-2 pe-md-5"
                   variant="dark"
                   onClick={() => setModalShow(true)}
+                  disabled={amount < nftsDetails?.minimumBidETH}
                 >
                   Place Bid
                 </Button>
@@ -152,8 +157,11 @@ const NFTDetailsPage = ({ match }) => {
         title={nftsDetails?.name}
         socialLink={nftsDetails?.Artist?.SocialLink}
         socialLabel={nftsDetails?.Artist?.SocialLabel}
+        nftId={nftsId}
         show={modalShow}
+        minBid={nftsDetails?.minimumBidETH}
         onHide={() => setModalShow(false)}
+        amount={amount}
       />
     </>
   );
