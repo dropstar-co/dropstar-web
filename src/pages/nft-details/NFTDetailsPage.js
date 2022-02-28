@@ -1,7 +1,7 @@
 import "./NFTDetailsPage.css";
 
 import { Button, Form } from "react-bootstrap";
-import { fetchNfts, fetchNftsBids } from "../../store/actions/nfts";
+import { fetchNfts, fetchNftsBids, postBid } from "../../store/actions/nfts";
 import { getNfts, getNtftsBids } from "../../store/selectors/nfts";
 import { setUserAuthState, setUserProfile } from "../../store/actions/user";
 import { useDispatch, useSelector } from "react-redux";
@@ -43,6 +43,21 @@ const NFTDetailsPage = ({ match }) => {
     }
   };
 
+  // const handleSubmitBid = (id, userId) => {
+  //   console.log()
+  //   setModalShow(true);
+  //   const data = {
+  //     nftID:id,
+  //     userId,
+  //     amountETH: amount,
+  //     isWinner: false,
+  //     DateBid: "2022-01-23",
+  //   };
+  //   console.log('here');
+  //   dispatch(postBid(data));
+  //   console.log('here,jkj');
+
+  // };
   useEffect(() => {
     dispatch(fetchNfts(nftsId));
     dispatch(fetchNftsBids(nftsId));
@@ -135,7 +150,13 @@ const NFTDetailsPage = ({ match }) => {
             <h6 className="nft-bid-title">Bids</h6>
             <hr className="nft-details-custom-hr" />
             <div className="nft-bid">
-              <p>
+              {nftsBids?.map((bid) => (
+                <p>
+                  Bid for <strong>0.049 ETH</strong> placed by @xyz, August 25,
+                  2021 at 2:45 pm
+                </p>
+              ))}
+              {/* <p>
                 Bid for <strong>0.049 ETH</strong> placed by @xyz, August 25,
                 2021 at 2:45 pm
               </p>
@@ -146,7 +167,7 @@ const NFTDetailsPage = ({ match }) => {
               <p>
                 Minimum bid set at <strong>0.045 ETH</strong> by @xyz, August
                 25, 2021 at 2:32 pm
-              </p>
+              </p> */}
 
               <p>Minted by @xyz, August 20, 2021 at 6:05 pm</p>
             </div>
