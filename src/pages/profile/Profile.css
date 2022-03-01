@@ -75,7 +75,8 @@
 .profile-page-lower-section-wrapper {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  /* align-items: center; */
+  flex-direction: column;
 }
 
 .profile-page-date-time {
