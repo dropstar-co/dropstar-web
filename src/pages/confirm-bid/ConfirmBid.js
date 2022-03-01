@@ -22,12 +22,13 @@ const ConfirmBid = (props) => {
 
   const handleBidConfirmation = () => {
     const data = {
-      userID: userProfile?.id,
+      userID: 4,
       nftID: props?.nftId,
       AmountETH: props.amount,
       isWinner: false,
       DateBid: "2022-01-23",
     };
+    console.log(data)
     dispatch(postBid(data));
     if (status === "completed") {
       setShowCongratMessage(true);
