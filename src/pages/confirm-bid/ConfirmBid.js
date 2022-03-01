@@ -6,9 +6,9 @@ import { useDispatch, useSelector } from "react-redux";
 import Image from "../../assets/images/background.svg";
 import { getNtftsStatus } from "../../store/selectors/nfts";
 import { getUserProfile } from "../../store/selectors/user";
-import { postBid } from "../../store/actions/nfts";
+import { postBid, fetchNftsBids } from "../../store/actions/nfts";
 import { useState } from "react";
-
+import moment from 'moment';
 const ConfirmBid = (props) => {
   const dispatch = useDispatch();
   const [agree, setAgree] = useState(false);
@@ -22,11 +22,11 @@ const ConfirmBid = (props) => {
 
   const handleBidConfirmation = () => {
     const data = {
-      userID: 4,
+      userID: props.userId,
       nftID: props?.nftId,
       AmountETH: props.amount,
       isWinner: false,
-      DateBid: "2022-01-23",
+      DateBid: moment(),
     };
     console.log(data)
     dispatch(postBid(data));
@@ -39,6 +39,7 @@ const ConfirmBid = (props) => {
     props.onHide();
     setShowCongratMessage(false);
     setAgree(!agree);
+    props.setAmount(0)
   };
 
   return (
@@ -54,7 +55,7 @@ const ConfirmBid = (props) => {
           @{props?.socialLink}_{props?.socialLabel}
         </div>
         <div>
-          <img src={Image} alt={props?.title} width="100%" />
+          <img src={props.image} alt={props?.title} width="100%" />
         </div>
         {showCongratMessage && (
           <div className="message-container text-center mt-4">
@@ -81,7 +82,7 @@ const ConfirmBid = (props) => {
           <>
             <div className="confirm-bid-bid-container mt-3">
               <p className="confirm-bid-title-2">Your Bid:</p>
-              <h6 className="confirm-bid-amount mb-2">0.05 MATIC</h6>
+              <h6 className="confirm-bid-amount mb-2">{props.amount} MATIC</h6>
               <div className="checkbox-wrapper align-items-center">
                 <input
                   type="checkbox"

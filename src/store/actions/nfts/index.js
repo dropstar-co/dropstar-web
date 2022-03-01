@@ -20,6 +20,11 @@ export const setNftsBids = (payload) => ({
   payload,
 });
 
+export const updateNftsBids = (payload) => ({
+  type: ActionTypes.UPDATE_NFT_BIDS,
+  payload,
+});
+
 export const fetchNfts = (nftId) => {
   return async (dispatch) => {
     try {
@@ -68,9 +73,12 @@ export const postBid = (data) => {
       );
       dispatch(setNftStatus("posting"));
       if (response && response.status === 200) {
+        console.log(response, "my response")
         dispatch(setNftStatus("completed"));
+        dispatch(updateNftsBids(response.data.data))
       }
     } catch (error) {
+      console.log('logging my error')
       dispatch(setAppLoading(false));
       dispatch(setNftStatus("error"));
     }

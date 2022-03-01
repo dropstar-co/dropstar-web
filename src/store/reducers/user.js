@@ -9,6 +9,7 @@ const INITIAL_STATE = {
     lastName: "",
     hasMasterPin: false,
   },
+  user:{}
 };
 
 const userReducer = (state = INITIAL_STATE, action) => {
@@ -23,6 +24,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         userProfile: {...state.userProfile, ...payload},
+         user : payload 
       };
     case actionTypes.SET_USER_PROFILE:
       return {
