@@ -9,7 +9,9 @@ const INITIAL_STATE = {
 const nftsReducer = (state = INITIAL_STATE, action) => {
   const { payload } = action;
   switch (action.type) {
+
     case ActionTypes.SET_NFTS_STATUS:
+      console.log(payload)
       return {
         ...state,
         status: payload,
@@ -24,6 +26,11 @@ const nftsReducer = (state = INITIAL_STATE, action) => {
         ...state,
         nfts: payload,
       };
+    case ActionTypes.UPDATE_NFT_BIDS:
+    return {
+      ...state, 
+      nftsBids:[payload, ...state.nftsBids]
+    }
     default:
       return state;
   }

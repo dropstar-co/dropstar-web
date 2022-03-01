@@ -25,6 +25,7 @@ export const fetchLoggedInUser = (data) => {
       const response = await axios(
         axiosPayload(`${BASE_URL}user/info`, data, "post")
       );
+
       if (response && response.status === 200) {
         dispatch(setLoggedInUserData(response.data.data))
       }
