@@ -4,9 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 // ../../store/selectors/user
 const PrivateRoutes = ({ component: Component, ...rest }) => {
-  console.log(localStorage.getItem("dstoken"))
   const isUserAuthenticated = useSelector(getUserAuthState);
-  console.log(isUserAuthenticated,"here")
   return (
     <Route
       {...rest}
@@ -14,9 +12,7 @@ const PrivateRoutes = ({ component: Component, ...rest }) => {
         isUserAuthenticated === true ? (
           <Component {...props} />
         ) : (
-          <Redirect
-            to="/discover"
-          />
+          <Redirect to="/discover" />
         )
       }
     />

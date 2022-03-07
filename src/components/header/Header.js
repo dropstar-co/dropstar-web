@@ -22,7 +22,7 @@ const Header = () => {
 
   const handleLogin = async () => {
     const ve = await venlyHelpers.login();
-    if(ve.userId && ve?.email) {
+    if (ve.userId && ve?.email) {
       dispatch(fetchLoggedInUser({ Email: ve?.email, VenlyUID: ve?.userId }));
       dispatch(setUserAuthState(true));
       dispatch(
@@ -39,7 +39,10 @@ const Header = () => {
 
   const [showMenu, setShowMenu] = useState(false);
 
-  const ToggleShowMenu = () => setShowMenu(!showMenu);
+  const ToggleShowMenu = () => {
+    console.log(showMenu);
+    setShowMenu(!showMenu);
+  };
   const DirectToDiscoverPage = () => history.push("/discover");
 
   return (
@@ -56,7 +59,7 @@ const Header = () => {
             <NavLink to="/faq" className="faq">
               FAQ
             </NavLink>
-            {isUserAuthenticated&& (<span>{profile?.email}</span>)}
+            {isUserAuthenticated && <span>{profile?.email}</span>}
             {isUserAuthenticated && (
               <Dropdown>
                 <Dropdown.Toggle id="dropdown-custom-1">

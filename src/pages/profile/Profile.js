@@ -3,7 +3,7 @@ import "./Profile.css";
 import { Button } from "react-bootstrap";
 import ProfileAvatar from "../../assets/svg/profileImage.svg";
 import React from "react";
-import { getUserBids } from "../../store/actions/user";
+import { getUserBids, fetchLoggedInUser } from "../../store/actions/user";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import {
@@ -18,11 +18,27 @@ const Profile = () => {
   const user = useSelector(getBEUser);
   const userBidsList = useSelector(getUserBidSelector);
   const dispatch = useDispatch();
+  const getNewUser = async () => {
+    const newUse = await dispatch(
+      fetchLoggedInUser({
+        Email: userProfile?.email,
+        VenlyUID: userProfile?.userId,
+      })
+    );
+  };
   useEffect(() => {
-    console.log(user && user);
-    dispatch(getUserBids(user?.id));
-    console.log("fetching the profile");
+    console.log(userProfile?.email, userProfile?.userId);
+    const newUser = getNewUser();
+    console.log("my new user is", user && user);
+    // console.log(userProfile && user);
+    user && dispatch(user && getUserBids(user && user.id));
+    // user && console.log("fetching the profile");
   }, []);
+  const handleVenly = () => {
+    return window.open(
+      "https://login.arkane.network/auth/realms/Arkane/protocol/openid-connect/auth?client_id=Arkane&state=b6b2c690-3a93-42e6-837d-962c45698d50&redirect_uri=https%3A%2F%2Fwallet.venly.io%2F%3Fauth_callback%3D1&scope=openid&response_type=code"
+    );
+  };
   return (
     <div className="profile-page">
       <div className="me-4 profile-page-avatar-container">
@@ -45,7 +61,9 @@ const Profile = () => {
             instructions <span className="profile-page-link">here</span>.
           </div>
           <div>
-            <Button variant="dark">Access my Venly Wallet</Button>
+            <Button variant="dark" onClick={handleVenly}>
+              Access my Venly Wallet
+            </Button>
           </div>
         </div>
         <div className="profile-page-lower-section">
@@ -80,7 +98,9 @@ const Profile = () => {
                     <div className="profile-page-title profile-page-nft-bal">
                       0.05 ETH
                     </div>
-                    <Button variant="secondary">Claim NFT</Button>
+                    <Button variant="secondary" onClick={handleVenly}>
+                      Claim NFT
+                    </Button>
                   </div>
                 )}
               </div>

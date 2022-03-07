@@ -3,15 +3,16 @@ import "./NFTPageCarousel.css";
 import React, { useState } from "react";
 
 import Carousel from "react-bootstrap/Carousel";
-
+import moment from "moment";
 const NFTPageCarousel = ({ data }) => {
+  console.log(data);
   const [index, setIndex] = useState(0);
 
   const handleSelect = (selectedIndex, e) => {
     setIndex(selectedIndex);
   };
   return (
-    <div className="mb-5 mt-3 nft-page-caro">
+    <div className="mb-5 mt-3 nft-page-caro" style={{ display: "flex" }}>
       <Carousel
         activeIndex={index}
         onSelect={handleSelect}
@@ -21,9 +22,12 @@ const NFTPageCarousel = ({ data }) => {
       >
         {data.map((datum) => (
           <Carousel.Item key={datum.id}>
-            <h3 className="caro-title">{datum.title}</h3>
+            <h3 className="caro-title">
+              Bid for <strong>{datum.AmountETH}</strong> placed at{" "}
+              {moment(datum.DateBid).format("dddd, MMMM Do YYYY, h:mm:ss a")}
+            </h3>
             <hr className="carousel-custom-hr" />
-            <p className="caro-text">{datum.text}</p>
+            {/* <p className="caro-text">{datum.text}</p> */}
           </Carousel.Item>
         ))}
       </Carousel>
