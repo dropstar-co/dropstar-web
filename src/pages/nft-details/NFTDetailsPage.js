@@ -67,7 +67,21 @@ const NFTDetailsPage = ({ match }) => {
     dispatch(fetchNfts(nftsId));
     dispatch(fetchNftsBids(nftsId));
   }, [dispatch, nftsId]);
-
+  const getPlaceBid = (nftsDetails, amount) => {
+    if (moment(nftsDetails.EndDate) > moment()) {
+      if (amount > getCurrentBid()) {
+        if (amount > 0) {
+          if (amount > 0.01) {
+            return false;
+          }
+          return true;
+        }
+        return true;
+      }
+      return true;
+    }
+    return true;
+  };
   if (loading) {
     return <Loader />;
   }
@@ -91,7 +105,7 @@ const NFTDetailsPage = ({ match }) => {
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
           ></iframe>
-          <NFTPageCarousel data={CarouselData} />
+          <NFTPageCarousel data={nftsBids} />
           <div className="bid-wrapper  mt-3">
             <div className="me-sm-5">
               <div className="mb-1">Current Bid</div>
@@ -141,7 +155,7 @@ const NFTDetailsPage = ({ match }) => {
                   className="ms-4 py-2 pe-md-5"
                   variant="dark"
                   onClick={() => setModalShow(true)}
-                  // disabled={amount < nftsDetails?.minimumBidETH}
+                  disabled={getPlaceBid(nftsDetails, amount)}
                 >
                   Place Bid
                 </Button>

@@ -2,7 +2,7 @@ import "./NavigationBar.css";
 
 import { Container, Navbar, Offcanvas } from "react-bootstrap";
 import { getUserAuthState, getUserProfile } from "../../store/selectors/user";
-import { setUserAuthState, setUserProfile } from '../../store/actions/user';
+import { setUserAuthState, setUserProfile } from "../../store/actions/user";
 import { useDispatch, useSelector } from "react-redux";
 
 import Footer from "../../pages/footer/Footer";
@@ -18,7 +18,7 @@ const NavigationBar = () => {
 
   const handleLogin = async () => {
     const ve = await venlyHelpers.login();
-    if(ve.userId && ve?.email) {
+    if (ve.userId && ve?.email) {
       dispatch(setUserAuthState(true));
       dispatch(
         setUserProfile({
@@ -35,12 +35,12 @@ const NavigationBar = () => {
     await venlyHelpers.logOut();
     const isAuth = await venlyHelpers.checkAuth();
     localStorage.setItem("dstoken", isAuth?.isAuthenticated);
-    return await venlyHelpers.logOut()
+    return await venlyHelpers.logOut();
   };
 
   return (
     <>
-      <Navbar expand={false} className="main-nav">
+      <Navbar collapseOnSelect expand={false} className="main-nav">
         <Container>
           <div />
           <Navbar.Brand href="/discover">
@@ -81,7 +81,9 @@ const NavigationBar = () => {
                     </div>
                   )}
                   {isUserAuthenticated && (
-                    <div className="logout-link" onClick={handleLogout}>Log out</div>
+                    <div className="logout-link" onClick={handleLogout}>
+                      Log out
+                    </div>
                   )}
                 </div>
               </div>

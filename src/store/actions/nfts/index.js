@@ -75,7 +75,7 @@ export const postBid = (data) => {
       if (response && response.status === 200) {
         console.log(response, "my response")
         dispatch(setNftStatus("completed"));
-        dispatch(updateNftsBids(response.data.data))
+        return dispatch(updateNftsBids(response.data.data))
       }
     } catch (error) {
       console.log('logging my error')

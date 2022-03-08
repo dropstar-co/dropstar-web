@@ -8,9 +8,9 @@ import thunkMiddleware from "redux-thunk";
 const loggerMiddleware = createLogger();
 const middlewares = [thunkMiddleware];
 
-if (process.env.NODE_ENV === "development") {
-  middlewares.push(loggerMiddleware);
-}
+// if (process.env.NODE_ENV === "development") {
+//   middlewares.push(loggerMiddleware);
+// }
 const store = createStore(
   rootReducer,
   {},

@@ -14,10 +14,14 @@ export const setUserProfile = (payload) => ({
   payload,
 });
 
-export const setLoggedInUserData = payload => ({
+export const setLoggedInUserData = (payload) => ({
   type: actionTypes.FETCH_LOGGED_IN_USER,
   payload,
-})
+});
+export const getUserBidsI = (payload) => ({
+  type: actionTypes.GET_USER_BIDS,
+  payload,
+});
 
 export const fetchLoggedInUser = (data) => {
   return async (dispatch) => {
@@ -25,12 +29,29 @@ export const fetchLoggedInUser = (data) => {
       const response = await axios(
         axiosPayload(`${BASE_URL}user/info`, data, "post")
       );
+      console.log(response);
 
       if (response && response.status === 200) {
-        dispatch(setLoggedInUserData(response.data.data))
+        dispatch(setLoggedInUserData(response.data.data));
       }
     } catch (error) {
-     console.log(error);
+      console.log(error);
+    }
+  };
+};
+
+export const getUserBids = (id) => {
+  return async (dispatch) => {
+    try {
+      const response = await axios(
+        axiosPayload(`${BASE_URL}user/bids/${id}`, "get")
+      );
+      if (response && response.status === 200) {
+        console.log(response, "my response");
+        dispatch(getUserBidsI(response.data.data));
+      }
+    } catch (error) {
+      console.log("logging my error");
     }
   };
 };

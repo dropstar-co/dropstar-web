@@ -9,7 +9,8 @@ const INITIAL_STATE = {
     lastName: "",
     hasMasterPin: false,
   },
-  user:{}
+  user:{},
+  userBids:[]
 };
 
 const userReducer = (state = INITIAL_STATE, action) => {
@@ -25,6 +26,11 @@ const userReducer = (state = INITIAL_STATE, action) => {
         ...state,
         userProfile: {...state.userProfile, ...payload},
          user : payload 
+      };
+    case actionTypes.GET_USER_BIDS:
+      return {
+        ...state,
+         userBids : payload 
       };
     case actionTypes.SET_USER_PROFILE:
       return {
