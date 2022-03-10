@@ -9,35 +9,28 @@ const venlyConnect = new VenlyConnect(VENLY_WIDGET_CLIENT_ID, {
 });
 
 class venlyHelpers {
-  static async checkAuthenticated() {
-    const result = await venlyConnect.checkAuthenticated();
-    result.authenticated(async function (auth) {
-      const wallets = await venlyConnect.api.getWallets({ secretType: VENLY_CHAIN });
-    });
-  }
-
-  static init() {
-    venlyHelpers.checkAuthenticated();
-  }
-
   static async connect(venlyConnect) {
-    try {
-      const account = await venlyConnect.flows.getAccount(VENLY_CHAIN);
-    } catch (error) {
-      console.log(error);
-    }
+    const account = await venlyConnect.flows.getAccount(VENLY_CHAIN);
+    return account;
   }
 
   static async login() {
     const loginObject = await venlyConnect.flows.authenticate();
-    const wallets = await venlyConnect.api.getProfile();
-    return wallets;
+    const account = await venlyConnect.flows.getAccount(VENLY_CHAIN);
+    const profile = await venlyConnect.api.getProfile();
+    const wallets = await venlyConnect.api.getWallets({ secretType: VENLY_CHAIN });
+
+    const ret = Object.assign(profile, { wallets });
+    return ret;
   }
 
   static async loadProfile() {
-    await venlyConnect.flows.authenticate();
-    const wallets = await venlyConnect.api.getProfile();
-    return wallets;
+    const loginObject = await venlyConnect.flows.authenticate();
+    const profile = await venlyConnect.api.getProfile();
+    const wallets = await venlyConnect.api.getWallets({ secretType: VENLY_CHAIN });
+
+    const ret = Object.assign(profile, { wallets });
+    return ret;
   }
 
   static async checkAuth() {
