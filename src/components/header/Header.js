@@ -1,18 +1,18 @@
-import "./Header.css";
+import './Header.css';
 
-import { NavLink, useHistory } from "react-router-dom";
-import React, { useState } from "react";
-import { getUserAuthState, getUserProfile } from "../../store/selectors/user";
-import { setUserAuthState, setUserProfile } from "../../store/actions/user";
-import { useDispatch, useSelector } from "react-redux";
+import { NavLink, useHistory } from 'react-router-dom';
+import React, { useState } from 'react';
+import { getUserAuthState, getUserProfile } from '../../store/selectors/user';
+import { setUserAuthState, setUserProfile } from '../../store/actions/user';
+import { useDispatch, useSelector } from 'react-redux';
 
-import Avatar from "../../assets/svg/user.svg";
-import { Dropdown } from "react-bootstrap";
-import LoginButton from "../buttons/login/LoginButton";
-import Logo from "../../assets/svg/logo.svg";
-import MenuDropdown from "../menu-dropdown/MenuDropdown";
-import { fetchLoggedInUser } from "../../store/actions/user";
-import venlyHelpers from "../../helpers/venly";
+import Avatar from '../../assets/svg/user.svg';
+import { Dropdown } from 'react-bootstrap';
+import LoginButton from '../buttons/login/LoginButton';
+import Logo from '../../assets/svg/logo.svg';
+import MenuDropdown from '../menu-dropdown/MenuDropdown';
+import { fetchLoggedInUser } from '../../store/actions/user';
+import venlyHelpers from '../../helpers/venly';
 
 const Header = () => {
   const history = useHistory();
@@ -22,6 +22,7 @@ const Header = () => {
 
   const handleLogin = async () => {
     const ve = await venlyHelpers.login();
+
     if (ve.userId && ve?.email) {
       dispatch(fetchLoggedInUser({ Email: ve?.email, VenlyUID: ve?.userId }));
       dispatch(setUserAuthState(true));
@@ -32,7 +33,7 @@ const Header = () => {
           firstName: ve?.firstName,
           lastName: ve?.lastName,
           hasMasterPin: ve?.hasMasterPin,
-        })
+        }),
       );
     }
   };
@@ -43,7 +44,7 @@ const Header = () => {
     console.log(showMenu);
     setShowMenu(!showMenu);
   };
-  const DirectToDiscoverPage = () => history.push("/discover");
+  const DirectToDiscoverPage = () => history.push('/discover');
 
   return (
     <>
@@ -63,19 +64,12 @@ const Header = () => {
             {isUserAuthenticated && (
               <Dropdown>
                 <Dropdown.Toggle id="dropdown-custom-1">
-                  <img
-                    src={Avatar}
-                    alt="user"
-                    className="user-image"
-                    onClick={ToggleShowMenu}
-                  />
+                  <img src={Avatar} alt="user" className="user-image" onClick={ToggleShowMenu} />
                 </Dropdown.Toggle>
                 <MenuDropdown />
               </Dropdown>
             )}
-            {!isUserAuthenticated && (
-              <LoginButton handleClick={handleLogin} text="Login" />
-            )}
+            {!isUserAuthenticated && <LoginButton handleClick={handleLogin} text="Login" />}
           </div>
         </div>
         <hr className="horizontal-line" />
