@@ -17,15 +17,23 @@
   line-height: 18px;
   text-align: justify;
 }
-
+.media {
+  display: flex;
+}
 .carousel-custom-hr {
   width: 100%;
   opacity: 1;
   margin-top: -1px;
 }
 
-@media (max-width: 950px) {
+/* @media  ( min-width: 100px) and (max-width: 400px) {
   .nft-page-caro {
     display: block;
+  }
+} */
+
+@media (min-width: 600px) {
+  .media {
+    display: none;
   }
 }

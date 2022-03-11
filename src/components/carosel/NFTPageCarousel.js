@@ -12,7 +12,7 @@ const NFTPageCarousel = ({ data }) => {
     setIndex(selectedIndex);
   };
   return (
-    <div className="mb-5 mt-3 nft-page-caro" style={{ display: "flex" }}>
+    <div className="mb-5 mt-3 nft-page-caro media" style={{ display: "flex" }}>
       <Carousel
         activeIndex={index}
         onSelect={handleSelect}

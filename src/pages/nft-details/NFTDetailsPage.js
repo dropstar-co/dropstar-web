@@ -82,6 +82,10 @@ const NFTDetailsPage = ({ match }) => {
     }
     return true;
   };
+
+  // const getValidDate = (nftsDetails) => {
+  //   if (moment(nftsDetails.EndDate))
+  // }
   if (loading) {
     return <Loader />;
   }
