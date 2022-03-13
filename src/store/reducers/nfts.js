@@ -1,7 +1,7 @@
-import * as ActionTypes from "../actions/nfts/types";
+import * as ActionTypes from '../actions/nfts/types';
 
 const INITIAL_STATE = {
-  status: "initial",
+  status: 'initial',
   nftsBids: [],
   nfts: {},
 };
@@ -9,9 +9,7 @@ const INITIAL_STATE = {
 const nftsReducer = (state = INITIAL_STATE, action) => {
   const { payload } = action;
   switch (action.type) {
-
     case ActionTypes.SET_NFTS_STATUS:
-      console.log(payload)
       return {
         ...state,
         status: payload,
@@ -27,10 +25,10 @@ const nftsReducer = (state = INITIAL_STATE, action) => {
         nfts: payload,
       };
     case ActionTypes.UPDATE_NFT_BIDS:
-    return {
-      ...state, 
-      nftsBids:[payload, ...state.nftsBids]
-    }
+      return {
+        ...state,
+        nftsBids: [payload, ...state.nftsBids],
+      };
     default:
       return state;
   }

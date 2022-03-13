@@ -39,6 +39,7 @@ class venlyHelpers {
   }
   static async logOut() {
     localStorage.removeItem('dstoken');
+    localStorage.removeItem('userId');
     const authObj = venlyConnect.checkAuthenticated();
     await (await authObj).auth.clearToken();
     await venlyConnect.logout({ windowMode: 'REDIRECT' });

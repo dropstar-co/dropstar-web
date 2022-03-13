@@ -19,9 +19,12 @@ const App = () => {
     const gets = async () => {
       const isAuth = await venlyHelpers.checkAuth();
       dispatch(setUserAuthState(isAuth?.isAuthenticated));
-      // console.log('HERE IN THE APP COMP..', await isAuth.auth && await venlyHelpers.loadProfile());
-      // console.log('AFTER LOGOUT', isAuth);
-      dispatch(setUserProfile({ email: isAuth?.auth?.idTokenParsed?.email }));
+      dispatch(
+        setUserProfile({
+          email: isAuth?.auth?.idTokenParsed?.email,
+          userId: isAuth?.auth?.idTokenParsed?.sub,
+        }),
+      );
       isAuth && localStorage.setItem('dstoken', isAuth?.isAuthenticated);
     };
     gets();

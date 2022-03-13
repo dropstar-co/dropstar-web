@@ -1,28 +1,24 @@
-import "./NFTDetailsPage.css";
+import './NFTDetailsPage.css';
 
-import { Button, Form } from "react-bootstrap";
-import { fetchNfts, fetchNftsBids } from "../../store/actions/nfts";
-import { getNfts, getNtftsBids } from "../../store/selectors/nfts";
-import {
-  setUserAuthState,
-  setUserProfile,
-  fetchLoggedInUser,
-} from "../../store/actions/user";
-import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useState } from "react";
-import Countdown from "react-countdown";
+import { Button, Form } from 'react-bootstrap';
+import { fetchNfts, fetchNftsBids } from '../../store/actions/nfts';
+import { getNfts, getNtftsBids } from '../../store/selectors/nfts';
+import { setUserAuthState, setUserProfile, fetchLoggedInUser } from '../../store/actions/user';
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect, useState } from 'react';
+import Countdown from 'react-countdown';
 
-import { CarouselData } from "../../utils/dummyData";
-import ClockIcon from "../../assets/svg/clock.svg";
-import ConfirmBid from "../confirm-bid/ConfirmBid";
-import Loader from "../Spinner";
-import NFTPageCarousel from "../../components/carosel/NFTPageCarousel";
-import TopHeading from "./TopHeading";
-import { getAppLoadingState } from "../../store/selectors/loader";
-import { getBEUser, getUserAuthState } from "../../store/selectors/user";
-import venlyHelpers from "../../helpers/venly";
-import moment from "moment";
-
+import { CarouselData } from '../../utils/dummyData';
+import ClockIcon from '../../assets/svg/clock.svg';
+import ConfirmBid from '../confirm-bid/ConfirmBid';
+import Loader from '../Spinner';
+import NFTPageCarousel from '../../components/carosel/NFTPageCarousel';
+import TopHeading from './TopHeading';
+import { getAppLoadingState } from '../../store/selectors/loader';
+import { getBEUser, getUserAuthState } from '../../store/selectors/user';
+import venlyHelpers from '../../helpers/venly';
+import moment from 'moment';
+import Polygon from '../../assets/images/ploygon.png';
 const NFTDetailsPage = ({ match }) => {
   const [amount, setAmount] = useState(0);
   const [modalShow, setModalShow] = useState(false);
@@ -46,22 +42,13 @@ const NFTDetailsPage = ({ match }) => {
           firstName: ve?.firstName,
           lastName: ve?.lastName,
           hasMasterPin: ve?.hasMasterPin,
-        })
+        }),
       );
     }
   };
 
   const getCurrentBid = () => {
-    console.log(
-      nftsBids.reduce(
-        (acc, shot) => (acc = acc > shot.AmountETH ? acc : shot.AmountETH),
-        0
-      )
-    );
-    return nftsBids.reduce(
-      (acc, shot) => (acc = acc > shot.AmountETH ? acc : shot.AmountETH),
-      0
-    );
+    return nftsBids.reduce((acc, shot) => (acc = acc > shot.AmountETH ? acc : shot.AmountETH), 0);
   };
   useEffect(() => {
     dispatch(fetchNfts(nftsId));
@@ -83,9 +70,12 @@ const NFTDetailsPage = ({ match }) => {
     return true;
   };
 
-  // const getValidDate = (nftsDetails) => {
-  //   if (moment(nftsDetails.EndDate))
-  // }
+  const getValidDate = nftsDetails => {
+    if (moment(nftsDetails.EndDate).diff(moment()) > 0) {
+      return true;
+    }
+    return false;
+  };
   if (loading) {
     return <Loader />;
   }
@@ -107,64 +97,67 @@ const NFTDetailsPage = ({ match }) => {
             title="YouTube video player"
             frameBorder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-          ></iframe>
+            allowFullScreen></iframe>
           <NFTPageCarousel data={nftsBids} />
           <div className="bid-wrapper  mt-3">
             <div className="me-sm-5">
               <div className="mb-1">Current Bid</div>
-              <div className="bold-text">
-                {nftsBids && getCurrentBid()} MATIC
-              </div>
+              <div className="bold-text">{nftsBids && getCurrentBid()} MATIC</div>
             </div>
             <div>
               <div className="mb-1">
-                Action ending:{" "}
+                Action ending:{' '}
                 <span className="nft-date">
-                  (January 10, 2022 at 9:22pm CET)
+                  {nftsDetails.EndDate &&
+                    moment(nftsDetails.EndDate).format('dddd, MMMM Do YYYY, h:mm:ss a')}
                   {/* <Countdown date={Date.now() + 10000} />, */}
                 </span>
               </div>
               <div className="bold-text d-flex">
                 <img src={ClockIcon} alt="clock" />
                 <span className="ms-3 bold-text">
-                  {nftsDetails.EndDate && (
-                    <Countdown date={nftsDetails.EndDate} />
-                  )}
+                  {nftsDetails.EndDate && <Countdown date={nftsDetails.EndDate} />}
                 </span>
               </div>
             </div>
           </div>
           {!isUserAuthenticated && (
             <div className="ms-lg-5 ms-md-5 mt-4 auth-bid-btn-wrapper">
-              <Button variant="dark" onClick={handleLogin}>
-                Authenticate to Bid
-              </Button>
+              {getValidDate(nftsDetails) ? (
+                <Button variant="dark" onClick={handleLogin}>
+                  Authenticate to Bid
+                </Button>
+              ) : (
+                <Button variant="secondary">Auction Ended</Button>
+              )}
             </div>
           )}
           {isUserAuthenticated && (
             <>
               <div className="form-wrapper mt-4">
-                <Form style={{ width: "130px" }}>
+                <Form style={{ width: '130px' }}>
                   <Form.Group>
                     <Form.Control
                       type="number"
                       placeholder="0.05"
                       className="py-2"
-                      onChange={(e) => setAmount(e.target.value)}
+                      onChange={e => setAmount(e.target.value)}
                     />
                   </Form.Group>
                 </Form>
+                {getValidDate(nftsDetails) && (
+                  <img src={Polygon} width="100px" height="auto" alt="clock" />
+                )}
+
                 <Button
                   className="ms-4 py-2 pe-md-5"
                   variant="dark"
                   onClick={() => setModalShow(true)}
-                  disabled={getPlaceBid(nftsDetails, amount)}
-                >
+                  disabled={getPlaceBid(nftsDetails, amount)}>
                   Place Bid
                 </Button>
               </div>
-              <div className="text-muted mt-2" style={{ fontSize: "10px" }}>
+              <div className="text-muted mt-2" style={{ fontSize: '10px' }}>
                 Minimum bid is {nftsDetails?.minimumBidETH} MATIC (170.78 EUR)
               </div>
             </>
@@ -180,17 +173,15 @@ const NFTDetailsPage = ({ match }) => {
             <h6 className="nft-bid-title">Bids</h6>
             <hr className="nft-details-custom-hr" />
             <div className="nft-bid">
-              {nftsBids?.map((bid) => (
-                <p>
-                  Bid for <strong>{bid.AmountETH}</strong> placed by @xyz,{" "}
-                  {moment(bid.DateBid).format("dddd, MMMM Do YYYY, h:mm:ss a")}
+              {nftsBids?.map(bid => (
+                <p key={bid.id}>
+                  Bid for <strong>{bid.AmountETH}</strong> placed by @xyz,{' '}
+                  {moment(bid.DateBid).format('dddd, MMMM Do YYYY, h:mm:ss a')}
                 </p>
               ))}
               <p>
-                Minted by @xyz,{" "}
-                {moment(nftsDetails.MintedDate).format(
-                  "dddd, MMMM Do YYYY, h:mm:ss a"
-                )}
+                Minted by @xyz,{' '}
+                {moment(nftsDetails.MintedDate).format('dddd, MMMM Do YYYY, h:mm:ss a')}
               </p>
             </div>
           </div>

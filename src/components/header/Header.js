@@ -2,7 +2,7 @@ import './Header.css';
 
 import { NavLink, useHistory } from 'react-router-dom';
 import React, { useState } from 'react';
-import { getUserAuthState, getUserProfile } from '../../store/selectors/user';
+import { getUserAuthState, getUserProfile, getBEUser } from '../../store/selectors/user';
 import { setUserAuthState, setUserProfile } from '../../store/actions/user';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -19,6 +19,7 @@ const Header = () => {
   const dispatch = useDispatch();
   const isUserAuthenticated = useSelector(getUserAuthState);
   const profile = useSelector(getUserProfile);
+  const user = useSelector(getBEUser);
 
   const handleLogin = async () => {
     const ve = await venlyHelpers.login();
@@ -26,6 +27,7 @@ const Header = () => {
     if (ve.userId && ve?.email) {
       dispatch(fetchLoggedInUser({ Email: ve?.email, VenlyUID: ve?.userId }));
       dispatch(setUserAuthState(true));
+
       dispatch(
         setUserProfile({
           userId: ve?.userId,
@@ -41,7 +43,6 @@ const Header = () => {
   const [showMenu, setShowMenu] = useState(false);
 
   const ToggleShowMenu = () => {
-    console.log(showMenu);
     setShowMenu(!showMenu);
   };
   const DirectToDiscoverPage = () => history.push('/discover');
