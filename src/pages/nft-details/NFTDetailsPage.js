@@ -58,7 +58,8 @@ const NFTDetailsPage = ({ match }) => {
     if (moment(nftsDetails.EndDate) > moment()) {
       if (amount > getCurrentBid()) {
         if (amount > 0) {
-          if (amount > 0.01) {
+          if (amount >= nftsDetails.minimumBidETH && amount > 0.01) {
+            console.log(amount, nftsDetails.minimumBidETH);
             return false;
           }
           return true;
@@ -132,36 +133,41 @@ const NFTDetailsPage = ({ match }) => {
               )}
             </div>
           )}
-          {isUserAuthenticated && (
-            <>
-              <div className="form-wrapper mt-4">
-                <Form style={{ width: '130px' }}>
-                  <Form.Group>
-                    <Form.Control
-                      type="number"
-                      placeholder="0.05"
-                      className="py-2"
-                      onChange={e => setAmount(e.target.value)}
-                    />
-                  </Form.Group>
-                </Form>
-                {getValidDate(nftsDetails) && (
-                  <img src={Polygon} width="100px" height="auto" alt="clock" />
-                )}
+          {isUserAuthenticated &&
+            (getValidDate(nftsDetails) ? (
+              <>
+                <div className="form-wrapper mt-4">
+                  <Form style={{ width: '130px' }}>
+                    <Form.Group>
+                      <Form.Control
+                        type="number"
+                        placeholder="0.05"
+                        className="py-2"
+                        onChange={e => setAmount(e.target.value)}
+                      />
+                    </Form.Group>
+                  </Form>
+                  {getValidDate(nftsDetails) && (
+                    <img src={Polygon} width="100px" height="auto" alt="clock" />
+                  )}
 
-                <Button
-                  className="ms-4 py-2 pe-md-5"
-                  variant="dark"
-                  onClick={() => setModalShow(true)}
-                  disabled={getPlaceBid(nftsDetails, amount)}>
-                  Place Bid
-                </Button>
+                  <Button
+                    className="ms-4 py-2 pe-md-5"
+                    variant="dark"
+                    onClick={() => setModalShow(true)}
+                    disabled={getPlaceBid(nftsDetails, amount)}>
+                    Place Bid
+                  </Button>
+                </div>
+                <div className="text-muted mt-2" style={{ fontSize: '10px' }}>
+                  Minimum bid is {nftsDetails?.minimumBidETH} MATIC (170.78 EUR)
+                </div>
+              </>
+            ) : (
+              <div className="form-wrapper mt-4">
+                <Button variant="secondary">Auction Ended</Button>
               </div>
-              <div className="text-muted mt-2" style={{ fontSize: '10px' }}>
-                Minimum bid is {nftsDetails?.minimumBidETH} MATIC (170.78 EUR)
-              </div>
-            </>
-          )}
+            ))}
         </div>
         <div className="description-container">
           <div>
