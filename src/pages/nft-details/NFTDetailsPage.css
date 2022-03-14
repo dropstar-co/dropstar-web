@@ -82,11 +82,6 @@
   .video-frame {
     width: 100%;
   }
-
-  .nft-date {
-    display: none;
-  }
-
   .form-wrapper,
   .bid-wrapper {
     justify-content: space-between;

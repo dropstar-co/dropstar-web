@@ -1,39 +1,47 @@
-import { VenlyConnect, WindowMode } from "@venly/connect";
+import { VenlyConnect, WindowMode } from '@venly/connect';
 import axios from 'axios';
+
+const VENLY_WIDGET_CLIENT_ID = 'Testaccount';
+const VENLY_CHAIN = 'MATIC';
+const VENLY_ENVIRONMENT = 'staging';
+const venlyConnect = new VenlyConnect(VENLY_WIDGET_CLIENT_ID, {
+  environment: VENLY_ENVIRONMENT,
+});
+
 class venlyHelpers {
+  static async connect(venlyConnect) {
+    const account = await venlyConnect.flows.getAccount(VENLY_CHAIN);
+    return account;
+  }
+
   static async login() {
-    const venlyConnect = new VenlyConnect("Testaccount", {
-      environment: "staging",
-    });
     const loginObject = await venlyConnect.flows.authenticate();
-    const wallets = await venlyConnect.api.getProfile();
-    return wallets;
+    const account = await venlyConnect.flows.getAccount(VENLY_CHAIN);
+    const profile = await venlyConnect.api.getProfile();
+    const wallets = await venlyConnect.api.getWallets({ secretType: VENLY_CHAIN });
+
+    const ret = Object.assign(profile, { wallets });
+    return ret;
   }
 
   static async loadProfile() {
-    const venlyConnect = new VenlyConnect("Testaccount", {
-      environment: "staging",
-    });
-    await venlyConnect.flows.authenticate();
-    const wallets = await venlyConnect.api.getProfile();
-    return wallets;
+    const loginObject = await venlyConnect.flows.authenticate();
+    const profile = await venlyConnect.api.getProfile();
+    const wallets = await venlyConnect.api.getWallets({ secretType: VENLY_CHAIN });
+
+    const ret = Object.assign(profile, { wallets });
+    return ret;
   }
 
   static async checkAuth() {
-
-    const venlyConnect = new VenlyConnect("Testaccount", {
-      environment: "staging",
-    });
     const checkingauth = await venlyConnect.checkAuthenticated();
     return checkingauth;
   }
   static async logOut() {
-    const venlyConnect = new VenlyConnect("Testaccount", {
-      environment: "staging",
-    });
-    localStorage.removeItem('dstoken')
-    const  authObj = venlyConnect.checkAuthenticated()
-    await (await authObj).auth.clearToken()
+    localStorage.removeItem('dstoken');
+    localStorage.removeItem('userId');
+    const authObj = venlyConnect.checkAuthenticated();
+    await (await authObj).auth.clearToken();
     await venlyConnect.logout({ windowMode: 'REDIRECT' });
     return await venlyConnect.logout();
   }

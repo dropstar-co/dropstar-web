@@ -1,36 +1,36 @@
-import "./ConfirmBid.css";
+import './ConfirmBid.css';
 
-import { Button, Modal } from "react-bootstrap";
-import { useDispatch, useSelector } from "react-redux";
+import { Button, Modal } from 'react-bootstrap';
+import { useDispatch, useSelector } from 'react-redux';
 
-import Image from "../../assets/images/background.svg";
-import { getNtftsStatus } from "../../store/selectors/nfts";
-import { getUserProfile } from "../../store/selectors/user";
-import { postBid, fetchNftsBids } from "../../store/actions/nfts";
-import { useState } from "react";
+import Image from '../../assets/images/background.svg';
+import { getNtftsStatus } from '../../store/selectors/nfts';
+import { getUserProfile } from '../../store/selectors/user';
+import { postBid, fetchNftsBids } from '../../store/actions/nfts';
+import { useState } from 'react';
 import moment from 'moment';
-const ConfirmBid = (props) => {
+const ConfirmBid = props => {
   const dispatch = useDispatch();
   const [agree, setAgree] = useState(false);
   const [showCongratMessage, setShowCongratMessage] = useState(false);
   const userProfile = useSelector(getUserProfile);
   const status = useSelector(getNtftsStatus);
 
-  const handleChange = (e) => {
+  const handleChange = e => {
     setAgree(e.target.checked);
   };
-
+  const userId = localStorage.getItem('userId');
   const handleBidConfirmation = () => {
     const data = {
-      userID: props.userId,
+      userID: userId,
       nftID: props?.nftId,
       AmountETH: props.amount,
       isWinner: false,
       DateBid: moment(),
     };
-    console.log(data)
+
     dispatch(postBid(data));
-    if (status === "completed") {
+    if (status === 'completed') {
       setShowCongratMessage(true);
     }
   };
@@ -39,15 +39,13 @@ const ConfirmBid = (props) => {
     props.onHide();
     setShowCongratMessage(false);
     setAgree(!agree);
-    props.setAmount(0)
+    props.setAmount(0);
   };
 
   return (
     <Modal {...props} aria-labelledby="contained-modal-title-vcenter" centered>
       <Modal.Header closeButton>
-        <Modal.Title id="contained-modal-title-vcenter">
-          Confirm Bid
-        </Modal.Title>
+        <Modal.Title id="contained-modal-title-vcenter">Confirm Bid</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <h1 className="confirm-bid-title">{props?.title}</h1>
@@ -59,19 +57,13 @@ const ConfirmBid = (props) => {
         </div>
         {showCongratMessage && (
           <div className="message-container text-center mt-4">
-            <h6 className="message message-title mb-3">
-              Congratulations, your bid was placed!
-            </h6>
+            <h6 className="message message-title mb-3">Congratulations, your bid was placed!</h6>
             <p className="message message-text">
               The winner will be notified once the auction has closed.
             </p>
             <div className="close-button-wrapper">
               <div className="d-grid gap-2">
-                <Button
-                  className="px-5"
-                  variant="dark"
-                  onClick={handleFinalClose}
-                >
+                <Button className="px-5" variant="dark" onClick={handleFinalClose}>
                   Close
                 </Button>
               </div>
@@ -84,17 +76,12 @@ const ConfirmBid = (props) => {
               <p className="confirm-bid-title-2">Your Bid:</p>
               <h6 className="confirm-bid-amount mb-2">{props.amount} MATIC</h6>
               <div className="checkbox-wrapper align-items-center">
-                <input
-                  type="checkbox"
-                  checked={agree}
-                  className="me-1"
-                  onChange={handleChange}
-                />
+                <input type="checkbox" checked={agree} className="me-1" onChange={handleChange} />
                 <label className="confirm-bid-terms-and-conditions">
-                  By checking this box, I agree with the{" "}
+                  By checking this box, I agree with the{' '}
                   <a href="!#" className="terms-link">
                     Terms of Service
-                  </a>{" "}
+                  </a>{' '}
                 </label>
               </div>
             </div>
@@ -103,8 +90,7 @@ const ConfirmBid = (props) => {
                 className="px-5"
                 disabled={!agree}
                 variant="dark"
-                onClick={handleBidConfirmation}
-              >
+                onClick={handleBidConfirmation}>
                 Confirm Bid
               </Button>
             </div>
