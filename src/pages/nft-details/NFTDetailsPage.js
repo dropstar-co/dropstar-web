@@ -181,7 +181,7 @@ const NFTDetailsPage = ({ match }) => {
             <div className="nft-bid">
               {nftsBids?.map(bid => (
                 <p key={bid.id}>
-                  Bid for <strong>{bid.AmountETH}</strong> placed by @xyz,{' '}
+                  Bid for <strong>{bid.AmountETH}</strong> placed on{' '}
                   {moment(bid.DateBid).format('dddd, MMMM Do YYYY, h:mm:ss a')}
                 </p>
               ))}

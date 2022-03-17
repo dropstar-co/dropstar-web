@@ -10,6 +10,7 @@ import Avatar from '../../assets/svg/user.svg';
 import { Dropdown } from 'react-bootstrap';
 import LoginButton from '../buttons/login/LoginButton';
 import Logo from '../../assets/svg/logo.svg';
+import BlackLogo from '../../assets/svg/BlackLogo.svg';
 import MenuDropdown from '../menu-dropdown/MenuDropdown';
 import { fetchLoggedInUser } from '../../store/actions/user';
 import venlyHelpers from '../../helpers/venly';
@@ -52,7 +53,7 @@ const Header = () => {
       <div className="nav-sub-header">
         <div className="d-flex justify-content-between align-items-center flex-wrap">
           <div className="header-logo" onClick={DirectToDiscoverPage}>
-            <img src={Logo} alt="dropstar logo" />
+            <img src={BlackLogo} alt="dropstar logo" width={100} height={100} />
           </div>
           <div className="d-flex align-items-center">
             <NavLink to="/discover" className="discover">
