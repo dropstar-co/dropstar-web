@@ -67,7 +67,7 @@ const Header = () => {
             {isUserAuthenticated && (
               <Dropdown>
                 <Dropdown.Toggle id="dropdown-custom-1">
-                  <img src={Avatar} alt="user" className="user-image" onClick={ToggleShowMenu} />
+                  <img src={Avatar} alt="user" className="user-image" height="50px" onClick={ToggleShowMenu} />
                 </Dropdown.Toggle>
                 <MenuDropdown />
               </Dropdown>

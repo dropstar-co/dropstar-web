@@ -202,7 +202,7 @@ const NFTDetailsPage = ({ match }) => {
                 </p>
               ))}
               <p>
-                Minted by @xyz,{' '}
+                Minted at,{' '}
                 {moment(nftsDetails.MintedDate).format('dddd, MMMM Do YYYY, h:mm:ss a')}
               </p>
             </div>
