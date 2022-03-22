@@ -50,6 +50,16 @@ const NFTDetailsPage = ({ match }) => {
   const getCurrentBid = () => {
     return nftsBids.reduce((acc, shot) => (acc = acc > shot.AmountETH ? acc : shot.AmountETH), 0);
   };
+
+  const getCurrentMaticToEuro = async () => {
+    fetch('https://min-api.cryptocompare.com/data/price?fsym=MATIC&tsyms=EUR')
+      .then(res => {
+        console.log(res);
+        const current = getCurrentBid();
+        return current * res;
+      })
+      .catch(err => console.log(err));
+  };
   useEffect(() => {
     dispatch(fetchNfts(nftsId));
     dispatch(fetchNftsBids(nftsId));
@@ -160,7 +170,8 @@ const NFTDetailsPage = ({ match }) => {
                   </Button>
                 </div>
                 <div className="text-muted mt-2" style={{ fontSize: '10px' }}>
-                  Minimum bid is {nftsDetails?.minimumBidETH} MATIC (170.78 EUR)
+                  Minimum bid is {nftsDetails?.minimumBidETH} MATIC (
+                  {170})
                 </div>
               </>
             ) : (
