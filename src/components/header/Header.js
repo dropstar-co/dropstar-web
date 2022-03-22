@@ -6,7 +6,8 @@ import { getUserAuthState, getUserProfile, getBEUser } from '../../store/selecto
 import { setUserAuthState, setUserProfile } from '../../store/actions/user';
 import { useDispatch, useSelector } from 'react-redux';
 
-import Avatar from '../../assets/svg/user.svg';
+// import Avatar from '../../assets/svg/user.svg';
+import Avatar from '../../assets/images/profile_logo.png';
 import { Dropdown } from 'react-bootstrap';
 import LoginButton from '../buttons/login/LoginButton';
 import Logo from '../../assets/svg/logo.svg';
