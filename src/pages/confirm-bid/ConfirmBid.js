@@ -79,7 +79,7 @@ const ConfirmBid = props => {
                 <input type="checkbox" checked={agree} className="me-1" onChange={handleChange} />
                 <label className="confirm-bid-terms-and-conditions">
                   By checking this box, I agree with the{' '}
-                  <a href="!#" className="terms-link">
+                  <a href="https://www.dropstar.org/terms"  target="_blank" className="terms-link">
                     Terms of Service
                   </a>{' '}
                 </label>
