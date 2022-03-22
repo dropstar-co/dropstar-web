@@ -1,15 +1,15 @@
-import "./NavigationBar.css";
+import './NavigationBar.css';
 
-import { Container, Navbar, Offcanvas } from "react-bootstrap";
-import { getUserAuthState, getUserProfile } from "../../store/selectors/user";
-import { setUserAuthState, setUserProfile } from "../../store/actions/user";
-import { useDispatch, useSelector } from "react-redux";
+import { Container, Navbar, Offcanvas, Nav } from 'react-bootstrap';
+import { getUserAuthState, getUserProfile } from '../../store/selectors/user';
+import { setUserAuthState, setUserProfile } from '../../store/actions/user';
+import { useDispatch, useSelector } from 'react-redux';
 
-import Footer from "../../pages/footer/Footer";
-import Logo from "../../assets/svg/logo.svg";
-import { NavLink } from "react-router-dom";
-import User from "../../assets/svg/user.svg";
-import venlyHelpers from "../../helpers/venly";
+import Footer from '../../pages/footer/Footer';
+import Logo from '../../assets/svg/logo.svg';
+import { NavLink } from 'react-router-dom';
+import User from '../../assets/svg/user.svg';
+import venlyHelpers from '../../helpers/venly';
 
 const NavigationBar = () => {
   const dispatch = useDispatch();
@@ -27,14 +27,14 @@ const NavigationBar = () => {
           firstName: ve?.firstName,
           lastName: ve?.lastName,
           hasMasterPin: ve?.hasMasterPin,
-        })
+        }),
       );
     }
   };
   const handleLogout = async () => {
     await venlyHelpers.logOut();
     const isAuth = await venlyHelpers.checkAuth();
-    localStorage.setItem("dstoken", isAuth?.isAuthenticated);
+    localStorage.setItem('dstoken', isAuth?.isAuthenticated);
     return await venlyHelpers.logOut();
   };
 
@@ -50,8 +50,7 @@ const NavigationBar = () => {
           <Navbar.Offcanvas
             id="offcanvasNavbar"
             aria-labelledby="offcanvasNavbarLabel"
-            placement="end"
-          >
+            placement="end">
             <Offcanvas.Header closeButton>
               <Offcanvas.Title id="offcanvasNavbarLabel"></Offcanvas.Title>
             </Offcanvas.Header>
@@ -64,22 +63,24 @@ const NavigationBar = () => {
               )}
               <div className="d-flex ms-5">
                 <div className="d-flex flex-column align-items-end">
-                  <NavLink className="discover-link common" to="/discover">
-                    Discover
-                  </NavLink>
-                  <NavLink className="faq-link common" to="/faq">
-                    FAQ
-                  </NavLink>
-                  {isUserAuthenticated && (
-                    <NavLink className="profile-link common" to="/profile">
-                      Profile
+                  <Nav>
+                    <NavLink className="discover-link" to="/discover">
+                      <Nav.Link className='common' href='/discover'>Discover</Nav.Link>
                     </NavLink>
-                  )}
-                  {!isUserAuthenticated && (
-                    <div className="login-link" onClick={handleLogin}>
-                      Login
-                    </div>
-                  )}
+                    <NavLink className="faq-link" to="/faq">
+                     <Nav.Link className='common' href='/faq'>FAQ</Nav.Link>
+                    </NavLink>
+                    {isUserAuthenticated && (
+                      <NavLink className="profile-link" to="/profile">
+                        <Nav.Link className='common' href='/profile'>Profile</Nav.Link>
+                      </NavLink>
+                    )}
+                    {!isUserAuthenticated && (
+                      <div className="login-link" onClick={handleLogin}>
+                        Login
+                      </div>
+                    )}
+                  </Nav>
                   {isUserAuthenticated && (
                     <div className="logout-link" onClick={handleLogout}>
                       Log out

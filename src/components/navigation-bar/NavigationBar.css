@@ -20,16 +20,29 @@
   font-weight: 400;
 }
 
-a.common {
+.navbar-nav a {
   text-decoration: none;
+}
+
+a.nav-link {
   color: var(--ds-white);
-  font-weight: 700;
   font-family: var(--ds-roboto-mono);
+  text-decoration: none;
+  font-weight: 700;
+  text-align: right;
   font-size: 20px;
 }
 
-a.common.active {
+.navbar-nav a.nav-link:active {
+  color: white;
+}
+
+.navbar-nav a.active a.nav-link {
   text-decoration: underline;
+}
+
+a.common.nav-link {
+  text-decoration: none;
 }
 
 .discover-link {
@@ -42,6 +55,7 @@ a.common.active {
 }
 
 .login-link {
+  text-align: center;
   background-color: var(--ds-white);
   padding: 5px 10px;
   border-radius: 4px;

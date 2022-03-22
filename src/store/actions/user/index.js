@@ -28,6 +28,7 @@ export const fetchLoggedInUser = data => {
     try {
       const response = await axios(axiosPayload(`${BASE_URL}user/info`, data, 'post'));
       if (response && response.status === 200) {
+        console.log(response.data.data);
         localStorage.setItem('userId', response.data.data.id);
         dispatch(setLoggedInUserData(response.data.data));
       }

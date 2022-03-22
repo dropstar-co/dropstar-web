@@ -7,7 +7,7 @@ import { setUserAuthState, setUserProfile, fetchLoggedInUser } from '../../store
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import Countdown from 'react-countdown';
-
+import axios from 'axios';
 import { CarouselData } from '../../utils/dummyData';
 import ClockIcon from '../../assets/svg/clock.svg';
 import ConfirmBid from '../confirm-bid/ConfirmBid';
@@ -18,7 +18,8 @@ import { getAppLoadingState } from '../../store/selectors/loader';
 import { getBEUser, getUserAuthState } from '../../store/selectors/user';
 import venlyHelpers from '../../helpers/venly';
 import moment from 'moment';
-import Polygon from '../../assets/images/ploygon.png';
+// import Polygon from '../../assets/images/ploygon.png';
+import Polygon from '../../assets/svg/polygon-matic-logo.svg'
 const NFTDetailsPage = ({ match }) => {
   const [amount, setAmount] = useState(0);
   const [modalShow, setModalShow] = useState(false);
@@ -49,6 +50,19 @@ const NFTDetailsPage = ({ match }) => {
 
   const getCurrentBid = () => {
     return nftsBids.reduce((acc, shot) => (acc = acc > shot.AmountETH ? acc : shot.AmountETH), 0);
+  };
+
+  const getCurrentMaticToEuro =  () => {
+    axios.get('https://min-api.cryptocompare.com/data/price?fsym=MATIC&tsyms=EUR', {
+      "content-type":"application/json"
+    })
+      .then(res => {
+        console.log(res.data.EUR);
+        const current = nftsBids && getCurrentBid();
+        console.log(current , res.data.EUR, current * res.data.EUR )
+        return `${current * res.data.EUR}`;
+      })
+      .catch(err => console.log(err));
   };
   useEffect(() => {
     dispatch(fetchNfts(nftsId));
@@ -148,7 +162,7 @@ const NFTDetailsPage = ({ match }) => {
                     </Form.Group>
                   </Form>
                   {getValidDate(nftsDetails) && (
-                    <img src={Polygon} width="100px" height="auto" alt="clock" />
+                    <img src={Polygon} width="100px" height="40px" alt="clock" />
                   )}
 
                   <Button
@@ -160,7 +174,9 @@ const NFTDetailsPage = ({ match }) => {
                   </Button>
                 </div>
                 <div className="text-muted mt-2" style={{ fontSize: '10px' }}>
-                  Minimum bid is {nftsDetails?.minimumBidETH} MATIC (170.78 EUR)
+                  Minimum bid is { nftsBids && getCurrentBid()} MATIC (
+                  { getCurrentMaticToEuro()}
+                  )
                 </div>
               </>
             ) : (
@@ -181,7 +197,7 @@ const NFTDetailsPage = ({ match }) => {
             <div className="nft-bid">
               {nftsBids?.map(bid => (
                 <p key={bid.id}>
-                  Bid for <strong>{bid.AmountETH}</strong> placed by @xyz,{' '}
+                  Bid for <strong>{bid.AmountETH}</strong> placed on{' '}
                   {moment(bid.DateBid).format('dddd, MMMM Do YYYY, h:mm:ss a')}
                 </p>
               ))}
