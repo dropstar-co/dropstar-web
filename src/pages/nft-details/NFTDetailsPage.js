@@ -197,12 +197,12 @@ const NFTDetailsPage = ({ match }) => {
             <div className="nft-bid">
               {nftsBids?.map(bid => (
                 <p key={bid.id}>
-                  Bid for <strong>{bid.AmountETH}</strong> placed on{' '}
+                  Bid for <strong>{bid.AmountETH} MATIC</strong> placed on{' '}
                   {moment(bid.DateBid).format('dddd, MMMM Do YYYY, h:mm:ss a')}
                 </p>
               ))}
               <p>
-                Minted at,{' '}
+                Minted ,{' '}
                 {moment(nftsDetails.MintedDate).format('dddd, MMMM Do YYYY, h:mm:ss a')}
               </p>
             </div>

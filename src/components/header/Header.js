@@ -26,8 +26,14 @@ const Header = () => {
   const handleLogin = async () => {
     const ve = await venlyHelpers.login();
 
-    if (ve.userId && ve?.email) {
-      dispatch(fetchLoggedInUser({ Email: ve?.email, VenlyUID: ve?.userId }));
+    if (ve.userId && ve?.email && ve?.wallets?.length >= 1) {
+      dispatch(
+        fetchLoggedInUser({
+          Email: ve?.email,
+          VenlyUID: ve?.userId,
+          walletAddress: ve.wallets[0].address,
+        }),
+      );
       dispatch(setUserAuthState(true));
 
       dispatch(
@@ -54,15 +60,16 @@ const Header = () => {
       <div className="nav-sub-header">
         <div className="d-flex justify-content-between align-items-center flex-wrap">
           <div className="header-logo" onClick={DirectToDiscoverPage}>
-            <img src={BlackLogo} alt="dropstar logo" width={100} height={100} />
+            <img src={BlackLogo} alt="dropstar logo" width="183px" height="32px" />
           </div>
           <div className="d-flex align-items-center">
             <NavLink to="/discover" className="discover">
               Discover
             </NavLink>
-            <NavLink to="/faq" className="faq">
+            < a href='https://www.dropstar.org/faq' className='faq'  target="_blank">FAQ</a>
+            {/* <NavLink to="/faq" className="faq">
               FAQ
-            </NavLink>
+            </NavLink> */}
             {isUserAuthenticated && <span>{profile?.email}</span>}
             {isUserAuthenticated && (
               <Dropdown>

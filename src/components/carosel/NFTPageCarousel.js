@@ -22,7 +22,7 @@ const NFTPageCarousel = ({ data }) => {
           {data.map(datum => (
             <Carousel.Item key={datum.id}>
               <h3 className="caro-title">
-                Bid for <strong>{datum.AmountETH}</strong> placed at{' '}
+                Bid for <strong>{datum.AmountETH} MATIC</strong> placed at{' '}
                 {moment(datum.DateBid).format('dddd, MMMM Do YYYY, h:mm:ss a')}
               </h3>
               <hr className="carousel-custom-hr" />
