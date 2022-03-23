@@ -26,8 +26,14 @@ const Header = () => {
   const handleLogin = async () => {
     const ve = await venlyHelpers.login();
 
-    if (ve.userId && ve?.email) {
-      dispatch(fetchLoggedInUser({ Email: ve?.email, VenlyUID: ve?.userId }));
+    if (ve.userId && ve?.email && ve?.wallets?.length >= 1) {
+      dispatch(
+        fetchLoggedInUser({
+          Email: ve?.email,
+          VenlyUID: ve?.userId,
+          walletAddress: ve.wallets[0].address,
+        }),
+      );
       dispatch(setUserAuthState(true));
 
       dispatch(

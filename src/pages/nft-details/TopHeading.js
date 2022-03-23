@@ -1,6 +1,6 @@
-import "./TopHeading.css";
+import './TopHeading.css';
 
-import ShareIcon from "../../assets/svg/shareIcon.svg";
+import ShareIcon from '../../assets/svg/shareIcon.svg';
 
 const TopHeading = ({ title, socialLink, socialLabel, address }) => {
   return (
@@ -21,7 +21,7 @@ const TopHeading = ({ title, socialLink, socialLabel, address }) => {
           <span>{title}</span>
         </div>
         <div>
-          <span className="me-2">Contact address</span> {address}
+          <span className="me-2">Contract address</span> {address}
         </div>
       </div>
     </div>
