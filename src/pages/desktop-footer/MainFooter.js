@@ -9,7 +9,10 @@ const MainFooter = () => {
           <span className="mx-1">&copy;</span>
           Dropstar
         </div>
-        <div>Imprint</div>
+        <div>
+          <a href='https://www.dropstar.org/imprint' target="_blank" className='link'>Imprint</a>
+          
+          </div>
       </div>
     </div>
   );

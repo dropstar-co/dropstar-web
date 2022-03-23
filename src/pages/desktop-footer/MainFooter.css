@@ -2,6 +2,10 @@
   font-family: var(--ds-open-sans);
   font-size: 12px;
 }
+.link { 
+  text-decoration: none;
+  color: black;
+}
 
 @media (max-width: 760px) {
   .footer-two {
