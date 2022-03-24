@@ -53,6 +53,10 @@ a.common.nav-link {
 .profile-link {
   margin-top: 25px;
 }
+.faq-link{
+  text-decoration: none;
+  color: white;
+}
 
 .login-link {
   text-align: center;
