@@ -40,9 +40,7 @@ const Profile = () => {
     }
   }, []);
   const handleVenly = () => {
-    return window.open(
-      'https://login.arkane.network/auth/realms/Arkane/protocol/openid-connect/auth?client_id=Arkane&state=b6b2c690-3a93-42e6-837d-962c45698d50&redirect_uri=https%3A%2F%2Fwallet.venly.io%2F%3Fauth_callback%3D1&scope=openid&response_type=code',
-    );
+    return window.open('https://wallet.venly.io');
   };
   return (
     <div className="profile-page">
