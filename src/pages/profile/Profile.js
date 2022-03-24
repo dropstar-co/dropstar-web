@@ -91,7 +91,7 @@ const Profile = () => {
                 </div>
                 {bid.isWinner && (
                   <div className="profile-page-claim-nft">
-                    <div className="profile-page-title profile-page-nft-bal">0.05 ETH</div>
+                    <div className="profile-page-title profile-page-nft-bal">{userBidsList.AmountETH}</div>
                     <Button variant="secondary" onClick={handleVenly}>
                       Claim NFT
                     </Button>

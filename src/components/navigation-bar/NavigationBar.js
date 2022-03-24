@@ -67,9 +67,10 @@ const NavigationBar = () => {
                     <NavLink className="discover-link" to="/discover">
                       <Nav.Link className='common' href='/discover'>Discover</Nav.Link>
                     </NavLink>
-                    <NavLink className="faq-link" to="/faq">
+                    < a href='https://www.dropstar.org/faq' className='faq-link'  target="_blank">FAQ</a>
+                    {/* <NavLink className="faq-link" to="/faq">
                      <Nav.Link className='common' href='/faq'>FAQ</Nav.Link>
-                    </NavLink>
+                    </NavLink> */}
                     {isUserAuthenticated && (
                       <NavLink className="profile-link" to="/profile">
                         <Nav.Link className='common' href='/profile'>Profile</Nav.Link>
