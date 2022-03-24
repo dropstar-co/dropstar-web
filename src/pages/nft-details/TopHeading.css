@@ -36,7 +36,13 @@
   line-height: 16px;
   color: var(--ds-black);
 }
-.user-image{cursor: pointer;}
+.user-image {
+  cursor: pointer;
+}
+
+.contract-address-link {
+  color: var(--ds-black);
+}
 
 @media (max-width: 850px) {
   .nft-page {
