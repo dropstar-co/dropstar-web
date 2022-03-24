@@ -36,7 +36,7 @@ const DiscoverPage = () => {
           <div
             className="background-image-container"
             onClick={() => history.push(`/nfts/${currentArtist?.id}`)}
-            style= {{ backgroundImage : `${ process.env.NODE_ENV !== "production" ? `url( ${   currentArtist?.Artist?.ImageLink  })` :  process.env.PROD_LINK + `${currentArtist?.Artist?.ImageLink}` }`}}
+            style= {{ backgroundImage : `${ process.env.NODE_ENV !== "production" ? `url( ${   currentArtist?.Artist?.ImageLink  })` :  process.env.REACT_APP_PROD_LINK + `${currentArtist?.Artist?.ImageLink}` }`}}
             // {{backgroundImage: 
 
           >

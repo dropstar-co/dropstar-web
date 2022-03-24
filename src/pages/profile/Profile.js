@@ -81,7 +81,7 @@ const Profile = () => {
                 key={bid.id}>
                 <div>
                   <div className="profile-page-title-2" style={{ marginBottom: '-8px' }}>
-                    Bid placed on ENTRET PLANET
+                    Bid placed on { bid?.Nft?.name}
                   </div>
                   <span className="profile-page-date-time">
                     {moment(bid.DateBid).format('dddd, MMMM Do YYYY, h:mm:ss a')}{' '}

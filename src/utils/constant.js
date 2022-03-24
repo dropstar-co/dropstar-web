@@ -1,1 +1,1 @@
-export const BASE_URL =  process.env.NODE_ENV !== "production" ? "https://cors-everywhere.herokuapp.com/http://dropstarstaging-env.eba-ezcsnqme.us-east-2.elasticbeanstalk.com/api/v1/"  : ""
+export const BASE_URL =  process.env.NODE_ENV !== "production" ? `${process.env.REACT_APP_DEV_LINK}`  : `${process.env.REACT_APP_PROD_LINK}`
