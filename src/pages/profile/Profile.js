@@ -1,7 +1,7 @@
 import './Profile.css';
 
 import { Button } from 'react-bootstrap';
-// import ProfileAvatar from '../../assets/svg/profileImage.svg';
+
 import ProfileAvatar from '../../assets/images/profile_logo.png';
 import React from 'react';
 import { getUserBids, fetchLoggedInUser } from '../../store/actions/user';
