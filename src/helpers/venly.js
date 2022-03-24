@@ -2,7 +2,7 @@ import { VenlyConnect, WindowMode } from '@venly/connect';
 import axios from 'axios';
 
 const VENLY_WIDGET_CLIENT_ID = process.env.REACT_APP_NODE_ENV !== "production" ?  'Testaccount' : process.env.REACT_APP_VENLY_WIDGET_CLIENT_ID ;
-const VENLY_CHAIN = process.env.REACT_APP_NODE_ENV !== 'MATIC' 
+const VENLY_CHAIN =  'MATIC' 
 const VENLY_ENVIRONMENT = process.env.REACT_APP_NODE_ENV !== "production" ? 'staging': process.env.REACT_APP_VENLY_ENVIRONMENT;
 const venlyConnect = new VenlyConnect(VENLY_WIDGET_CLIENT_ID, {
   environment: VENLY_ENVIRONMENT,
