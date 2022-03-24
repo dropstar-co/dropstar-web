@@ -189,7 +189,7 @@ const NFTDetailsPage = ({ match }) => {
           <div>
             <h6 className="nft-about-title">About</h6>
             <hr className="nft-details-custom-hr" />
-            <p className="nft-about">{nftsDetails?.NftAbout}</p>
+            <p className="nft-about">{nftsDetails?.nftsDetails}</p>
           </div>
           <div className="bid-desc-wrapper">
             <h6 className="nft-bid-title">Bids</h6>
