@@ -6,9 +6,8 @@ import ProfileAvatar from '../../assets/images/profile_logo.png';
 import React from 'react';
 import { getUserBids, fetchLoggedInUser } from '../../store/actions/user';
 import { useDispatch, useSelector } from 'react-redux';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import {
-  getUserAuthState,
   getUserProfile,
   getBEUser,
   getUserBidSelector,
