@@ -21,7 +21,12 @@ const TopHeading = ({ title, socialLink, socialLabel, address }) => {
           <span>{title}</span>
         </div>
         <div>
-          <span className="me-2">Contract address</span> {address}
+          <a
+            className="contract-address-link me-2"
+            target="_blank"
+            href={'http://polygonscan.com/address/' + address}>
+            Contract address
+          </a>
         </div>
       </div>
     </div>
