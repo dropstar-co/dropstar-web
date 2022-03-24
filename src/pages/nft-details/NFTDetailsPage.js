@@ -18,7 +18,7 @@ import { getAppLoadingState } from '../../store/selectors/loader';
 import { getBEUser, getUserAuthState } from '../../store/selectors/user';
 import venlyHelpers from '../../helpers/venly';
 import moment from 'moment';
-// import Polygon from '../../assets/images/ploygon.png';
+
 import Polygon from '../../assets/svg/polygon-matic-logo.svg'
 const NFTDetailsPage = ({ match }) => {
   const [amount, setAmount] = useState(0);
