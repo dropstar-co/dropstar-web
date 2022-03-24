@@ -1,9 +1,9 @@
 import { VenlyConnect, WindowMode } from '@venly/connect';
 import axios from 'axios';
 
-const VENLY_WIDGET_CLIENT_ID = 'Testaccount';
-const VENLY_CHAIN = 'MATIC';
-const VENLY_ENVIRONMENT = 'staging';
+const VENLY_WIDGET_CLIENT_ID = process.env.NODE_ENV !== "production" ?  'Testaccount' : "" ;
+const VENLY_CHAIN = process.env.NODE_ENV !== "production" ? 'MATIC' : "";
+const VENLY_ENVIRONMENT = process.env.NODE_ENV !== "production" ? 'staging': "";
 const venlyConnect = new VenlyConnect(VENLY_WIDGET_CLIENT_ID, {
   environment: VENLY_ENVIRONMENT,
 });
