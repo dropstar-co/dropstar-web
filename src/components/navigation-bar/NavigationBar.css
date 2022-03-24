@@ -1,0 +1,82 @@
+.main-nav {
+  display: none;
+}
+
+.offcanvas-header .btn-close {
+  background-color: white;
+}
+
+.offcanvas-end {
+  width: 300px;
+}
+
+#offcanvasNavbar {
+  background-color: var(--ds-black);
+}
+
+.nav-email {
+  color: var(--ds-white);
+  margin-left: 5px;
+  font-weight: 400;
+}
+
+.navbar-nav a {
+  text-decoration: none;
+}
+
+a.nav-link {
+  color: var(--ds-white);
+  font-family: var(--ds-roboto-mono);
+  text-decoration: none;
+  font-weight: 700;
+  text-align: right;
+  font-size: 20px;
+}
+
+.navbar-nav a.nav-link:active {
+  color: white;
+}
+
+.navbar-nav a.active a.nav-link {
+  text-decoration: underline;
+}
+
+a.common.nav-link {
+  text-decoration: none;
+}
+
+.discover-link {
+  margin-bottom: 10px;
+}
+
+.faq-link,
+.profile-link {
+  margin-top: 25px;
+}
+.faq-link{
+  text-decoration: none;
+  color: white;
+}
+
+.login-link {
+  text-align: center;
+  background-color: var(--ds-white);
+  padding: 5px 10px;
+  border-radius: 4px;
+  border: 1px solid #2f2f2f;
+  margin-top: 25px;
+  cursor: pointer;
+}
+
+.logout-link {
+  font-weight: 300;
+  margin-top: 50px;
+  color: var(--ds-white);
+  cursor: pointer;
+}
+
+@media (max-width: 670px) {
+  .main-nav {
+    display: block;
+  }
+}

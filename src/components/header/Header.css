@@ -1,0 +1,67 @@
+.faq {
+  margin-left: 50px;
+  margin-right: 50px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.header-logo {
+  cursor: pointer;
+}
+
+a.discover,
+a.faq {
+  text-decoration: none;
+  text-transform: capitalize;
+  color: var(--ds-black);
+}
+
+a.discover.active, a.faq.active {
+  text-decoration: underline;
+}
+
+.horizontal-line {
+  opacity: 1;
+}
+
+#dropdown-custom-1 {
+  background: white !important;
+  outline: 0;
+}
+
+button#dropdown-custom-1.dropdown-toggle.btn.btn-primary {
+  border: none;
+  outline: none;
+  box-shadow: none;
+}
+
+.dropdown-toggle::after {
+  display: none;
+  margin-left: 0;
+  vertical-align: 0;
+  content: "";
+  border-top: 0;
+  border-right: 0;
+  border-bottom: 0;
+  border-left: 0;
+}
+
+.dropdown-menu {
+  margin-top: 20px;
+}
+
+.dropdown-item {
+  color: var(--ds-black);
+  font-family: var(--ds-roboto-mono);
+  font-size: 14px;
+}
+
+.dropdown-item:hover {
+  background: var(--ds-primary-light);
+}
+
+@media (max-width: 670px) {
+  .nav-sub-header {
+    display: none;
+  }
+}

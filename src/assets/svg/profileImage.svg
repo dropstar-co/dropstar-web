@@ -1,0 +1,9 @@
+<svg width="244" height="234" viewBox="0 0 244 234" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<ellipse cx="122" cy="117" rx="122" ry="117" fill="url(#pattern0)"/>
+<defs>
+<pattern id="pattern0" patternContentUnits="objectBoundingBox" width="1" height="1">
+<use xlink:href="#image0_798_12115" transform="translate(0 -0.0213675) scale(0.0625 0.0651709)"/>
+</pattern>
+<image id="image0_798_12115" width="16" height="16" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAPJJREFUOE9j3Lp1638GCgAjVQ3o6OjA6RZRUVGG5ORkDHm4C/BphunCZghtDMgsl8fpFX7GSBQ5FBeANE7vfMgAolPC1jHMWRUEVwzj4zQApPLj/+WUGQAzBF+ywOsCkMbkphgGgeT3DHVSMWBzpryzYcgROgJmo2sGiaEkJJjmbwcEGbgcEIaAFDY9WwI2pFd6K/ZAhNnOpszAoOT4nuHefoghyECCkYGhVIpIA0Aa0yRj4DaD+CADQGLIXsHICyBvfLr8k0EkgB0jLKdHQ7yBDLBmptDQULABMA2ZSyEBSrQBv5MzwRpY504H0+h8ZBcAAFgwifGO4KLvAAAAAElFTkSuQmCC"/>
+</defs>
+</svg>

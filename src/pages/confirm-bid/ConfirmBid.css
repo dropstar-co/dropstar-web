@@ -1,0 +1,78 @@
+.confirm-bid-title {
+  font-family: var(--ds-roboto-mono);
+  font-weight: 500;
+  font-size: 24px;
+  text-transform: uppercase;
+  line-height: 32px;
+  color: var(--ds-black);
+}
+
+.confirm-bid-social {
+  font-family: var(--ds-roboto-mono);
+  font-weight: bold;
+  font-size: 12px;
+  line-height: 16px;
+  text-transform: capitalize;
+  margin-top: -5px;
+  margin-bottom: 10px;
+}
+
+.confirm-bid-terms-and-conditions {
+  font-weight: normal;
+  font-size: 12px;
+  line-height: 24px;
+  letter-spacing: -0.011em;
+  color: #868686;
+}
+
+.terms-link {
+  text-decoration: none;
+}
+
+.confirm-bid-title-2 {
+  font-family: var(--ds-open-sans);
+  font-weight: normal;
+  font-size: 12px;
+  line-height: 16px;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.confirm-bid-amount {
+  margin-top: -6px;
+  font-family: var(--ds-roboto-mono);
+  font-weight: bold;
+  font-size: 18px;
+  line-height: 24px;
+  color: var(--ds-black);
+}
+
+.message {
+  font-family: var(--ds-roboto-mono);
+  font-size: 16px;
+  line-height: 21px;
+  color: var(--ds-black);
+}
+
+.message-title {
+  font-weight: bold;
+}
+
+.message-text {
+  font-size: 15px;
+}
+.close-button-wrapper {
+  margin: 40px 80px 20px 80px;
+}
+
+@media (max-width: 450px) {
+  .checkbox-wrapper {
+    display: flex;
+    align-items: center;
+  }
+
+  .confirm-bid-terms-and-conditions {
+    font-size: 10px;
+    line-height: 15px;
+    letter-spacing: 0px;
+  }
+}
