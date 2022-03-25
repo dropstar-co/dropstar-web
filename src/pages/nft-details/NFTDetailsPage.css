@@ -82,6 +82,9 @@
     margin-top: 50px;
   }
 
+  .bid-desc-wrapper{
+    display: none;
+  }
   .video-frame {
     width: 100%;
   }
