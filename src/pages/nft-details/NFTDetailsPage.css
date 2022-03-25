@@ -76,7 +76,10 @@
 
 @media (max-width: 950px) {
   .description-container {
-    display: none;
+    /* display: none; */
+    width: 90%;
+    margin: auto;
+    margin-top: 50px;
   }
 
   .video-frame {

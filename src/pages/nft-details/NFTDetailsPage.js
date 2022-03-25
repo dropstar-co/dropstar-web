@@ -121,7 +121,7 @@ const NFTDetailsPage = ({ match }) => {
             </div>
             <div>
               <div className="mb-1">
-                Action ending:{' '}
+                Auction ending:{' '}
                 <span className="nft-date">
                   {nftsDetails.EndDate &&
                     moment(nftsDetails.EndDate).format('dddd, MMMM Do YYYY, h:mm:ss a')}

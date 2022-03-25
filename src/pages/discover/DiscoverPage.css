@@ -34,7 +34,7 @@
   /* or 45px */
   display: flex;
   align-items: center;
-  text-align: right;
+  /* text-align: right; */
   text-transform: capitalize;
   color: var(--ds-white);
 }
