@@ -19,10 +19,11 @@ import { getBEUser, getUserAuthState } from '../../store/selectors/user';
 import venlyHelpers from '../../helpers/venly';
 import moment from 'moment';
 
-import Polygon from '../../assets/svg/polygon-matic-logo.svg'
+import Polygon from '../../assets/svg/polygon-matic-logo.svg';
 const NFTDetailsPage = ({ match }) => {
   const [amount, setAmount] = useState(0);
   const [modalShow, setModalShow] = useState(false);
+  const [maticPrice, setMaticPrice] = useState('');
   let nftsId = match.params.nftsId;
   const dispatch = useDispatch();
   const loading = useSelector(getAppLoadingState);
@@ -54,25 +55,36 @@ const NFTDetailsPage = ({ match }) => {
   // minimumBidETH
 
   const getMinimumBid = () => {
-    return nftsBids.reduce((acc, shot) => (acc = acc > shot.AmountETH ? acc : shot.AmountETH), nftsDetails?.minimumBidETH);
+    return nftsBids.reduce(
+      (acc, shot) => (acc = acc > shot.AmountETH ? acc : shot.AmountETH),
+      nftsDetails?.minimumBidETH,
+    );
   };
 
-
-  const getCurrentMaticToEuro =  () => {
-    axios.get('https://min-api.cryptocompare.com/data/price?fsym=MATIC&tsyms=EUR', {
-      "content-type":"application/json"
-    })
-      .then(res => {
-        console.log(res.data.EUR);
-        const current = nftsBids && getCurrentBid();
-        console.log(current , res.data.EUR, current * res.data.EUR )
-        return `${current * res.data.EUR}`;
-      })
-      .catch(err => console.log(err));
+  const getCurrentMaticToEuro = () => {
+    console.log(maticPrice);
+    // if (maticPrice !== '' && maticPrice !== undefined && maticPrice !== null) {
+      axios
+        .get('https://min-api.cryptocompare.com/data/price?fsym=MATIC&tsyms=EUR', {
+          'content-type': 'application/json',
+        })
+        .then(res => {
+          console.log(res.data.EUR);
+          const current = getMinimumBid();
+          console.log(current * res.data.EUR);
+          const data = current * res.data.EUR;
+          setMaticPrice(data);
+          console.log('my matic price', maticPrice);
+          return setMaticPrice(data);
+        })
+        .catch(err => console.log(err));
+    // }
   };
   useEffect(() => {
     dispatch(fetchNfts(nftsId));
     dispatch(fetchNftsBids(nftsId));
+    setMaticPrice('');
+    nftsBids &&  getCurrentMaticToEuro()
   }, [dispatch, nftsId]);
   const getPlaceBid = (nftsDetails, amount) => {
     if (moment(nftsDetails.EndDate) > moment()) {
@@ -119,13 +131,13 @@ const NFTDetailsPage = ({ match }) => {
             frameBorder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen></iframe>
-          <NFTPageCarousel data={nftsBids} details={nftsDetails}  />
+          <NFTPageCarousel data={nftsBids} details={nftsDetails} />
           <div className="bid-wrapper  mt-3">
             <div className="me-sm-5">
               <div className="mb-1">Current Bid</div>
               <div className="bold-text">{nftsBids && getCurrentBid()} MATIC</div>
             </div>
-            <div className='text22'>
+            <div className="text22">
               <div className="mb-1">
                 Auction ending:{' '}
                 <span className="nft-date">
@@ -180,8 +192,8 @@ const NFTDetailsPage = ({ match }) => {
                   </Button>
                 </div>
                 <div className="text-muted mt-2" style={{ fontSize: '10px' }}>
-                  Minimum bid is { nftsBids && getMinimumBid()} MATIC (
-                  { getCurrentMaticToEuro()}
+                  Minimum bid is {nftsBids && getMinimumBid()} MATIC (
+                  {/* { maticPrice} EURO */}
                   )
                 </div>
               </>
@@ -208,15 +220,14 @@ const NFTDetailsPage = ({ match }) => {
                 </p>
               ))}
               <p>
-                Minted ,{' '}
-                {moment(nftsDetails.MintedDate).format('dddd, MMMM Do YYYY, h:mm:ss a')}
+                Minted , {moment(nftsDetails.MintedDate).format('dddd, MMMM Do YYYY, h:mm:ss a')}
               </p>
             </div>
           </div>
         </div>
       </div>
       <ConfirmBid
-        image={nftsDetails?.Artist?.ImageLink}
+        image={nftsDetails?.ImageLink}
         title={nftsDetails?.name}
         socialLink={nftsDetails?.Artist?.SocialLink}
         socialLabel={nftsDetails?.Artist?.SocialLabel}

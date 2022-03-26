@@ -53,7 +53,7 @@ const ConfirmBid = props => {
           @{props?.socialLink}_{props?.socialLabel}
         </div>
         <div>
-          <img src={props.image} alt={props?.title} width="100%" />
+          <img src={process.env.REACT_APP_IMAGE_LINK + props.image} alt={props?.title} width="100%"  height={200}/>
         </div>
         {showCongratMessage && (
           <div className="message-container text-center mt-4">
