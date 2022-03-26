@@ -51,6 +51,12 @@ const NFTDetailsPage = ({ match }) => {
   const getCurrentBid = () => {
     return nftsBids.reduce((acc, shot) => (acc = acc > shot.AmountETH ? acc : shot.AmountETH), 0);
   };
+  // minimumBidETH
+
+  const getMinimumBid = () => {
+    return nftsBids.reduce((acc, shot) => (acc = acc > shot.AmountETH ? acc : shot.AmountETH), nftsDetails?.minimumBidETH);
+  };
+
 
   const getCurrentMaticToEuro =  () => {
     axios.get('https://min-api.cryptocompare.com/data/price?fsym=MATIC&tsyms=EUR', {
@@ -113,13 +119,13 @@ const NFTDetailsPage = ({ match }) => {
             frameBorder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen></iframe>
-          <NFTPageCarousel data={nftsBids} />
+          <NFTPageCarousel data={nftsBids} details={nftsDetails}  />
           <div className="bid-wrapper  mt-3">
             <div className="me-sm-5">
               <div className="mb-1">Current Bid</div>
               <div className="bold-text">{nftsBids && getCurrentBid()} MATIC</div>
             </div>
-            <div>
+            <div className='text22'>
               <div className="mb-1">
                 Auction ending:{' '}
                 <span className="nft-date">
@@ -174,7 +180,7 @@ const NFTDetailsPage = ({ match }) => {
                   </Button>
                 </div>
                 <div className="text-muted mt-2" style={{ fontSize: '10px' }}>
-                  Minimum bid is { nftsBids && getCurrentBid()} MATIC (
+                  Minimum bid is { nftsBids && getMinimumBid()} MATIC (
                   { getCurrentMaticToEuro()}
                   )
                 </div>

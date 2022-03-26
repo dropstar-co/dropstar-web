@@ -82,8 +82,8 @@
     margin-top: 50px;
   }
 
-  .bid-desc-wrapper{
-    display: none;
+  .nft-bid, .bid-desc-wrapper{
+    display: none
   }
   .video-frame {
     width: 100%;
@@ -91,5 +91,9 @@
   .form-wrapper,
   .bid-wrapper {
     justify-content: space-between;
+    /* flex-direction: column; */
   }
+  /* .bid-wrapper , .me-sm-5, .text22 {
+    flex-direction: column;
+  } */
 }

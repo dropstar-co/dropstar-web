@@ -21,6 +21,7 @@ const DiscoverPage = () => {
     dispatch(fetchArtists());
   }, []);
 
+
   if (loading) {
     return <Loader />;
   }
@@ -34,7 +35,7 @@ const DiscoverPage = () => {
             className="background-image-container"
             onClick={() => history.push(`/nfts/${currentArtist?.id}`)}
             style={{
-              backgroundImage: `${`url( ${currentArtist?.Artist?.ImageLink})`
+              backgroundImage: `${`url( ${process.env.REACT_APP_IMAGE_LINK + currentArtist?.ImageLink})`
                 // process.env.REACT_APP_NODE_ENV !== 'production'
                 //   ? `url( ${currentArtist?.Artist?.ImageLink})`
                 //   : `url( ${process.env.REACT_APP_IMAGE_LINK + currentArtist?.Artist?.ImageLink})`

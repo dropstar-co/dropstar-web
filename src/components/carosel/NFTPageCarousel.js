@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 
 import Carousel from 'react-bootstrap/Carousel';
 import moment from 'moment';
-const NFTPageCarousel = ({ data }) => {
+const NFTPageCarousel = ({ data , details}) => {
   const [index, setIndex] = useState(0);
 
   const handleSelect = (selectedIndex, e) => {
@@ -13,6 +13,8 @@ const NFTPageCarousel = ({ data }) => {
   return (
     <div className="q">
       <div className="mb-5 mt-3 nft-page-caro media" style={{ display: 'flex' }}>
+        <p>Minted ,{' '}
+                {moment(details.MintedDate).format('dddd, MMMM Do YYYY, h:mm:ss a')}</p>
         <Carousel
           activeIndex={index}
           onSelect={handleSelect}

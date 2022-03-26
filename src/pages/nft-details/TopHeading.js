@@ -28,6 +28,7 @@ const TopHeading = ({ title, socialLink, socialLabel, address }) => {
             Contract address
           </a>
         </div>
+        <div></div>
       </div>
     </div>
   );

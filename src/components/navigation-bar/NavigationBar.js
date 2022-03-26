@@ -6,7 +6,8 @@ import { setUserAuthState, setUserProfile } from '../../store/actions/user';
 import { useDispatch, useSelector } from 'react-redux';
 
 import Footer from '../../pages/footer/Footer';
-import Logo from '../../assets/svg/logo.svg';
+// import Logo from '../../assets/svg/logo.svg';
+import Logo from '../../assets/svg/BlackLogo.svg';
 import { NavLink } from 'react-router-dom';
 import User from '../../assets/svg/user.svg';
 import venlyHelpers from '../../helpers/venly';
@@ -44,7 +45,7 @@ const NavigationBar = () => {
         <Container>
           <div />
           <Navbar.Brand href="/discover">
-            <img src={Logo} alt="dropstar logo" />
+            <img src={Logo} height="32px" width="150px" alt="dropstar logo" />
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="offcanvasNavbar" />
           <Navbar.Offcanvas
