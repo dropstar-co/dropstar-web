@@ -193,7 +193,8 @@ const NFTDetailsPage = ({ match }) => {
                 </div>
                 <div className="text-muted mt-2" style={{ fontSize: '10px' }}>
                   Minimum bid is {nftsBids && getMinimumBid()} MATIC (
-                  { maticPrice} EURO)
+                  {/* { maticPrice} EURO */}
+                  )
                 </div>
               </>
             ) : (
@@ -226,7 +227,7 @@ const NFTDetailsPage = ({ match }) => {
         </div>
       </div>
       <ConfirmBid
-        image={nftsDetails?.Artist?.ImageLink}
+        image={nftsDetails?.ImageLink}
         title={nftsDetails?.name}
         socialLink={nftsDetails?.Artist?.SocialLink}
         socialLabel={nftsDetails?.Artist?.SocialLabel}
