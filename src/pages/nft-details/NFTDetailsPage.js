@@ -23,7 +23,7 @@ import Polygon from '../../assets/svg/polygon-matic-logo.svg';
 const NFTDetailsPage = ({ match }) => {
   const [amount, setAmount] = useState(0);
   const [modalShow, setModalShow] = useState(false);
-  const [maticPrice, setMaticPrice] = useState('');
+  const [maticPrice, setMaticPrice] = useState(0);
   let nftsId = match.params.nftsId;
   const dispatch = useDispatch();
   const loading = useSelector(getAppLoadingState);
