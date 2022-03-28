@@ -23,7 +23,7 @@ import Polygon from '../../assets/svg/polygon-matic-logo.svg';
 const NFTDetailsPage = ({ match }) => {
   const [amount, setAmount] = useState(0);
   const [modalShow, setModalShow] = useState(false);
-  const [maticPrice, setMaticPrice] = useState('');
+  const [maticPrice, setMaticPrice] = useState(0);
   let nftsId = match.params.nftsId;
   const dispatch = useDispatch();
   const loading = useSelector(getAppLoadingState);
@@ -63,7 +63,6 @@ const NFTDetailsPage = ({ match }) => {
 
   const getCurrentMaticToEuro = () => {
     console.log(maticPrice);
-    // if (maticPrice !== '' && maticPrice !== undefined && maticPrice !== null) {
       axios
         .get('https://min-api.cryptocompare.com/data/price?fsym=MATIC&tsyms=EUR', {
           'content-type': 'application/json',
@@ -84,7 +83,7 @@ const NFTDetailsPage = ({ match }) => {
     dispatch(fetchNfts(nftsId));
     dispatch(fetchNftsBids(nftsId));
     setMaticPrice('');
-    nftsBids &&  getCurrentMaticToEuro()
+    nftsBids && nftsDetails &&  getCurrentMaticToEuro()
   }, [dispatch, nftsId]);
   const getPlaceBid = (nftsDetails, amount) => {
     if (moment(nftsDetails.EndDate) > moment()) {
@@ -193,7 +192,7 @@ const NFTDetailsPage = ({ match }) => {
                 </div>
                 <div className="text-muted mt-2" style={{ fontSize: '10px' }}>
                   Minimum bid is {nftsBids && getMinimumBid()} MATIC (
-                  {/* { maticPrice} EURO */}
+                  { maticPrice} EURO
                   )
                 </div>
               </>
