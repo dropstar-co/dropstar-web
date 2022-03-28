@@ -7,11 +7,7 @@ import React from 'react';
 import { getUserBids, fetchLoggedInUser } from '../../store/actions/user';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
-import {
-  getUserProfile,
-  getBEUser,
-  getUserBidSelector,
-} from '../../store/selectors/user';
+import { getUserProfile, getBEUser, getUserBidSelector } from '../../store/selectors/user';
 import moment from 'moment';
 const Profile = () => {
   const userProfile = useSelector(getUserProfile);
@@ -23,6 +19,7 @@ const Profile = () => {
       fetchLoggedInUser({
         Email: userProfile?.email,
         VenlyUID: userProfile?.userId,
+        walletAddress: userProfile?.walletAddress,
       }),
     );
   };
@@ -80,7 +77,7 @@ const Profile = () => {
                 key={bid.id}>
                 <div>
                   <div className="profile-page-title-2" style={{ marginBottom: '-8px' }}>
-                    Bid placed on { bid?.Nft?.name}
+                    Bid placed on {bid?.Nft?.name}
                   </div>
                   <span className="profile-page-date-time">
                     {moment(bid.DateBid).format('dddd, MMMM Do YYYY, h:mm:ss a')}{' '}
@@ -88,7 +85,9 @@ const Profile = () => {
                 </div>
                 {bid.isWinner && (
                   <div className="profile-page-claim-nft">
-                    <div className="profile-page-title profile-page-nft-bal">{userBidsList.AmountETH}</div>
+                    <div className="profile-page-title profile-page-nft-bal">
+                      {userBidsList.AmountETH}
+                    </div>
                     <Button variant="secondary" onClick={handleVenly}>
                       Claim NFT
                     </Button>

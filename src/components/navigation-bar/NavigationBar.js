@@ -37,6 +37,7 @@ const NavigationBar = () => {
           firstName: ve?.firstName,
           lastName: ve?.lastName,
           hasMasterPin: ve?.hasMasterPin,
+          walletAddress: ve.wallets[0].address,
         }),
       );
     }
@@ -87,15 +88,21 @@ const NavigationBar = () => {
                 <div className="d-flex flex-column align-items-end">
                   <Nav>
                     <NavLink className="discover-link" to="/discover">
-                      <Nav.Link className='common' href='/discover'>Discover</Nav.Link>
+                      <Nav.Link className="common" href="/discover">
+                        Discover
+                      </Nav.Link>
                     </NavLink>
-                    < a href='https://www.dropstar.org/faq' className='faq-link'  target="_blank">FAQ</a>
+                    <a href="https://www.dropstar.org/faq" className="faq-link" target="_blank">
+                      FAQ
+                    </a>
                     {/* <NavLink className="faq-link" to="/faq">
                      <Nav.Link className='common' href='/faq'>FAQ</Nav.Link>
                     </NavLink> */}
                     {isUserAuthenticated && (
                       <NavLink className="profile-link" to="/profile">
-                        <Nav.Link className='common' href='/profile'>Profile</Nav.Link>
+                        <Nav.Link className="common" href="/profile">
+                          Profile
+                        </Nav.Link>
                       </NavLink>
                     )}
                     {!isUserAuthenticated && (

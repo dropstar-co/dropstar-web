@@ -53,7 +53,12 @@ const ConfirmBid = props => {
           @{props?.socialLink}_{props?.socialLabel}
         </div>
         <div>
-          <img src={process.env.REACT_APP_IMAGE_LINK + props.image} alt={props?.title} width="100%"  height={200}/>
+          <img
+            src={process.env.REACT_APP_IMAGE_LINK + props.image}
+            alt={props?.title}
+            width="100%"
+            height={200}
+          />
         </div>
         {showCongratMessage && (
           <div className="message-container text-center mt-4">
@@ -79,7 +84,7 @@ const ConfirmBid = props => {
                 <input type="checkbox" checked={agree} className="me-1" onChange={handleChange} />
                 <label className="confirm-bid-terms-and-conditions">
                   By checking this box, I agree with the{' '}
-                  <a href="https://www.dropstar.org/terms"  target="_blank" className="terms-link">
+                  <a href="https://www.dropstar.org/terms" target="_blank" className="terms-link">
                     Terms of Service
                   </a>{' '}
                 </label>
