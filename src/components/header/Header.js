@@ -3,7 +3,7 @@ import './Header.css';
 import { NavLink, useHistory } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import { getUserAuthState, getUserProfile, getBEUser } from '../../store/selectors/user';
-import { setUserAuthState, setUserProfile } from '../../store/actions/user';
+import { setUserAuthState, setUserProfile, updateUser } from '../../store/actions/user';
 import { useDispatch, useSelector } from 'react-redux';
 
 // import Avatar from '../../assets/svg/user.svg';
@@ -23,44 +23,12 @@ const Header = () => {
   const profile = useSelector(getUserProfile);
   const user = useSelector(getBEUser);
 
-  /*
-  console.log({ aaa: profile });
-
-  useEffect(async () => {
-    console.log({ profile });
-    if (profile.userId === undefined || profile.userId === '') return;
-
-    const wallets = await venlyHelpers.getWallets();
-    console.log({ wallets });
-
-    if (profile.walletAddress !== undefined) {
-      console.log('Fixed');
-      return;
-    }
-
-    dispatch(
-      fetchLoggedInUser({
-        Email: profile?.email,
-        VenlyUID: profile?.userId,
-        walletAddress: wallets[0].address,
-      }),
-    );
-    dispatch(setUserAuthState(true));
-
-    dispatch(
-      setUserProfile(
-        Object.assign(profile, {
-          walletAddress: wallets[0].address,
-        }),
-      ),
-    );
-  }, [profile.userId, profile.walletAddress]);
-  */
-
   const handleLogin = async () => {
     const ve = await venlyHelpers.login();
 
     const wallets = await venlyHelpers.getWallets();
+
+    await updateUser(ve);
 
     if (ve.userId && ve?.email && ve?.wallets?.length >= 1) {
       dispatch(

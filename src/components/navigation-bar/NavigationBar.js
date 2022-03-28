@@ -2,7 +2,12 @@ import './NavigationBar.css';
 
 import { Container, Navbar, Offcanvas, Nav } from 'react-bootstrap';
 import { getUserAuthState, getUserProfile } from '../../store/selectors/user';
-import { setUserAuthState, setUserProfile, fetchLoggedInUser } from '../../store/actions/user';
+import {
+  setUserAuthState,
+  setUserProfile,
+  fetchLoggedInUser,
+  updateUser,
+} from '../../store/actions/user';
 import { useDispatch, useSelector } from 'react-redux';
 
 import Footer from '../../pages/footer/Footer';
@@ -20,6 +25,14 @@ const NavigationBar = () => {
 
   const handleLogin = async () => {
     const ve = await venlyHelpers.login();
+
+    const wallets = await venlyHelpers.getWallets();
+
+    const newVE = Object.assign(ve, { walletAddress: wallets[0].address });
+    await updateUser(newVE);
+
+    console.log({ newVE, ve });
+
     if (ve.userId && ve?.email && ve?.wallets?.length >= 1) {
       dispatch(
         fetchLoggedInUser({
@@ -80,7 +93,11 @@ const NavigationBar = () => {
             <Offcanvas.Body className="mt-3">
               {isUserAuthenticated && (
                 <div className="d-flex align-items-center mb-5">
-                  <img src={ProfileAvatar} style={{height:"30px" , borderRadius:"50%"}} alt="user" />
+                  <img
+                    src={ProfileAvatar}
+                    style={{ height: '30px', borderRadius: '50%' }}
+                    alt="user"
+                  />
                   <div className="nav-email">{profile?.email}</div>
                 </div>
               )}

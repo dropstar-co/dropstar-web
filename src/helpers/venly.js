@@ -21,27 +21,22 @@ class venlyHelpers {
   }
 
   static async login() {
+    console.log('login');
     const loginObject = await venlyConnect.flows.authenticate();
     const account = await venlyConnect.flows.getAccount(VENLY_CHAIN);
     const profile = await venlyConnect.api.getProfile();
     const wallets = await venlyConnect.api.getWallets({ secretType: VENLY_CHAIN });
 
-    const ret = Object.assign(profile, { wallets });
+    const ret = Object.assign(profile, { wallets, walletAddress: wallets[0].address });
+
+    console.log({ ret });
+    console.log('EEEEENDED');
     return ret;
   }
 
   static async getWallets() {
     const wallets = await venlyConnect.api.getWallets({ secretType: VENLY_CHAIN });
     return wallets;
-  }
-
-  static async loadProfile() {
-    const loginObject = await venlyConnect.flows.authenticate();
-    const profile = await venlyConnect.api.getProfile();
-    const wallets = await venlyConnect.api.getWallets({ secretType: VENLY_CHAIN });
-
-    const ret = Object.assign(profile, { wallets });
-    return ret;
   }
 
   static async checkAuth() {
