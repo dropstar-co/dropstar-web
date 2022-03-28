@@ -2,7 +2,7 @@ import './NavigationBar.css';
 
 import { Container, Navbar, Offcanvas, Nav } from 'react-bootstrap';
 import { getUserAuthState, getUserProfile } from '../../store/selectors/user';
-import { setUserAuthState, setUserProfile } from '../../store/actions/user';
+import { setUserAuthState, setUserProfile, fetchLoggedInUser } from '../../store/actions/user';
 import { useDispatch, useSelector } from 'react-redux';
 
 import Footer from '../../pages/footer/Footer';
@@ -20,8 +20,16 @@ const NavigationBar = () => {
 
   const handleLogin = async () => {
     const ve = await venlyHelpers.login();
-    if (ve.userId && ve?.email) {
+    if (ve.userId && ve?.email && ve?.wallets?.length >= 1) {
+      dispatch(
+        fetchLoggedInUser({
+          Email: ve?.email,
+          VenlyUID: ve?.userId,
+          walletAddress: ve.wallets[0].address,
+        }),
+      );
       dispatch(setUserAuthState(true));
+
       dispatch(
         setUserProfile({
           userId: ve?.userId,
@@ -32,6 +40,18 @@ const NavigationBar = () => {
         }),
       );
     }
+    // if (ve.userId && ve?.email) {
+    //   dispatch(setUserAuthState(true));
+    //   dispatch(
+    //     setUserProfile({
+    //       userId: ve?.userId,
+    //       email: ve?.email,
+    //       firstName: ve?.firstName,
+    //       lastName: ve?.lastName,
+    //       hasMasterPin: ve?.hasMasterPin,
+    //     }),
+    //   );
+    // }
   };
   const handleLogout = async () => {
     await venlyHelpers.logOut();
