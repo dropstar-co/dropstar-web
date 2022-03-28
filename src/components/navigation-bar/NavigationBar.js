@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import Footer from '../../pages/footer/Footer';
 // import Logo from '../../assets/svg/logo.svg';
 import Logo from '../../assets/svg/BlackLogo.svg';
+import ProfileAvatar from '../../assets/images/profile_logo.png';
 import { NavLink } from 'react-router-dom';
 import User from '../../assets/svg/user.svg';
 import venlyHelpers from '../../helpers/venly';
@@ -58,7 +59,7 @@ const NavigationBar = () => {
             <Offcanvas.Body className="mt-3">
               {isUserAuthenticated && (
                 <div className="d-flex align-items-center mb-5">
-                  <img src={User} alt="user" />
+                  <img src={ProfileAvatar} style={{height:"30px" , borderRadius:"50%"}} alt="user" />
                   <div className="nav-email">{profile?.email}</div>
                 </div>
               )}
