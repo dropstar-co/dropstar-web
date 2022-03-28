@@ -23,7 +23,7 @@ import Polygon from '../../assets/svg/polygon-matic-logo.svg';
 const NFTDetailsPage = ({ match }) => {
   const [amount, setAmount] = useState(0);
   const [modalShow, setModalShow] = useState(false);
-  const [maticPrice, setMaticPrice] = useState('');
+  const [maticPrice, setMaticPrice] = useState(0);
   let nftsId = match.params.nftsId;
   const dispatch = useDispatch();
   const loading = useSelector(getAppLoadingState);
@@ -34,17 +34,8 @@ const NFTDetailsPage = ({ match }) => {
 
   const handleLogin = async () => {
     const ve = await venlyHelpers.login();
-
-    const wallets = await venlyHelpers.getWallets();
-
     if (ve?.userId && ve?.email) {
-      dispatch(
-        fetchLoggedInUser({
-          Email: ve?.email,
-          VenlyUID: ve?.userId,
-          walletAddress: wallets[0].address,
-        }),
-      );
+      dispatch(fetchLoggedInUser({ Email: ve?.email, VenlyUID: ve?.userId }));
       dispatch(setUserAuthState(true));
       dispatch(
         setUserProfile({
@@ -53,7 +44,6 @@ const NFTDetailsPage = ({ match }) => {
           firstName: ve?.firstName,
           lastName: ve?.lastName,
           hasMasterPin: ve?.hasMasterPin,
-          walletAddress: wallets[0].address,
         }),
       );
     }
@@ -73,28 +63,27 @@ const NFTDetailsPage = ({ match }) => {
 
   const getCurrentMaticToEuro = () => {
     console.log(maticPrice);
-    // if (maticPrice !== '' && maticPrice !== undefined && maticPrice !== null) {
-    axios
-      .get('https://min-api.cryptocompare.com/data/price?fsym=MATIC&tsyms=EUR', {
-        'content-type': 'application/json',
-      })
-      .then(res => {
-        console.log(res.data.EUR);
-        const current = getMinimumBid();
-        console.log(current * res.data.EUR);
-        const data = current * res.data.EUR;
-        setMaticPrice(data);
-        console.log('my matic price', maticPrice);
-        return setMaticPrice(data);
-      })
-      .catch(err => console.log(err));
+      axios
+        .get('https://min-api.cryptocompare.com/data/price?fsym=MATIC&tsyms=EUR', {
+          'content-type': 'application/json',
+        })
+        .then(res => {
+          console.log(res.data.EUR);
+          const current = getMinimumBid();
+          console.log(current * res.data.EUR);
+          const data = current * res.data.EUR;
+          setMaticPrice(data);
+          console.log('my matic price', maticPrice);
+          return setMaticPrice(data);
+        })
+        .catch(err => console.log(err));
     // }
   };
   useEffect(() => {
     dispatch(fetchNfts(nftsId));
     dispatch(fetchNftsBids(nftsId));
     setMaticPrice('');
-    nftsBids && getCurrentMaticToEuro();
+    nftsBids && nftsDetails &&  getCurrentMaticToEuro()
   }, [dispatch, nftsId]);
   const getPlaceBid = (nftsDetails, amount) => {
     if (moment(nftsDetails.EndDate) > moment()) {
@@ -202,7 +191,9 @@ const NFTDetailsPage = ({ match }) => {
                   </Button>
                 </div>
                 <div className="text-muted mt-2" style={{ fontSize: '10px' }}>
-                  Minimum bid is {nftsBids && getMinimumBid()} MATIC ({/* { maticPrice} EURO */})
+                  Minimum bid is {nftsBids && getMinimumBid()} MATIC (
+                  { maticPrice} EURO
+                  )
                 </div>
               </>
             ) : (
