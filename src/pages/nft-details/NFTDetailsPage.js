@@ -3,7 +3,12 @@ import './NFTDetailsPage.css';
 import { Button, Form } from 'react-bootstrap';
 import { fetchNfts, fetchNftsBids } from '../../store/actions/nfts';
 import { getNfts, getNtftsBids } from '../../store/selectors/nfts';
-import { setUserAuthState, setUserProfile, fetchLoggedInUser } from '../../store/actions/user';
+import {
+  setUserAuthState,
+  setUserProfile,
+  fetchLoggedInUser,
+  updateUser,
+} from '../../store/actions/user';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import Countdown from 'react-countdown';
@@ -34,6 +39,14 @@ const NFTDetailsPage = ({ match }) => {
 
   const handleLogin = async () => {
     const ve = await venlyHelpers.login();
+
+    const wallets = await venlyHelpers.getWallets();
+
+    const newVE = Object.assign(ve, { walletAddress: wallets[0].address });
+    await updateUser(newVE);
+
+    console.log({ newVE, ve });
+
     if (ve?.userId && ve?.email) {
       dispatch(fetchLoggedInUser({ Email: ve?.email, VenlyUID: ve?.userId }));
       dispatch(setUserAuthState(true));
@@ -63,27 +76,27 @@ const NFTDetailsPage = ({ match }) => {
 
   const getCurrentMaticToEuro = () => {
     console.log(maticPrice);
-      axios
-        .get('https://min-api.cryptocompare.com/data/price?fsym=MATIC&tsyms=EUR', {
-          'content-type': 'application/json',
-        })
-        .then(res => {
-          console.log(res.data.EUR);
-          const current = getMinimumBid();
-          console.log(current * res.data.EUR);
-          const data = current * res.data.EUR;
-          setMaticPrice(data);
-          console.log('my matic price', maticPrice);
-          return setMaticPrice(data);
-        })
-        .catch(err => console.log(err));
+    axios
+      .get('https://min-api.cryptocompare.com/data/price?fsym=MATIC&tsyms=EUR', {
+        'content-type': 'application/json',
+      })
+      .then(res => {
+        console.log(res.data.EUR);
+        const current = getMinimumBid();
+        console.log(current * res.data.EUR);
+        const data = current * res.data.EUR;
+        setMaticPrice(data);
+        console.log('my matic price', maticPrice);
+        return setMaticPrice(data);
+      })
+      .catch(err => console.log(err));
     // }
   };
   useEffect(() => {
     dispatch(fetchNfts(nftsId));
     dispatch(fetchNftsBids(nftsId));
     setMaticPrice('');
-    nftsBids && nftsDetails &&  getCurrentMaticToEuro()
+    nftsBids && nftsDetails && getCurrentMaticToEuro();
   }, [dispatch, nftsId]);
   const getPlaceBid = (nftsDetails, amount) => {
     if (moment(nftsDetails.EndDate) > moment()) {
@@ -191,9 +204,7 @@ const NFTDetailsPage = ({ match }) => {
                   </Button>
                 </div>
                 <div className="text-muted mt-2" style={{ fontSize: '10px' }}>
-                  Minimum bid is {nftsBids && getMinimumBid()} MATIC (
-                  { maticPrice} EURO
-                  )
+                  Minimum bid is {nftsBids && getMinimumBid()} MATIC ({maticPrice} EURO )
                 </div>
               </>
             ) : (

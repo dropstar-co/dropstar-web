@@ -50,3 +50,30 @@ export const getUserBids = id => {
     }
   };
 };
+
+export const updateUser = async data => {
+  console.log('updateUser');
+  console.log({ data });
+  try {
+    const response = await axios(
+      axiosPayload(
+        `${BASE_URL}/user/update`,
+        {
+          VenlyUID: data.userId,
+          Email: data.email,
+          walletAddress: data.walletAddress,
+        },
+        'post',
+      ),
+    );
+
+    if (response && response.status >= 200 && response.status < 300) {
+      console.log('updateUser ' + response.status);
+    } else {
+      console.log('updateUser errored');
+      console.log({ response });
+    }
+  } catch (error) {
+    console.log('logging my error');
+  }
+};

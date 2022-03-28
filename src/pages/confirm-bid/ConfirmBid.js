@@ -6,9 +6,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import Image from '../../assets/images/background.svg';
 import { getNtftsStatus } from '../../store/selectors/nfts';
 import { getUserProfile } from '../../store/selectors/user';
+import { updateUser } from '../../store/actions/user';
 import { postBid, fetchNftsBids } from '../../store/actions/nfts';
 import { useState } from 'react';
 import moment from 'moment';
+import venlyHelpers from '../../helpers/venly';
 const ConfirmBid = props => {
   const dispatch = useDispatch();
   const [agree, setAgree] = useState(false);
@@ -20,7 +22,14 @@ const ConfirmBid = props => {
     setAgree(e.target.checked);
   };
   const userId = localStorage.getItem('userId');
-  const handleBidConfirmation = () => {
+  const handleBidConfirmation = async () => {
+    const wallets = await venlyHelpers.getWallets();
+    console.log({ wallets });
+
+    const ve = Object.assign(userProfile, { walletAddress: wallets[0].address });
+
+    await updateUser(ve);
+
     const data = {
       userID: userId,
       nftID: props?.nftId,
