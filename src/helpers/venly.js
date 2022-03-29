@@ -13,6 +13,10 @@ const VENLY_ENVIRONMENT =
 const venlyConnect = new VenlyConnect(VENLY_WIDGET_CLIENT_ID, {
   environment: VENLY_ENVIRONMENT,
 });
+const PSO_ADDRESS =
+  process.env.REACT_APP_NODE_ENV !== 'production'
+    ? '0xB7B70Cee97EDa8986b0885d8a481202EF1c839b4'
+    : process.env.PSO_ADDRESS;
 
 class venlyHelpers {
   static async connect(venlyConnect) {
@@ -32,6 +36,50 @@ class venlyHelpers {
     console.log({ ret });
     console.log('EEEEENDED');
     return ret;
+  }
+
+  static async claimNFT(saleVoucher) {
+    const signer = await venlyConnect.createSigner();
+    const wallets = await venlyConnect.api.getWallets({ secretType: VENLY_CHAIN });
+
+    console.log({ wallets });
+
+    //TODO: calculate the payable value
+
+    console.log({ saleVoucher });
+
+    const inputs = [
+      { type: 'uint256', value: saleVoucher._id },
+      { type: 'address', value: saleVoucher._tokenAddress },
+      { type: 'uint256', value: saleVoucher._tokenId },
+      { type: 'address', value: saleVoucher._holderAddress },
+      { type: 'uint256', value: saleVoucher._price },
+      { type: 'address', value: wallets[0].address },
+      { type: 'address', value: saleVoucher._paymentRecipientAddress },
+      { type: 'uint256', value: saleVoucher._startDate },
+      { type: 'uint256', value: saleVoucher._deadline },
+
+      {
+        value: [
+          {
+            r: saleVoucher._signatures[0].r,
+            s: saleVoucher._signatures[0].s,
+            v: saleVoucher._signatures[0].v,
+          },
+        ],
+      },
+    ];
+
+    console.log({ inputs });
+
+    signer.executeContract({
+      secretType: VENLY_CHAIN,
+      walletId: wallets[0].id,
+      to: PSO_ADDRESS,
+      value: saleVoucher.AmountETH,
+      functionName: 'fulfillBid',
+      inputs,
+    });
   }
 
   static async getWallets() {
