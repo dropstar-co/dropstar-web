@@ -1,12 +1,11 @@
 import './Header.css';
 
 import { NavLink, useHistory } from 'react-router-dom';
-import React, { useEffect, useState } from 'react';
-import { getUserAuthState, getUserProfile, getBEUser } from '../../store/selectors/user';
+import React, { useState } from 'react';
+import { getUserAuthState, getUserProfile } from '../../store/selectors/user';
 import { setUserAuthState, setUserProfile, updateUser } from '../../store/actions/user';
 import { useDispatch, useSelector } from 'react-redux';
 
-// import Avatar from '../../assets/svg/user.svg';
 import Avatar from '../../assets/images/profile_logo.png';
 import { Dropdown } from 'react-bootstrap';
 import LoginButton from '../buttons/login/LoginButton';
@@ -21,10 +20,17 @@ const Header = () => {
   const dispatch = useDispatch();
   const isUserAuthenticated = useSelector(getUserAuthState);
   const profile = useSelector(getUserProfile);
-  const user = useSelector(getBEUser);
 
   const handleLogin = async () => {
+    console.log({ window });
     const ve = await venlyHelpers.login();
+
+    console.log({ ve });
+    if (ve === undefined) {
+      alert('Login failed: check browser configuration');
+      history.push('/login-issue');
+      return;
+    }
 
     const wallets = await venlyHelpers.getWallets();
 

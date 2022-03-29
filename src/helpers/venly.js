@@ -18,6 +18,48 @@ const PSO_ADDRESS =
     ? '0xB7B70Cee97EDa8986b0885d8a481202EF1c839b4'
     : process.env.PSO_ADDRESS;
 
+var popupBlockerChecker = {
+  check: function (popup_window) {
+    var scope = this;
+    if (popup_window) {
+      if (/chrome/.test(navigator.userAgent.toLowerCase())) {
+        setTimeout(function () {
+          scope.is_popup_blocked(scope, popup_window);
+        }, 3000);
+      } else {
+        popup_window.onload = function () {
+          scope.is_popup_blocked(scope, popup_window);
+        };
+      }
+    } else {
+      scope.displayError();
+    }
+  },
+  is_popup_blocked: function (scope, popup_window) {
+    if (popup_window.innerHeight > 0 == false) {
+      scope.displayError();
+    }
+  },
+  displayError: function () {
+    console.log('Popup Blocker is enabled! Please add this site to your exception list.');
+  },
+};
+
+function checkCookie() {
+  var cookieEnabled = navigator.cookieEnabled;
+  if (!cookieEnabled) {
+    document.cookie = 'testcookie';
+    cookieEnabled = document.cookie.indexOf('testcookie') != -1;
+  }
+  console.log({ cookieEnabled });
+  return cookieEnabled || showCookieFail();
+}
+
+function showCookieFail() {
+  // do something here
+  console.log('Cookies are disabled');
+}
+
 class venlyHelpers {
   static async connect(venlyConnect) {
     const account = await venlyConnect.flows.getAccount(VENLY_CHAIN);
@@ -25,17 +67,43 @@ class venlyHelpers {
   }
 
   static async login() {
-    console.log('login');
-    const loginObject = await venlyConnect.flows.authenticate();
-    const account = await venlyConnect.flows.getAccount(VENLY_CHAIN);
-    const profile = await venlyConnect.api.getProfile();
-    const wallets = await venlyConnect.api.getWallets({ secretType: VENLY_CHAIN });
+    //const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
-    const ret = Object.assign(profile, { wallets, walletAddress: wallets[0].address });
+    //await delay(1);
+    try {
+      // within a window load,dom ready or something like that place your:
+      /*
+      if (!checkCookie()) {
+        throw 'Cookies not enabled';
+      }
 
-    console.log({ ret });
-    console.log('EEEEENDED');
-    return ret;
+      if (!popupBlockerChecker.check('https://wallet.venly.io')) {
+        console.log('Popups not enabled');
+      }
+      */
+
+      console.log('login');
+      const loginObject = await venlyConnect.flows.authenticate();
+      console.log({ loginObject });
+      const account = await venlyConnect.flows.getAccount(VENLY_CHAIN);
+      console.log({ account });
+
+      if (account.auth === undefined) {
+        throw 'Account.auth undefined';
+      }
+
+      const profile = await venlyConnect.api.getProfile();
+      const wallets = await venlyConnect.api.getWallets({ secretType: VENLY_CHAIN });
+
+      const ret = Object.assign(profile, { wallets, walletAddress: wallets[0].address });
+
+      console.log({ ret });
+      console.log('EEEEENDED');
+      return ret;
+    } catch (err) {
+      console.log({ err });
+      return undefined;
+    }
   }
 
   static async claimNFT(saleVoucher) {
@@ -72,14 +140,20 @@ class venlyHelpers {
 
     console.log({ inputs });
 
-    signer.executeContract({
+    const parameters = {
       secretType: VENLY_CHAIN,
       walletId: wallets[0].id,
       to: PSO_ADDRESS,
       value: saleVoucher.AmountETH,
       functionName: 'fulfillBid',
       inputs,
-    });
+    };
+
+    console.log({ parameters });
+
+    console.log(JSON.stringify(parameters, null, 2));
+
+    signer.executeContract(parameters);
   }
 
   static async getWallets() {
