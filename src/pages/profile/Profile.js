@@ -3,16 +3,40 @@ import './Profile.css';
 import { Button } from 'react-bootstrap';
 
 import ProfileAvatar from '../../assets/images/profile_logo.png';
-import React from 'react';
+import React, { useState } from 'react';
 import { getUserBids, fetchLoggedInUser } from '../../store/actions/user';
+import { fetchBidSaleVoucher } from '../../store/actions/salevoucher';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import { getUserProfile, getBEUser, getUserBidSelector } from '../../store/selectors/user';
 import moment from 'moment';
+
+import ClaimNFT from './ClaimNFT';
 const Profile = () => {
   const userProfile = useSelector(getUserProfile);
   const user = useSelector(getBEUser);
   const userBidsList = useSelector(getUserBidSelector);
+
+  const [saleVouchers, setSaleVouchers] = useState([]);
+
+  console.log({ saleVouchers });
+
+  console.log({ userBidsList });
+
+  useEffect(async () => {
+    let i;
+    let newSaleVoucher = [];
+    for (i = 0; i < userBidsList.length; i++) {
+      const bid = userBidsList[i];
+      const saleVoucher = await fetchBidSaleVoucher(bid.id);
+
+      //console.log({ saleVoucher });
+      newSaleVoucher.push(saleVoucher);
+    }
+
+    setSaleVouchers(newSaleVoucher);
+  }, [userBidsList]);
+
   const dispatch = useDispatch();
   const getNewUser = async () => {
     await dispatch(
@@ -67,7 +91,7 @@ const Profile = () => {
             <hr className="profile-page-custom-hr" />
           </div>
           <div className="profile-page-lower-section-wrapper">
-            {userBidsList?.map(bid => (
+            {userBidsList?.map((bid, index) => (
               <div
                 style={{
                   marginBottom: '15px',
@@ -88,9 +112,7 @@ const Profile = () => {
                     <div className="profile-page-title profile-page-nft-bal">
                       {userBidsList.AmountETH}
                     </div>
-                    <Button variant="secondary" onClick={handleVenly}>
-                      Claim NFT
-                    </Button>
+                    <ClaimNFT bid={bid} saleVoucher={saleVouchers[index]} />
                   </div>
                 )}
               </div>
