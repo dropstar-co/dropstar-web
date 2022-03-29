@@ -17,14 +17,25 @@ import ProfileAvatar from '../../assets/images/profile_logo.png';
 import { NavLink } from 'react-router-dom';
 import User from '../../assets/svg/user.svg';
 import venlyHelpers from '../../helpers/venly';
+import { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 
 const NavigationBar = () => {
+  const history = useHistory();
   const dispatch = useDispatch();
   const profile = useSelector(getUserProfile);
   const isUserAuthenticated = useSelector(getUserAuthState);
 
   const handleLogin = async () => {
+    console.log({ window });
     const ve = await venlyHelpers.login();
+
+    console.log({ ve });
+    if (ve === undefined) {
+      alert('Login failed: check browser configuration');
+      history.push('/login-issue');
+      return;
+    }
 
     const wallets = await venlyHelpers.getWallets();
 

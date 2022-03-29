@@ -13,7 +13,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import Countdown from 'react-countdown';
 import axios from 'axios';
-import { CarouselData } from '../../utils/dummyData';
 import ClockIcon from '../../assets/svg/clock.svg';
 import ConfirmBid from '../confirm-bid/ConfirmBid';
 import Loader from '../Spinner';
@@ -25,7 +24,9 @@ import venlyHelpers from '../../helpers/venly';
 import moment from 'moment';
 
 import Polygon from '../../assets/svg/polygon-matic-logo.svg';
+import { useHistory } from 'react-router-dom';
 const NFTDetailsPage = ({ match }) => {
+  const history = useHistory();
   const [amount, setAmount] = useState(0);
   const [modalShow, setModalShow] = useState(false);
   const [maticPrice, setMaticPrice] = useState(0);
@@ -38,7 +39,15 @@ const NFTDetailsPage = ({ match }) => {
   const user = useSelector(getBEUser);
 
   const handleLogin = async () => {
+    console.log({ window });
     const ve = await venlyHelpers.login();
+
+    console.log({ ve });
+    if (ve === undefined) {
+      alert('Login failed: check browser configuration');
+      history.push('/login-issue');
+      return;
+    }
 
     const wallets = await venlyHelpers.getWallets();
 
