@@ -66,8 +66,6 @@
   margin-top: -1px;
 }
 
-
-
 @media (max-width: 750px) {
   .auth-bid-btn-wrapper {
     text-align: center;
@@ -82,8 +80,9 @@
     margin-top: 50px;
   }
 
-  .nft-bid, .bid-desc-wrapper{
-    display: none
+  .nft-bid,
+  .bid-desc-wrapper {
+    display: none;
   }
   .video-frame {
     width: 100%;
