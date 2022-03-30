@@ -12,6 +12,7 @@ const VENLY_ENVIRONMENT =
     : process.env.REACT_APP_VENLY_ENVIRONMENT;
 const venlyConnect = new VenlyConnect(VENLY_WIDGET_CLIENT_ID, {
   environment: VENLY_ENVIRONMENT,
+  windowMode: 'REDIRECT',
 });
 const PSO_ADDRESS =
   process.env.REACT_APP_NODE_ENV !== 'production'
