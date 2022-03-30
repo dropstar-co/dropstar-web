@@ -5,7 +5,7 @@ import React from 'react';
 const LoginIssuePage = () => {
   return (
     <>
-      <h4 className="page-title">Login issue</h4>
+      <h4 className="page-title">Troubleshoot</h4>
       <h1>Login issue</h1>
       <div>
         <p>
@@ -39,34 +39,6 @@ const LoginIssuePage = () => {
       </div>
     </>
   );
-
-  /*
-  return (
-    <>
-      <h4 className="page-title">Login issue</h4>
-      <div className="discover-page">
-        <AsideComponent title="Discover" data={artists} />
-        <div className="right-container ms-md-3">
-          <div
-            className="background-image-container"
-            onClick={() => history.push(`/nfts/${currentArtist?.id}`)}
-            style={{
-              backgroundImage: `${`url( ${
-                process.env.REACT_APP_IMAGE_LINK + currentArtist?.ImageLink
-              })`}`,
-            }}>
-            <div className="text-wrapper">
-              <h5 className="nft-title">{currentArtist?.name}</h5>
-              <span className="nft-author ms-lg-2 ms-md-2 ms-0">
-                by {currentArtist?.Artist?.name}
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </>
-  );
-  */
 };
 
 export default LoginIssuePage;
