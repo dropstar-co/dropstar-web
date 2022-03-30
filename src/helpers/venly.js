@@ -32,7 +32,7 @@ class venlyHelpers {
       const account = await venlyConnect.flows.getAccount(VENLY_CHAIN, { windowMode: 'REDIRECT' });
       console.log({ account });
 
-      alert(`Authenticated? ${account.isAuthenticated}`);
+      //alert(`Authenticated? ${account.isAuthenticated}`);
 
       if (account.auth === undefined) {
         throw 'Account.auth undefined';
