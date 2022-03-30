@@ -90,20 +90,23 @@ const NFTDetailsPage = ({ match }) => {
       );
       const { EUR } = res.data;
       const current = getMinimumBid();
-      const data = current * EUR;
+      const data = Math.round(current * EUR * 100) / 100;
       setMaticPrice(data);
       setMaticEUR(EUR);
+
+      //console.log({ current, data, EUR });
 
       return setMaticPrice(data);
     } catch (err) {
       console.log(err);
     }
-    // }
   };
 
-  useEffect(async () => {
+  //console.log({ maticEUR, maticPrice, minBid: nftsDetails.minimumBidETH, user });
+
+  useEffect(() => {
     getCurrentMaticToEuro();
-  }, []);
+  }, [user, nftsDetails.id]);
 
   useEffect(() => {
     dispatch(fetchNfts(nftsId));
@@ -162,12 +165,23 @@ const NFTDetailsPage = ({ match }) => {
                 <div>
                   <div className="mb-1">Current Bid</div>
                   <div className="bold-text">{nftsBids && getCurrentBid()} MATIC</div>
-                  <div>{nftsBids ? maticPrice : 'NaN'} EURO</div>
+                  <div>
+                    {nftsBids && maticPrice > 0
+                      ? maticPrice
+                      : Math.round(nftsDetails.minimumBidETH * maticEUR * 100) / 100}{' '}
+                    EURO
+                  </div>
                 </div>
               ) : (
                 <div>
-                  <div className="mb-1">No bids</div>
-                  <div className="bold-text">Be the first!</div>
+                  <div className="mb-1">Be the first!</div>
+                  <div className="bold-text">{nftsDetails.minimumBidETH} MATIC</div>
+                  <div>
+                    {nftsBids && maticPrice > 0
+                      ? maticPrice
+                      : Math.round(nftsDetails.minimumBidETH * maticEUR * 100) / 100}{' '}
+                    EURO
+                  </div>
                 </div>
               )}
             </div>
@@ -207,7 +221,7 @@ const NFTDetailsPage = ({ match }) => {
                     <Form.Group>
                       <Form.Control
                         type="number"
-                        placeholder="0.05"
+                        placeholder={nftsDetails.minimumBidETH}
                         className="py-2"
                         onChange={e => setAmount(e.target.value)}
                       />
