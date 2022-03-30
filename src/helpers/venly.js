@@ -1,4 +1,4 @@
-import { VenlyConnect, WindowMode } from '@venly/connect';
+import { VenlyConnect } from '@venly/connect';
 import axios from 'axios';
 
 const VENLY_WIDGET_CLIENT_ID =
@@ -10,79 +10,29 @@ const VENLY_ENVIRONMENT =
   process.env.REACT_APP_NODE_ENV !== 'production'
     ? 'staging'
     : process.env.REACT_APP_VENLY_ENVIRONMENT;
+
 const venlyConnect = new VenlyConnect(VENLY_WIDGET_CLIENT_ID, {
   environment: VENLY_ENVIRONMENT,
+  /*windowMode: 'REDIRECT',*/
 });
 const PSO_ADDRESS =
   process.env.REACT_APP_NODE_ENV !== 'production'
     ? '0xB7B70Cee97EDa8986b0885d8a481202EF1c839b4'
     : process.env.PSO_ADDRESS;
 
-var popupBlockerChecker = {
-  check: function (popup_window) {
-    var scope = this;
-    if (popup_window) {
-      if (/chrome/.test(navigator.userAgent.toLowerCase())) {
-        setTimeout(function () {
-          scope.is_popup_blocked(scope, popup_window);
-        }, 3000);
-      } else {
-        popup_window.onload = function () {
-          scope.is_popup_blocked(scope, popup_window);
-        };
-      }
-    } else {
-      scope.displayError();
-    }
-  },
-  is_popup_blocked: function (scope, popup_window) {
-    if (popup_window.innerHeight > 0 == false) {
-      scope.displayError();
-    }
-  },
-  displayError: function () {
-    console.log('Popup Blocker is enabled! Please add this site to your exception list.');
-  },
-};
-
-function checkCookie() {
-  var cookieEnabled = navigator.cookieEnabled;
-  if (!cookieEnabled) {
-    document.cookie = 'testcookie';
-    cookieEnabled = document.cookie.indexOf('testcookie') != -1;
-  }
-  console.log({ cookieEnabled });
-  return cookieEnabled || showCookieFail();
-}
-
-function showCookieFail() {
-  // do something here
-  console.log('Cookies are disabled');
-}
-
 class venlyHelpers {
   static async login() {
-    //const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
-
-    //await delay(1);
     try {
-      // within a window load,dom ready or something like that place your:
       /*
-      if (!checkCookie()) {
-        throw 'Cookies not enabled';
-      }
-
-      if (!popupBlockerChecker.check('https://wallet.venly.io')) {
-        console.log('Popups not enabled');
-      }
+      console.log('login');
+      const loginObject = await venlyConnect.flows.authenticate({ windowMode: 'REDIRECT' });
+      console.log({ loginObject });
       */
 
-      console.log('login');
-      const loginObject = await venlyConnect.flows.authenticate();
-      console.log({ loginObject });
-
-      const account = await venlyConnect.flows.getAccount(VENLY_CHAIN);
+      const account = await venlyConnect.flows.getAccount(VENLY_CHAIN, { windowMode: 'REDIRECT' });
       console.log({ account });
+
+      //alert(`Authenticated? ${account.isAuthenticated}`);
 
       if (account.auth === undefined) {
         throw 'Account.auth undefined';
@@ -158,7 +108,22 @@ class venlyHelpers {
   }
 
   static async checkAuth() {
+    console.log('checkAuth called');
     const checkingauth = await venlyConnect.checkAuthenticated();
+
+    console.log({ checkingauth });
+
+    checkingauth.authenticated(async function (auth) {
+      console.log('Authenticated!!!');
+      const callbackWallets = await venlyConnect.api.getWallets({ secretType: VENLY_CHAIN });
+      console.log({ callbackWallets });
+    });
+
+    checkingauth.notAuthenticated(async function (auth) {
+      console.log('Not authenticated!!!');
+      console.log({ auth });
+    });
+
     return checkingauth;
   }
   static async logOut() {
