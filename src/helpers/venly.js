@@ -1,8 +1,6 @@
 import { VenlyConnect } from '@venly/connect';
 import axios from 'axios';
 
-const windowMode = 'REDIRECT';
-
 const VENLY_WIDGET_CLIENT_ID =
   process.env.REACT_APP_NODE_ENV !== 'production'
     ? 'Testaccount'
@@ -12,9 +10,10 @@ const VENLY_ENVIRONMENT =
   process.env.REACT_APP_NODE_ENV !== 'production'
     ? 'staging'
     : process.env.REACT_APP_VENLY_ENVIRONMENT;
+
 const venlyConnect = new VenlyConnect(VENLY_WIDGET_CLIENT_ID, {
   environment: VENLY_ENVIRONMENT,
-  windowMode,
+  windowMode: 'REDIRECT',
 });
 const PSO_ADDRESS =
   process.env.REACT_APP_NODE_ENV !== 'production'
@@ -81,7 +80,7 @@ class venlyHelpers {
       */
 
       console.log('login');
-      const loginObject = await venlyConnect.flows.authenticate({ windowMode });
+      const loginObject = await venlyConnect.flows.authenticate({ windowMode: 'REDIRECT' });
       console.log({ loginObject });
 
       const account = await venlyConnect.flows.getAccount(VENLY_CHAIN);
