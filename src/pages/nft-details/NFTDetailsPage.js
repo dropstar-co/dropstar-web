@@ -139,6 +139,7 @@ const NFTDetailsPage = ({ match }) => {
   if (loading) {
     return <Loader />;
   }
+
   return (
     <>
       <div className="nft-page">
@@ -163,7 +164,12 @@ const NFTDetailsPage = ({ match }) => {
             <div className="me-sm-5">
               {nftsBids && nftsBids.length !== 0 ? (
                 <div>
-                  <div className="mb-1">Current Bid</div>
+                  {nftsBids[0].userID === user.id ? (
+                    <div className="mb-1">You are the current bid Winner</div>
+                  ) : (
+                    <div className="mb-1">Current Bid</div>
+                  )}
+
                   <div className="bold-text">{nftsBids && getCurrentBid()} MATIC</div>
                   <div>
                     {nftsBids && maticPrice > 0

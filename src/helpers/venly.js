@@ -61,11 +61,6 @@ function showCookieFail() {
 }
 
 class venlyHelpers {
-  static async connect(venlyConnect) {
-    const account = await venlyConnect.flows.getAccount(VENLY_CHAIN);
-    return account;
-  }
-
   static async login() {
     //const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -85,12 +80,15 @@ class venlyHelpers {
       console.log('login');
       const loginObject = await venlyConnect.flows.authenticate();
       console.log({ loginObject });
+      /*
       const account = await venlyConnect.flows.getAccount(VENLY_CHAIN);
       console.log({ account });
+      
 
       if (account.auth === undefined) {
         throw 'Account.auth undefined';
       }
+      */
 
       const profile = await venlyConnect.api.getProfile();
       const wallets = await venlyConnect.api.getWallets({ secretType: VENLY_CHAIN });
