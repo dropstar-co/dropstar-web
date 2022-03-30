@@ -158,9 +158,18 @@ const NFTDetailsPage = ({ match }) => {
           <NFTPageCarousel data={nftsBids} details={nftsDetails} />
           <div className="bid-wrapper  mt-3">
             <div className="me-sm-5">
-              <div className="mb-1">Current Bid</div>
-              <div className="bold-text">{nftsBids && getCurrentBid()} MATIC</div>
-              <div>{nftsBids ? maticPrice : 'NaN'} EURO</div>
+              {nftsBids && nftsBids.length !== 0 ? (
+                <div>
+                  <div className="mb-1">Current Bid</div>
+                  <div className="bold-text">{nftsBids && getCurrentBid()} MATIC</div>
+                  <div>{nftsBids ? maticPrice : 'NaN'} EURO</div>
+                </div>
+              ) : (
+                <div>
+                  <div className="mb-1">No bids</div>
+                  <div className="bold-text">Be the first!</div>
+                </div>
+              )}
             </div>
             <div className="text22">
               <div className="mb-1">
