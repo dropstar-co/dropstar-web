@@ -30,6 +30,7 @@ const NFTDetailsPage = ({ match }) => {
   const [amount, setAmount] = useState(0);
   const [modalShow, setModalShow] = useState(false);
   const [maticPrice, setMaticPrice] = useState(0);
+  const [maticEUR, setMaticEUR] = useState(0);
   let nftsId = match.params.nftsId;
   const dispatch = useDispatch();
   const loading = useSelector(getAppLoadingState);
@@ -39,10 +40,8 @@ const NFTDetailsPage = ({ match }) => {
   const user = useSelector(getBEUser);
 
   const handleLogin = async () => {
-    console.log({ window });
     const ve = await venlyHelpers.login();
 
-    console.log({ ve });
     if (ve === undefined) {
       alert('Login failed: check browser configuration');
       history.push('/login-issue');
@@ -53,8 +52,6 @@ const NFTDetailsPage = ({ match }) => {
 
     const newVE = Object.assign(ve, { walletAddress: wallets[0].address });
     await updateUser(newVE);
-
-    console.log({ newVE, ve });
 
     if (ve?.userId && ve?.email) {
       dispatch(fetchLoggedInUser({ Email: ve?.email, VenlyUID: ve?.userId }));
@@ -83,36 +80,42 @@ const NFTDetailsPage = ({ match }) => {
     );
   };
 
-  const getCurrentMaticToEuro = () => {
-    console.log(maticPrice);
-    axios
-      .get('https://min-api.cryptocompare.com/data/price?fsym=MATIC&tsyms=EUR', {
-        'content-type': 'application/json',
-      })
-      .then(res => {
-        console.log(res.data.EUR);
-        const current = getMinimumBid();
-        console.log(current * res.data.EUR);
-        const data = current * res.data.EUR;
-        setMaticPrice(data);
-        console.log('my matic price', maticPrice);
-        return setMaticPrice(data);
-      })
-      .catch(err => console.log(err));
+  const getCurrentMaticToEuro = async () => {
+    try {
+      const res = await axios.get(
+        'https://min-api.cryptocompare.com/data/price?fsym=MATIC&tsyms=EUR',
+        {
+          'content-type': 'application/json',
+        },
+      );
+      const { EUR } = res.data;
+      const current = getMinimumBid();
+      const data = current * EUR;
+      setMaticPrice(data);
+      setMaticEUR(EUR);
+
+      return setMaticPrice(data);
+    } catch (err) {
+      console.log(err);
+    }
     // }
   };
+
+  useEffect(async () => {
+    getCurrentMaticToEuro();
+  }, []);
+
   useEffect(() => {
     dispatch(fetchNfts(nftsId));
     dispatch(fetchNftsBids(nftsId));
-    setMaticPrice('');
-    nftsBids && nftsDetails && getCurrentMaticToEuro();
   }, [dispatch, nftsId]);
+
   const getPlaceBid = (nftsDetails, amount) => {
     if (moment(nftsDetails.EndDate) > moment()) {
       if (amount > getCurrentBid()) {
         if (amount > 0) {
           if (amount >= nftsDetails.minimumBidETH && amount > 0.01) {
-            console.log(amount, nftsDetails.minimumBidETH);
+            console.log(`amount=${amount} minimumBidMatic=${nftsDetails.minimumBidETH}`);
             return false;
           }
           return true;
@@ -157,6 +160,7 @@ const NFTDetailsPage = ({ match }) => {
             <div className="me-sm-5">
               <div className="mb-1">Current Bid</div>
               <div className="bold-text">{nftsBids && getCurrentBid()} MATIC</div>
+              <div>{nftsBids ? maticPrice : 'NaN'} EURO</div>
             </div>
             <div className="text22">
               <div className="mb-1">
@@ -213,7 +217,7 @@ const NFTDetailsPage = ({ match }) => {
                   </Button>
                 </div>
                 <div className="text-muted mt-2" style={{ fontSize: '10px' }}>
-                  Minimum bid is {nftsBids && getMinimumBid()} MATIC ({maticPrice} EURO )
+                  Minimum bid is {nftsBids && getMinimumBid()} MATIC ({maticPrice} EURO)
                 </div>
               </>
             ) : (
@@ -234,7 +238,9 @@ const NFTDetailsPage = ({ match }) => {
             <div className="nft-bid">
               {nftsBids?.map(bid => (
                 <p key={bid.id}>
-                  Bid for <strong>{bid.AmountETH} MATIC</strong> placed on{' '}
+                  {user.id === bid.userID ? `You (${user.Email}) bid ` : 'Someone else bid '}
+                  for <strong>{bid.AmountETH} MATIC</strong> (
+                  {Math.round(bid.AmountETH * maticEUR * 100) / 100} EUR) placed on{' '}
                   {moment(bid.DateBid).format('dddd, MMMM Do YYYY, h:mm:ss a')}
                 </p>
               ))}
