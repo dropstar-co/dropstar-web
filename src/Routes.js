@@ -4,6 +4,11 @@ import PrivateRoutes from './components/private-routes';
 import LoginIssuePage from './pages/login-issue/LoginIssuePage';
 import Profile from './pages/profile/Profile';
 import { Route } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { setVenlyParams } from './store/actions/venly';
+import { useEffect } from 'react';
+
+import venlyHelpers from './helpers/venly';
 
 const publicRoutes = (
   <>
@@ -18,7 +23,36 @@ const privateRoutes = (
   </>
 );
 
-const Routes = () => {
+const Routes = props => {
+  const dispatch = useDispatch();
+
+  console.log('Routes re rendered');
+
+  useEffect(() => {
+    async function doIt() {
+      const a = await venlyHelpers.checkAuth();
+      console.log({ a });
+    }
+    doIt();
+  }, []);
+
+  const { venlyParams } = props;
+  if (venlyParams === undefined || venlyParams.state === undefined) {
+    const hash = props.location.hash;
+    if (hash !== '') {
+      const splitsRaw = hash.substring(1).split('&');
+      let venlyParams = {};
+      splitsRaw.map(element => {
+        const [attribute, value] = element.split('=');
+        venlyParams[attribute] = value;
+      });
+
+      console.log('Setting venly params ' + JSON.stringify(venlyParams));
+
+      dispatch(setVenlyParams(venlyParams));
+    }
+  }
+
   return (
     <>
       {publicRoutes}

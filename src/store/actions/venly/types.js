@@ -1,0 +1,1 @@
+export const SET_VENLY_PARAMS = 'SET_VENLY_PARAMS';

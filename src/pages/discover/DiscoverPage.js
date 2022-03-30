@@ -8,7 +8,9 @@ import AsideComponent from '../../components/aside-component/AsideComponent';
 import Loader from '../Spinner';
 import { fetchArtists } from '../../store/actions/discover';
 import { getAppLoadingState } from '../../store/selectors/loader';
+import { getVenlyParams } from '../../store/selectors/venly';
 import { useHistory } from 'react-router-dom';
+import venlyHelpers from '../../helpers/venly';
 
 const DiscoverPage = () => {
   const dispatch = useDispatch();
@@ -17,8 +19,13 @@ const DiscoverPage = () => {
   const artists = useSelector(getArtists);
   const currentArtist = useSelector(getCurrentArtist);
 
+  const venlyParamsDiscover = useSelector(getVenlyParams);
+  console.log({ venlyParamsDiscover });
+
   useEffect(() => {
     dispatch(fetchArtists());
+
+    venlyHelpers.checkAuth();
   }, []);
 
   if (loading) {

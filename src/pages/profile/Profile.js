@@ -9,6 +9,7 @@ import { fetchBidSaleVoucher } from '../../store/actions/salevoucher';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import { getUserProfile, getBEUser, getUserBidSelector } from '../../store/selectors/user';
+import { getVenlyParams } from '../../store/selectors/venly';
 import moment from 'moment';
 
 import ClaimNFT from './ClaimNFT';
@@ -16,6 +17,9 @@ const Profile = () => {
   const userProfile = useSelector(getUserProfile);
   const user = useSelector(getBEUser);
   const userBidsList = useSelector(getUserBidSelector);
+
+  const venlyParamsProfile = useSelector(getVenlyParams);
+  console.log({ venlyParamsProfile });
 
   const [saleVouchers, setSaleVouchers] = useState([]);
 

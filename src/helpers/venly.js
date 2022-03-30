@@ -79,9 +79,11 @@ class venlyHelpers {
       }
       */
 
+      /*
       console.log('login');
       const loginObject = await venlyConnect.flows.authenticate({ windowMode: 'REDIRECT' });
       console.log({ loginObject });
+      */
 
       const account = await venlyConnect.flows.getAccount(VENLY_CHAIN);
       console.log({ account });
@@ -160,7 +162,9 @@ class venlyHelpers {
   }
 
   static async checkAuth() {
+    console.log('checkAuth called');
     const checkingauth = await venlyConnect.checkAuthenticated();
+    console.log({ checkingauth });
     return checkingauth;
   }
   static async logOut() {
