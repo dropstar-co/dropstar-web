@@ -1,13 +1,9 @@
 import './NavigationBar.css';
 
-import { Container, Navbar, Offcanvas, Nav } from 'react-bootstrap';
+import { Container, Navbar, Offcanvas, Nav, Button } from 'react-bootstrap';
 import { getUserAuthState, getUserProfile } from '../../store/selectors/user';
-import {
-  setUserAuthState,
-  setUserProfile,
-  fetchLoggedInUser,
-  updateUser,
-} from '../../store/actions/user';
+import { getWalletType, isOpenLoginDialog } from '../../store/selectors/wallet';
+import { setOpenLoginDialog } from '../../store/actions/wallet';
 import { useDispatch, useSelector } from 'react-redux';
 
 import Footer from '../../pages/footer/Footer';
@@ -15,74 +11,29 @@ import Footer from '../../pages/footer/Footer';
 import Logo from '../../assets/svg/BlackLogo.svg';
 import ProfileAvatar from '../../assets/images/profile_logo.png';
 import { NavLink } from 'react-router-dom';
-import User from '../../assets/svg/user.svg';
 import venlyHelpers from '../../helpers/venly';
-import { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
 const NavigationBar = () => {
   const history = useHistory();
   const dispatch = useDispatch();
   const profile = useSelector(getUserProfile);
+  const walletType = useSelector(getWalletType);
   const isUserAuthenticated = useSelector(getUserAuthState);
 
-  const handleLogin = async () => {
-    console.log({ window });
-    const ve = await venlyHelpers.login();
+  console.log({ profile, walletType, isUserAuthenticated });
 
-    console.log({ ve });
-    if (ve === undefined) {
-      alert('Login failed: check browser configuration');
-      history.push('/login-issue');
-      return;
-    }
-
-    const wallets = await venlyHelpers.getWallets();
-
-    const newVE = Object.assign(ve, { walletAddress: wallets[0].address });
-    await updateUser(newVE);
-
-    console.log({ newVE, ve });
-
-    if (ve.userId && ve?.email && ve?.wallets?.length >= 1) {
-      dispatch(
-        fetchLoggedInUser({
-          Email: ve?.email,
-          VenlyUID: ve?.userId,
-          walletAddress: ve.wallets[0].address,
-        }),
-      );
-      dispatch(setUserAuthState(true));
-
-      dispatch(
-        setUserProfile({
-          userId: ve?.userId,
-          email: ve?.email,
-          firstName: ve?.firstName,
-          lastName: ve?.lastName,
-          hasMasterPin: ve?.hasMasterPin,
-          walletAddress: ve.wallets[0].address,
-        }),
-      );
-    }
-    // if (ve.userId && ve?.email) {
-    //   dispatch(setUserAuthState(true));
-    //   dispatch(
-    //     setUserProfile({
-    //       userId: ve?.userId,
-    //       email: ve?.email,
-    //       firstName: ve?.firstName,
-    //       lastName: ve?.lastName,
-    //       hasMasterPin: ve?.hasMasterPin,
-    //     }),
-    //   );
-    // }
-  };
+  const handleLogin = () => dispatch(setOpenLoginDialog(true));
   const handleLogout = async () => {
-    await venlyHelpers.logOut();
-    const isAuth = await venlyHelpers.checkAuth();
-    localStorage.setItem('dstoken', isAuth?.isAuthenticated);
-    return await venlyHelpers.logOut();
+    if (walletType === 'venly') {
+      await venlyHelpers.logOut();
+      const isAuth = await venlyHelpers.checkAuth();
+      localStorage.setItem('dstoken', isAuth?.isAuthenticated);
+      return await venlyHelpers.logOut();
+    } else if (walletType === 'metamask') {
+    } else {
+      alert(`Wallet type ${walletType} not recognised`);
+    }
   };
 
   return (
@@ -123,9 +74,6 @@ const NavigationBar = () => {
                     <a href="https://www.dropstar.org/faq" className="faq-link" target="_blank">
                       FAQ
                     </a>
-                    {/* <NavLink className="faq-link" to="/faq">
-                     <Nav.Link className='common' href='/faq'>FAQ</Nav.Link>
-                    </NavLink> */}
                     {isUserAuthenticated && (
                       <NavLink className="profile-link" to="/profile">
                         <Nav.Link className="common" href="/profile">
@@ -134,9 +82,11 @@ const NavigationBar = () => {
                       </NavLink>
                     )}
                     {!isUserAuthenticated && (
-                      <div className="login-link" onClick={handleLogin}>
-                        Login
-                      </div>
+                      <NavLink className="profile-link" to="/profile" onClick={handleLogin}>
+                        <Nav.Link className="common" href="/profile">
+                          Login
+                        </Nav.Link>
+                      </NavLink>
                     )}
                   </Nav>
                   {isUserAuthenticated && (
