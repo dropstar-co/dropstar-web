@@ -18,18 +18,13 @@ const ConfirmBid = props => {
   const userProfile = useSelector(getUserProfile);
   const status = useSelector(getNtftsStatus);
 
+  console.log({ userProfile });
+
   const handleChange = e => {
     setAgree(e.target.checked);
   };
   const userId = localStorage.getItem('userId');
   const handleBidConfirmation = async () => {
-    const wallets = await venlyHelpers.getWallets();
-    console.log({ wallets });
-
-    const ve = Object.assign(userProfile, { walletAddress: wallets[0].address });
-
-    await updateUser(ve);
-
     const data = {
       userID: userId,
       nftID: props?.nftId,
