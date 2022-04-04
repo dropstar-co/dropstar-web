@@ -4,7 +4,8 @@ import {
   updateUser,
   fetchLoggedInUser,
 } from './store/actions/user';
-import { setOpenLoginDialog, setWalletType } from './store/actions/wallet';
+import { setOpenLoginDialog, setWalletType, setOpenAskEmailDialog } from './store/actions/wallet';
+import { setLoggedInUserData } from './store/actions/user';
 import { useEffect, useState } from 'react';
 
 import Header from './components/header/Header';
@@ -16,10 +17,15 @@ import { Switch, useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import venlyHelpers from './helpers/venly';
 
-import { Button } from 'react-bootstrap';
+import { Button, Form } from 'react-bootstrap';
 import Modal from 'react-modal';
 
-import { getWalletType, isOpenLoginDialog } from './store/selectors/wallet';
+import { getWalletType, isOpenLoginDialog, isOpenAskEmailDialog } from './store/selectors/wallet';
+import axios from 'axios';
+import axiosPayload from './utils/api';
+import { BASE_URL } from './utils/constant';
+
+import { ethers } from 'ethers';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -27,8 +33,16 @@ const App = () => {
   const [loading, setLoading] = useState(false);
 
   const isOpenLoginDialogValue = useSelector(isOpenLoginDialog);
+  const isOpenAskEmailDialogValue = useSelector(isOpenAskEmailDialog);
+  const walletType = useSelector(getWalletType);
 
-  console.log({ isOpenLoginDialogValue });
+  console.log({ walletType });
+
+  const [metamaskEmail, setMetamaskEmail] = useState('');
+  const [walletAddress, setWalletAddress] = useState('');
+  const [isExistingUser, setIsExistingUser] = useState(false);
+
+  console.log({ metamaskEmail, walletAddress });
 
   useEffect(() => {
     setLoading(true);
@@ -46,19 +60,6 @@ const App = () => {
     gets();
     setLoading(false);
   }, []);
-
-  let subtitle;
-  const [modalIsOpen, setIsOpen] = useState(false);
-
-  function openModal() {
-    dispatch(setOpenLoginDialog(true));
-  }
-
-  function afterOpenModal() {}
-
-  function closeModal() {
-    dispatch(setOpenLoginDialog(false));
-  }
 
   const loginVenly = async () => {
     console.log({ window });
@@ -96,12 +97,137 @@ const App = () => {
         }),
       );
 
+      dispatch(setWalletType('venly'));
       dispatch(setOpenLoginDialog(false));
     }
   };
 
-  const loginMetamask = function () {
-    console.log('Login Metamask');
+  const handleMetamaskLoginSelected = async function () {
+    if (window.ethereum === undefined) {
+      console.log('You do not have metamask installed...');
+      return;
+    }
+
+    if (typeof window.ethereum !== 'undefined') {
+      window.ethereum.on('chainChanged', chainId => {
+        window.location.reload();
+      });
+      window.ethereum.enable();
+    } else return;
+
+    console.log('Create write provider');
+    const provider = new ethers.providers.Web3Provider(window.ethereum, 'any');
+    console.log('created');
+    const accounts = await provider.send('eth_requestAccounts', []);
+    const walletAddressUser = ethers.utils.getAddress(accounts[0]);
+    const walletAddress = accounts[0];
+
+    setWalletAddress(walletAddress);
+
+    //TODO
+    //dispatch(setMetamaskSigner(provider));
+
+    try {
+      const response = await axios(
+        axiosPayload(`${BASE_URL}user/wallet/${walletAddress}`, '', 'get'),
+      );
+      console.log({ response });
+      console.log('Existe');
+
+      console.log(`aaaa ${response.data.data.id}`);
+
+      localStorage.setItem('userId', response.data.data.id);
+
+      console.log({ user: response.data.data });
+      dispatch(setLoggedInUserData(response.data.data));
+
+      dispatch(setUserAuthState(true));
+
+      const ve = {
+        email: walletAddressUser.substr(0, 6) + '...' + walletAddressUser.substr(38),
+        userId: walletAddress,
+        firstName: walletAddress,
+        lastName: walletAddress,
+        hasMasterPin: false,
+      };
+
+      dispatch(
+        setUserProfile({
+          userId: ve?.userId,
+          email: ve?.email,
+          firstName: ve?.firstName,
+          lastName: ve?.lastName,
+          hasMasterPin: ve?.hasMasterPin,
+          walletAddress,
+        }),
+      );
+
+      dispatch(setWalletType('metamask'));
+    } catch (err) {
+      dispatch(setOpenAskEmailDialog(true));
+    }
+
+    dispatch(setOpenLoginDialog(false));
+  };
+
+  const handleMetamaskMailProvided = async () => {
+    const walletAddressUser = ethers.utils.getAddress(walletAddress);
+
+    const response = await axios(
+      axiosPayload(
+        `${BASE_URL}user/info`,
+        {
+          Email: metamaskEmail,
+          VenlyUID: walletAddress,
+          walletAddress,
+        },
+        'post',
+      ),
+    );
+    if (response && response.status === 201) {
+      console.log({ response });
+
+      localStorage.setItem('userId', response.data.user.id);
+    } else {
+      console.log({ response });
+      throw 'Errored when creating user';
+    }
+
+    dispatch(setUserAuthState(true));
+
+    const ve = {
+      email: walletAddressUser.substr(0, 6) + '...' + walletAddressUser.substr(38),
+      userId: walletAddress,
+      firstName: walletAddress,
+      lastName: walletAddress,
+      hasMasterPin: false,
+    };
+
+    dispatch(
+      setUserProfile({
+        userId: ve?.userId,
+        email: ve?.email,
+        firstName: ve?.firstName,
+        lastName: ve?.lastName,
+        hasMasterPin: ve?.hasMasterPin,
+        walletAddress,
+      }),
+    );
+
+    dispatch(setWalletType('metamask'));
+
+    dispatch(setOpenAskEmailDialog(false));
+  };
+
+  const closeWalletDialog = () => dispatch(setOpenLoginDialog(false));
+  const closeAskEmailDialog = () => dispatch(setOpenAskEmailDialog(false));
+
+  const validateEmail = email => {
+    return String(email)
+      .toLowerCase()
+      .match(
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+      );
   };
 
   if (loading) {
@@ -111,14 +237,42 @@ const App = () => {
     <div>
       <Header />
       <NavigationBar />
+
       <Modal
+        appElement={document.getElementById('root') || undefined}
+        isOpen={isOpenAskEmailDialogValue}
+        onAfterOpen={() => ''}
+        onRequestClose={closeAskEmailDialog}
+        contentLabel="Ask Email Modal">
+        <h1 className="top-heading-title">Login with Metamask</h1>
+        <hr className="horizontal-line" />
+        <p>Input your email* to be notified about updates on the auctions you participate in.</p>
+        <div className="ms-4 py-2 pe-md-5">
+          <Form>
+            <Form.Group>
+              <Form.Control
+                type="email"
+                placeholder="Type your email"
+                onChange={e => setMetamaskEmail(e.target.value)}
+              />
+            </Form.Group>
+          </Form>
+          <Button
+            variant="dark"
+            onClick={handleMetamaskMailProvided}
+            disabled={!validateEmail(metamaskEmail)}>
+            Proceed
+          </Button>
+        </div>
+      </Modal>
+      <Modal
+        appElement={document.getElementById('root') || undefined}
         isOpen={isOpenLoginDialogValue}
-        onAfterOpen={afterOpenModal}
-        onRequestClose={closeModal}
+        onAfterOpen={() => ''}
+        onRequestClose={closeWalletDialog}
         contentLabel="Login Modal">
         <h1 className="top-heading-title">Login</h1>
         <hr className="horizontal-line" />
-        <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
         <div style={{ textAlign: 'center' }}>
           <button onClick={loginVenly}>
             <img
@@ -128,7 +282,7 @@ const App = () => {
               alt="venly"
             />
           </button>
-          <button onClick={loginMetamask}>
+          <button onClick={handleMetamaskLoginSelected}>
             <img
               width="100px"
               height="100px"
@@ -137,7 +291,7 @@ const App = () => {
             />
           </button>
           <div>
-            <Button variant="dark" onClick={closeModal}>
+            <Button variant="dark" onClick={closeWalletDialog}>
               Cancel
             </Button>
           </div>
