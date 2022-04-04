@@ -48,14 +48,23 @@ const App = () => {
     setLoading(true);
     const gets = async () => {
       const isAuth = await venlyHelpers.checkAuth();
-      dispatch(setUserAuthState(isAuth?.isAuthenticated));
-      dispatch(
-        setUserProfile({
-          email: isAuth?.auth?.idTokenParsed?.email,
-          userId: isAuth?.auth?.idTokenParsed?.sub,
-        }),
-      );
-      isAuth && localStorage.setItem('dstoken', isAuth?.isAuthenticated);
+
+      console.log(`localStorage.getItem('walletType') ${localStorage.getItem('walletType')}`);
+      if (isAuth.isAuthenticated) {
+        dispatch(setUserAuthState(isAuth?.isAuthenticated));
+        dispatch(
+          setUserProfile({
+            email: isAuth?.auth?.idTokenParsed?.email,
+            userId: isAuth?.auth?.idTokenParsed?.sub,
+          }),
+        );
+        isAuth && localStorage.setItem('dstoken', isAuth?.isAuthenticated);
+      } else {
+        if (localStorage.getItem('walletType') === 'metamask') {
+          console.log('Login with Metamask wallet detected');
+          handleMetamaskLoginSelected();
+        }
+      }
     };
     gets();
     setLoading(false);
@@ -104,7 +113,7 @@ const App = () => {
 
   const handleMetamaskLoginSelected = async function () {
     if (window.ethereum === undefined) {
-      console.log('You do not have metamask installed...');
+      alert('You do not have metamask installed...');
       return;
     }
 
@@ -137,6 +146,7 @@ const App = () => {
       console.log(`aaaa ${response.data.data.id}`);
 
       localStorage.setItem('userId', response.data.data.id);
+      localStorage.setItem('walletType', 'metamask');
 
       console.log({ user: response.data.data });
       dispatch(setLoggedInUserData(response.data.data));
@@ -188,6 +198,7 @@ const App = () => {
       console.log({ response });
 
       localStorage.setItem('userId', response.data.user.id);
+      localStorage.setItem('walletType', 'metamask');
     } else {
       console.log({ response });
       throw 'Errored when creating user';
