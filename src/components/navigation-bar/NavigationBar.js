@@ -8,7 +8,6 @@ import { setUserAuthState } from '../../store/actions/user';
 import { useDispatch, useSelector } from 'react-redux';
 
 import Footer from '../../pages/footer/Footer';
-// import Logo from '../../assets/svg/logo.svg';
 import Logo from '../../assets/svg/BlackLogo.svg';
 import ProfileAvatar from '../../assets/images/profile_logo.png';
 import { NavLink } from 'react-router-dom';
@@ -22,8 +21,6 @@ const NavigationBar = () => {
   const walletType = useSelector(getWalletType);
   const isUserAuthenticated = useSelector(getUserAuthState);
 
-  console.log({ profile, walletType, isUserAuthenticated });
-
   const handleLogin = () => dispatch(setOpenLoginDialog(true));
   const handleLogout = async () => {
     if (walletType === 'venly') {
@@ -33,7 +30,8 @@ const NavigationBar = () => {
       return await venlyHelpers.logOut();
     } else if (walletType === 'metamask') {
       console.log('logout with metamask');
-      localStorage.setItem('walletType', null);
+      //localStorage.removeItem('walletType');
+      localStorage.clear();
       dispatch(setUserAuthState(false));
     } else {
       alert(`Wallet type ${walletType} not recognised`);

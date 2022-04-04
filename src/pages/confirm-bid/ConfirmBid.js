@@ -2,15 +2,12 @@ import './ConfirmBid.css';
 
 import { Button, Modal } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-
-import Image from '../../assets/images/background.svg';
 import { getNtftsStatus } from '../../store/selectors/nfts';
 import { getUserProfile } from '../../store/selectors/user';
-import { updateUser } from '../../store/actions/user';
-import { postBid, fetchNftsBids } from '../../store/actions/nfts';
+import { postBid } from '../../store/actions/nfts';
 import { useState } from 'react';
 import moment from 'moment';
-import venlyHelpers from '../../helpers/venly';
+
 const ConfirmBid = props => {
   const dispatch = useDispatch();
   const [agree, setAgree] = useState(false);
