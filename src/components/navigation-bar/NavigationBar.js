@@ -1,9 +1,10 @@
 import './NavigationBar.css';
 
-import { Container, Navbar, Offcanvas, Nav, Button } from 'react-bootstrap';
+import { Container, Navbar, Offcanvas, Nav } from 'react-bootstrap';
 import { getUserAuthState, getUserProfile } from '../../store/selectors/user';
-import { getWalletType, isOpenLoginDialog } from '../../store/selectors/wallet';
+import { getWalletType } from '../../store/selectors/wallet';
 import { setOpenLoginDialog } from '../../store/actions/wallet';
+import { setUserAuthState } from '../../store/actions/user';
 import { useDispatch, useSelector } from 'react-redux';
 
 import Footer from '../../pages/footer/Footer';
@@ -31,6 +32,9 @@ const NavigationBar = () => {
       localStorage.setItem('dstoken', isAuth?.isAuthenticated);
       return await venlyHelpers.logOut();
     } else if (walletType === 'metamask') {
+      console.log('logout with metamask');
+      localStorage.setItem('walletType', null);
+      dispatch(setUserAuthState(false));
     } else {
       alert(`Wallet type ${walletType} not recognised`);
     }
@@ -90,9 +94,11 @@ const NavigationBar = () => {
                     )}
                   </Nav>
                   {isUserAuthenticated && (
-                    <div className="logout-link" onClick={handleLogout}>
-                      Log out
-                    </div>
+                    <NavLink className="logout-link" to="/profile" onClick={handleLogout}>
+                      <Nav.Link className="common" href="/profile">
+                        Log out
+                      </Nav.Link>
+                    </NavLink>
                   )}
                 </div>
               </div>
