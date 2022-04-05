@@ -94,11 +94,7 @@ const App = () => {
     const ve = await venlyHelpers.login();
 
     console.log({ ve });
-    if (ve === undefined) {
-      alert('Login failed: check browser configuration');
-      history.push('/login-issue');
-      return;
-    }
+    if (ve === undefined) return;
 
     const wallets = await venlyHelpers.getWallets();
 
