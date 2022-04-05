@@ -20,7 +20,7 @@ import venlyHelpers from './helpers/venly';
 import { Button, Form } from 'react-bootstrap';
 import Modal from 'react-modal';
 
-import { isOpenLoginDialog, isOpenAskEmailDialog } from './store/selectors/wallet';
+import { isOpenLoginDialog, isOpenAskEmailDialog, getWalletType } from './store/selectors/wallet';
 import axios from 'axios';
 import axiosPayload from './utils/api';
 import { BASE_URL } from './utils/constant';
@@ -34,8 +34,11 @@ const App = () => {
 
   const isOpenLoginDialogValue = useSelector(isOpenLoginDialog);
   const isOpenAskEmailDialogValue = useSelector(isOpenAskEmailDialog);
+  const walletTypeSelector = useSelector(getWalletType);
   const [metamaskEmail, setMetamaskEmail] = useState('');
   const [walletAddress, setWalletAddress] = useState('');
+
+  console.log(`walletTypeSelector: ${walletTypeSelector}`);
 
   useEffect(() => {
     setLoading(true);
@@ -59,6 +62,8 @@ const App = () => {
             }),
           );
           isAuth && localStorage.setItem('dstoken', isAuth?.isAuthenticated);
+        } else {
+          localStorage.removeItem('walletType');
         }
 
         return;
@@ -68,6 +73,13 @@ const App = () => {
         console.log('Login with Metamask wallet detected');
         dispatch(setWalletType('metamask'));
         handleMetamaskLoginSelected();
+        return;
+      }
+
+      if (localStorage.getItem('walletType') === 'walletconnect') {
+        console.log('Login with walletconnect wallet detected');
+        dispatch(setWalletType('walletconnect'));
+        handleWalletConnectLoginSelected();
         return;
       }
 
@@ -125,6 +137,7 @@ const App = () => {
 
     if (window.ethereum === undefined) {
       alert('You do not have metamask installed...');
+      localStorage.removeItem('walletType');
       return;
     }
 
@@ -160,7 +173,6 @@ const App = () => {
 
   const handleLoginMailProvided = async () => {
     const ethers = require('ethers');
-    console.log({ ethers });
     const walletAddressUser = ethers.utils.getAddress(walletAddress);
 
     const response = await axios(
@@ -205,8 +217,6 @@ const App = () => {
       }),
     );
 
-    dispatch(setWalletType('metamask'));
-
     dispatch(setOpenAskEmailDialog(false));
   };
 
@@ -240,9 +250,7 @@ const App = () => {
     //dispatch(setMetamaskSigner(provider));
 
     try {
-      await fetchUserByWalletAddressAndUpdateState(walletAddress);
-
-      dispatch(setWalletType('walletconnect'));
+      await fetchUserByWalletAddressAndUpdateState(walletAddress, 'walletconnect');
     } catch (err) {
       dispatch(setOpenAskEmailDialog(true));
     }
@@ -250,13 +258,14 @@ const App = () => {
     dispatch(setOpenLoginDialog(false));
   };
 
-  async function fetchUserByWalletAddressAndUpdateState(walletAddress) {
+  async function fetchUserByWalletAddressAndUpdateState(walletAddress, walletType) {
     const response = await axios(
       axiosPayload(`${BASE_URL}user/wallet/${walletAddress}`, '', 'get'),
     );
 
     localStorage.setItem('userId', response.data.data.id);
-    localStorage.setItem('walletType', 'metamask');
+    localStorage.setItem('walletType', walletType);
+    dispatch(setWalletType(walletType));
 
     console.log({ user: response.data.data });
     dispatch(setLoggedInUserData(response.data.data));
