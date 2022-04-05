@@ -20,12 +20,12 @@ import venlyHelpers from './helpers/venly';
 import { Button, Form } from 'react-bootstrap';
 import Modal from 'react-modal';
 
-import { getWalletType, isOpenLoginDialog, isOpenAskEmailDialog } from './store/selectors/wallet';
+import { isOpenLoginDialog, isOpenAskEmailDialog } from './store/selectors/wallet';
 import axios from 'axios';
 import axiosPayload from './utils/api';
 import { BASE_URL } from './utils/constant';
 
-import { ethers } from 'ethers';
+import WalletConnectProvider from '@walletconnect/web3-provider';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -34,15 +34,8 @@ const App = () => {
 
   const isOpenLoginDialogValue = useSelector(isOpenLoginDialog);
   const isOpenAskEmailDialogValue = useSelector(isOpenAskEmailDialog);
-  const walletType = useSelector(getWalletType);
-
-  console.log({ walletType });
-
   const [metamaskEmail, setMetamaskEmail] = useState('');
   const [walletAddress, setWalletAddress] = useState('');
-  const [isExistingUser, setIsExistingUser] = useState(false);
-
-  console.log({ metamaskEmail, walletAddress });
 
   useEffect(() => {
     setLoading(true);
@@ -127,6 +120,9 @@ const App = () => {
   };
 
   const handleMetamaskLoginSelected = async function () {
+    const ethers = require('ethers');
+    console.log({ ethers });
+
     if (window.ethereum === undefined) {
       alert('You do not have metamask installed...');
       return;
@@ -143,7 +139,7 @@ const App = () => {
     const provider = new ethers.providers.Web3Provider(window.ethereum, 'any');
     console.log('created');
     const accounts = await provider.send('eth_requestAccounts', []);
-    const walletAddressUser = ethers.utils.getAddress(accounts[0]);
+
     const walletAddress = accounts[0];
 
     setWalletAddress(walletAddress);
@@ -152,40 +148,7 @@ const App = () => {
     //dispatch(setMetamaskSigner(provider));
 
     try {
-      const response = await axios(
-        axiosPayload(`${BASE_URL}user/wallet/${walletAddress}`, '', 'get'),
-      );
-      console.log({ response });
-      console.log('Existe');
-
-      console.log(`aaaa ${response.data.data.id}`);
-
-      localStorage.setItem('userId', response.data.data.id);
-      localStorage.setItem('walletType', 'metamask');
-
-      console.log({ user: response.data.data });
-      dispatch(setLoggedInUserData(response.data.data));
-
-      dispatch(setUserAuthState(true));
-
-      const ve = {
-        email: walletAddressUser.substr(0, 6) + '...' + walletAddressUser.substr(38),
-        userId: walletAddress,
-        firstName: walletAddress,
-        lastName: walletAddress,
-        hasMasterPin: false,
-      };
-
-      dispatch(
-        setUserProfile({
-          userId: ve?.userId,
-          email: ve?.email,
-          firstName: ve?.firstName,
-          lastName: ve?.lastName,
-          hasMasterPin: ve?.hasMasterPin,
-          walletAddress,
-        }),
-      );
+      await fetchUserByWalletAddressAndUpdateState(walletAddress);
 
       dispatch(setWalletType('metamask'));
     } catch (err) {
@@ -195,7 +158,9 @@ const App = () => {
     dispatch(setOpenLoginDialog(false));
   };
 
-  const handleMetamaskMailProvided = async () => {
+  const handleLoginMailProvided = async () => {
+    const ethers = require('ethers');
+    console.log({ ethers });
     const walletAddressUser = ethers.utils.getAddress(walletAddress);
 
     const response = await axios(
@@ -245,6 +210,82 @@ const App = () => {
     dispatch(setOpenAskEmailDialog(false));
   };
 
+  const handleWalletConnectLoginSelected = async () => {
+    //  Create WalletConnect Provider
+    const infuraId = 'da4d287fc28a4607a1e7e8803609f22d';
+    const provider = new WalletConnectProvider({
+      infuraId,
+      rpc: {
+        1: `https://mainnet.infura.io/v3/${infuraId}`,
+        42: `https://kovan.infura.io/v3/${infuraId}`,
+        137: `https://polygon-mainnet.infura.io/v3/${infuraId}`,
+        80001: 'https://rpc-mumbai.matic.today',
+      },
+    });
+
+    //  Enable session (triggers QR Code modal)
+    let accounts;
+    try {
+      accounts = await provider.enable();
+    } catch (error) {
+      console.error(error);
+      return;
+    }
+
+    const walletAddress = accounts[0];
+
+    setWalletAddress(walletAddress);
+
+    //TODO
+    //dispatch(setMetamaskSigner(provider));
+
+    try {
+      await fetchUserByWalletAddressAndUpdateState(walletAddress);
+
+      dispatch(setWalletType('walletconnect'));
+    } catch (err) {
+      dispatch(setOpenAskEmailDialog(true));
+    }
+
+    dispatch(setOpenLoginDialog(false));
+  };
+
+  async function fetchUserByWalletAddressAndUpdateState(walletAddress) {
+    const response = await axios(
+      axiosPayload(`${BASE_URL}user/wallet/${walletAddress}`, '', 'get'),
+    );
+
+    localStorage.setItem('userId', response.data.data.id);
+    localStorage.setItem('walletType', 'metamask');
+
+    console.log({ user: response.data.data });
+    dispatch(setLoggedInUserData(response.data.data));
+
+    dispatch(setUserAuthState(true));
+
+    const ethers = require('ethers');
+    console.log({ ethers });
+    const walletAddressUser = ethers.utils.getAddress(walletAddress);
+    const ve = {
+      email: walletAddressUser.substr(0, 6) + '...' + walletAddressUser.substr(38),
+      userId: walletAddress,
+      firstName: walletAddress,
+      lastName: walletAddress,
+      hasMasterPin: false,
+    };
+
+    dispatch(
+      setUserProfile({
+        userId: ve?.userId,
+        email: ve?.email,
+        firstName: ve?.firstName,
+        lastName: ve?.lastName,
+        hasMasterPin: ve?.hasMasterPin,
+        walletAddress,
+      }),
+    );
+  }
+
   const closeWalletDialog = () => dispatch(setOpenLoginDialog(false));
   const closeAskEmailDialog = () => dispatch(setOpenAskEmailDialog(false));
 
@@ -270,7 +311,7 @@ const App = () => {
         onAfterOpen={() => ''}
         onRequestClose={closeAskEmailDialog}
         contentLabel="Ask Email Modal">
-        <h1 className="top-heading-title">Login with Metamask</h1>
+        <h1 className="top-heading-title">Login</h1>
         <hr className="horizontal-line" />
         <p>Input your email* to be notified about updates on the auctions you participate in.</p>
         <div className="ms-4 py-2 pe-md-5">
@@ -285,7 +326,7 @@ const App = () => {
           </Form>
           <Button
             variant="dark"
-            onClick={handleMetamaskMailProvided}
+            onClick={handleLoginMailProvided}
             disabled={!validateEmail(metamaskEmail)}>
             Proceed
           </Button>
@@ -314,6 +355,14 @@ const App = () => {
               height="100px"
               src={`${process.env.PUBLIC_URL}/images/metamask.svg`}
               alt="metamask"
+            />
+          </button>
+          <button onClick={handleWalletConnectLoginSelected}>
+            <img
+              width="100px"
+              height="100px"
+              src={`${process.env.PUBLIC_URL}/images/walletconnect.svg`}
+              alt="wallet connect"
             />
           </button>
           <div>
