@@ -12,6 +12,7 @@ import { getUserProfile, getBEUser, getUserBidSelector } from '../../store/selec
 import moment from 'moment';
 
 import ClaimNFT from './ClaimNFT';
+import { getWalletType } from '../../store/selectors/wallet';
 const Profile = () => {
   const userProfile = useSelector(getUserProfile);
   const user = useSelector(getBEUser);
@@ -19,9 +20,7 @@ const Profile = () => {
 
   const [saleVouchers, setSaleVouchers] = useState([]);
 
-  console.log({ saleVouchers });
-
-  console.log({ userBidsList });
+  const walletType = useSelector(getWalletType);
 
   useEffect(async () => {
     let i;
@@ -71,20 +70,25 @@ const Profile = () => {
         </div>
       </div>
       <div className="profile-page-right-side">
-        <div className="profile-page-balance-container">
-          {/* <h3 className="profile-page-title">Your Balance</h3>
-          <hr className="profile-page-custom-hr" />
-          <div className="profile-page-balance-amount mb-2">0.00 MATIC</div> */}
-          <div className="profile-page-description mb-4 mt-2">
-            To claim your NFT please deposit funds into balance! You can find instructions{' '}
-            <span className="profile-page-link">here</span>.
+        {walletType === 'venly' ? (
+          <div className="profile-page-balance-container">
+            <div className="profile-page-description mb-4 mt-2">
+              To claim your NFT please deposit funds into balance! You can find instructions{' '}
+              <span className="profile-page-link">here</span>.
+            </div>
+            <div>
+              <Button variant="dark" onClick={handleVenly}>
+                Access my Venly Wallet
+              </Button>
+            </div>
           </div>
-          <div>
-            <Button variant="dark" onClick={handleVenly}>
-              Access my Venly Wallet
-            </Button>
+        ) : (
+          <div className="profile-page-balance-container">
+            <div className="profile-page-description mb-4 mt-2">
+              To claim your NFT please deposit funds into balance!
+            </div>
           </div>
-        </div>
+        )}
         <div className="profile-page-lower-section">
           <div>
             <h3 className="profile-page-title">Bids</h3>
