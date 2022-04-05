@@ -30,9 +30,7 @@ const NavigationBar = () => {
       return await venlyHelpers.logOut();
     }
 
-    if (walletType === 'metamask') {
-      console.log('logout with metamask');
-      //localStorage.removeItem('walletType');
+    if (walletType === 'metamask' || walletType === 'walletconnect') {
       localStorage.clear();
       dispatch(setUserAuthState(false));
       return;
