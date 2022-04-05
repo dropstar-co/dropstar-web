@@ -28,14 +28,17 @@ const NavigationBar = () => {
       const isAuth = await venlyHelpers.checkAuth();
       localStorage.setItem('dstoken', isAuth?.isAuthenticated);
       return await venlyHelpers.logOut();
-    } else if (walletType === 'metamask') {
+    }
+
+    if (walletType === 'metamask') {
       console.log('logout with metamask');
       //localStorage.removeItem('walletType');
       localStorage.clear();
       dispatch(setUserAuthState(false));
-    } else {
-      alert(`Wallet type ${walletType} not recognised`);
+      return;
     }
+
+    alert(`Wallet type ${walletType} not recognised`);
   };
 
   return (

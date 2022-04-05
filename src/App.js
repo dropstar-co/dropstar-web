@@ -47,24 +47,38 @@ const App = () => {
   useEffect(() => {
     setLoading(true);
     const gets = async () => {
-      const isAuth = await venlyHelpers.checkAuth();
-
-      console.log(`localStorage.getItem('walletType') ${localStorage.getItem('walletType')}`);
-      if (isAuth.isAuthenticated) {
-        dispatch(setUserAuthState(isAuth?.isAuthenticated));
-        dispatch(
-          setUserProfile({
-            email: isAuth?.auth?.idTokenParsed?.email,
-            userId: isAuth?.auth?.idTokenParsed?.sub,
-          }),
-        );
-        isAuth && localStorage.setItem('dstoken', isAuth?.isAuthenticated);
-      } else {
-        if (localStorage.getItem('walletType') === 'metamask') {
-          console.log('Login with Metamask wallet detected');
-          handleMetamaskLoginSelected();
-        }
+      const walletTypeLS = localStorage.getItem('walletType');
+      if (!walletTypeLS || walletTypeLS === '') {
+        return;
       }
+      dispatch(setWalletType(walletTypeLS));
+
+      if (walletTypeLS === 'venly') {
+        const isAuth = await venlyHelpers.checkAuth();
+
+        console.log(`localStorage.getItem('walletType') ${localStorage.getItem('walletType')}`);
+        if (isAuth.isAuthenticated) {
+          dispatch(setUserAuthState(isAuth?.isAuthenticated));
+          dispatch(
+            setUserProfile({
+              email: isAuth?.auth?.idTokenParsed?.email,
+              userId: isAuth?.auth?.idTokenParsed?.sub,
+            }),
+          );
+          isAuth && localStorage.setItem('dstoken', isAuth?.isAuthenticated);
+        }
+
+        return;
+      }
+
+      if (localStorage.getItem('walletType') === 'metamask') {
+        console.log('Login with Metamask wallet detected');
+        dispatch(setWalletType('metamask'));
+        handleMetamaskLoginSelected();
+        return;
+      }
+
+      alert(`Wallet type '${walletTypeLS}' not recognised`);
     };
     gets();
     setLoading(false);
@@ -109,6 +123,7 @@ const App = () => {
       dispatch(setWalletType('venly'));
       dispatch(setOpenLoginDialog(false));
     }
+    localStorage.setItem('walletType', 'venly');
   };
 
   const handleMetamaskLoginSelected = async function () {

@@ -6,25 +6,29 @@ import { setUserAuthState } from '../../store/actions/user';
 import { getWalletType } from '../../store/selectors/wallet';
 import venlyHelpers from '../../helpers/venly';
 import { withRouter } from 'react-router-dom';
+import { setWalletType } from '../../store/actions/wallet';
 
 const MenuDropdown = ({ history }) => {
   const dispatch = useDispatch();
-  const walletType = useSelector(getWalletType);
 
   const handleLogout = async () => {
+    const walletType = localStorage.getItem('walletType');
     if (walletType === 'venly') {
       await venlyHelpers.logOut();
       const isAuth = await venlyHelpers.checkAuth();
       localStorage.setItem('dstoken', isAuth?.isAuthenticated);
       return await venlyHelpers.logOut();
-    } else if (walletType === 'metamask') {
+    }
+
+    if (walletType === 'metamask') {
       console.log('logout with metamask');
       //localStorage.removeItem('walletType');
       localStorage.clear();
       dispatch(setUserAuthState(false));
-    } else {
-      alert(`Wallet type ${walletType} not recognised`);
+      return;
     }
+
+    alert(`Wallet type ${walletType} not recognised`);
   };
 
   return (
