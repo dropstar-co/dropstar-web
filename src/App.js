@@ -20,12 +20,13 @@ import venlyHelpers from './helpers/venly';
 import { Button, Form } from 'react-bootstrap';
 import Modal from 'react-modal';
 
-import { getWalletType, isOpenLoginDialog, isOpenAskEmailDialog } from './store/selectors/wallet';
+import { isOpenLoginDialog, isOpenAskEmailDialog } from './store/selectors/wallet';
 import axios from 'axios';
 import axiosPayload from './utils/api';
 import { BASE_URL } from './utils/constant';
 
 import { ethers } from 'ethers';
+import WalletConnectProvider from '@walletconnect/web3-provider';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -34,15 +35,8 @@ const App = () => {
 
   const isOpenLoginDialogValue = useSelector(isOpenLoginDialog);
   const isOpenAskEmailDialogValue = useSelector(isOpenAskEmailDialog);
-  const walletType = useSelector(getWalletType);
-
-  console.log({ walletType });
-
   const [metamaskEmail, setMetamaskEmail] = useState('');
   const [walletAddress, setWalletAddress] = useState('');
-  const [isExistingUser, setIsExistingUser] = useState(false);
-
-  console.log({ metamaskEmail, walletAddress });
 
   useEffect(() => {
     setLoading(true);
@@ -245,6 +239,55 @@ const App = () => {
     dispatch(setOpenAskEmailDialog(false));
   };
 
+  const handleWalletConnectLoginSelected = async () => {
+    //  Create WalletConnect Provider
+    const infuraId = 'da4d287fc28a4607a1e7e8803609f22d';
+    const provider = new WalletConnectProvider({
+      infuraId,
+      rpc: {
+        1: `https://mainnet.infura.io/v3/${infuraId}`,
+        42: `https://kovan.infura.io/v3/${infuraId}`,
+        137: `https://polygon-mainnet.infura.io/v3/${infuraId}`,
+        80001: 'https://rpc-mumbai.matic.today',
+      },
+    });
+
+    //  Enable session (triggers QR Code modal)
+    let enableResult;
+    try {
+      enableResult = await provider.enable();
+    } catch (error) {
+      console.error(error);
+      return;
+    }
+
+    console.log({ enableResult });
+
+    /*
+
+    console.log({ WalletConnect, aaa });
+
+    //  Create WalletConnect SDK instance
+    const wc = new WalletConnect();
+
+    //  Connect session (triggers QR Code modal)
+    const connector = await wc.connect();
+
+    //  Get your desired provider
+
+    const provider = await wc.getWeb3Provider({
+      infuraId: '27e484dcd9e3efcfd25a83a78777cdf1',
+    });
+
+    /*
+    const provider = WalletConnect.get WalletConnectProvider({
+      infuraId: '27e484dcd9e3efcfd25a83a78777cdf1',
+    });
+    */
+
+    await provider.enable();
+  };
+
   const closeWalletDialog = () => dispatch(setOpenLoginDialog(false));
   const closeAskEmailDialog = () => dispatch(setOpenAskEmailDialog(false));
 
@@ -314,6 +357,14 @@ const App = () => {
               height="100px"
               src={`${process.env.PUBLIC_URL}/images/metamask.svg`}
               alt="metamask"
+            />
+          </button>
+          <button onClick={handleWalletConnectLoginSelected}>
+            <img
+              width="100px"
+              height="100px"
+              src={`${process.env.PUBLIC_URL}/images/walletconnect.svg`}
+              alt="wallet connect"
             />
           </button>
           <div>
