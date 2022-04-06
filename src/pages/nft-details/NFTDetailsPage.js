@@ -3,12 +3,7 @@ import './NFTDetailsPage.css';
 import { Button, Form } from 'react-bootstrap';
 import { fetchNfts, fetchNftsBids } from '../../store/actions/nfts';
 import { getNfts, getNtftsBids } from '../../store/selectors/nfts';
-import {
-  setUserAuthState,
-  setUserProfile,
-  fetchLoggedInUser,
-  updateUser,
-} from '../../store/actions/user';
+import { setOpenLoginDialog } from '../../store/actions/wallet';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import Countdown from 'react-countdown';
@@ -20,7 +15,6 @@ import NFTPageCarousel from '../../components/carosel/NFTPageCarousel';
 import TopHeading from './TopHeading';
 import { getAppLoadingState } from '../../store/selectors/loader';
 import { getBEUser, getUserAuthState } from '../../store/selectors/user';
-import venlyHelpers from '../../helpers/venly';
 import moment from 'moment';
 
 import Polygon from '../../assets/svg/polygon-matic-logo.svg';
@@ -39,34 +33,7 @@ const NFTDetailsPage = ({ match }) => {
   const isUserAuthenticated = useSelector(getUserAuthState);
   const user = useSelector(getBEUser);
 
-  const handleLogin = async () => {
-    const ve = await venlyHelpers.login();
-
-    if (ve === undefined) {
-      alert('Login failed: check browser configuration');
-      history.push('/login-issue');
-      return;
-    }
-
-    const wallets = await venlyHelpers.getWallets();
-
-    const newVE = Object.assign(ve, { walletAddress: wallets[0].address });
-    await updateUser(newVE);
-
-    if (ve?.userId && ve?.email) {
-      dispatch(fetchLoggedInUser({ Email: ve?.email, VenlyUID: ve?.userId }));
-      dispatch(setUserAuthState(true));
-      dispatch(
-        setUserProfile({
-          userId: ve?.userId,
-          email: ve?.email,
-          firstName: ve?.firstName,
-          lastName: ve?.lastName,
-          hasMasterPin: ve?.hasMasterPin,
-        }),
-      );
-    }
-  };
+  const handleLogin = () => dispatch(setOpenLoginDialog(true));
 
   const getCurrentBid = () => {
     return nftsBids.reduce((acc, shot) => (acc = acc > shot.AmountETH ? acc : shot.AmountETH), 0);

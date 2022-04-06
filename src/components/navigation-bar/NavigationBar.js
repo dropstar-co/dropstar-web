@@ -2,87 +2,48 @@ import './NavigationBar.css';
 
 import { Container, Navbar, Offcanvas, Nav } from 'react-bootstrap';
 import { getUserAuthState, getUserProfile } from '../../store/selectors/user';
-import {
-  setUserAuthState,
-  setUserProfile,
-  fetchLoggedInUser,
-  updateUser,
-} from '../../store/actions/user';
+import { getWalletType } from '../../store/selectors/wallet';
+import { setOpenLoginDialog } from '../../store/actions/wallet';
+import { setUserAuthState } from '../../store/actions/user';
 import { useDispatch, useSelector } from 'react-redux';
 
 import Footer from '../../pages/footer/Footer';
-// import Logo from '../../assets/svg/logo.svg';
 import Logo from '../../assets/svg/BlackLogo.svg';
 import ProfileAvatar from '../../assets/images/profile_logo.png';
 import { NavLink } from 'react-router-dom';
-import User from '../../assets/svg/user.svg';
 import venlyHelpers from '../../helpers/venly';
-import { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
 const NavigationBar = () => {
   const history = useHistory();
   const dispatch = useDispatch();
   const profile = useSelector(getUserProfile);
+  const walletType = useSelector(getWalletType);
   const isUserAuthenticated = useSelector(getUserAuthState);
 
-  const handleLogin = async () => {
-    console.log({ window });
-    const ve = await venlyHelpers.login();
+  const handleLogin = () => dispatch(setOpenLoginDialog(true));
+  const handleLogout = async () => {
+    if (walletType === 'venly') {
+      await venlyHelpers.logOut();
+      const isAuth = await venlyHelpers.checkAuth();
+      localStorage.setItem('dstoken', isAuth?.isAuthenticated);
+      return await venlyHelpers.logOut();
+    }
 
-    console.log({ ve });
-    if (ve === undefined) {
-      alert('Login failed: check browser configuration');
-      history.push('/login-issue');
+    if (walletType === 'metamask' || walletType === 'walletconnect') {
+      localStorage.clear();
+      dispatch(setUserAuthState(false));
       return;
     }
 
-    const wallets = await venlyHelpers.getWallets();
-
-    const newVE = Object.assign(ve, { walletAddress: wallets[0].address });
-    await updateUser(newVE);
-
-    console.log({ newVE, ve });
-
-    if (ve.userId && ve?.email && ve?.wallets?.length >= 1) {
-      dispatch(
-        fetchLoggedInUser({
-          Email: ve?.email,
-          VenlyUID: ve?.userId,
-          walletAddress: ve.wallets[0].address,
-        }),
-      );
-      dispatch(setUserAuthState(true));
-
-      dispatch(
-        setUserProfile({
-          userId: ve?.userId,
-          email: ve?.email,
-          firstName: ve?.firstName,
-          lastName: ve?.lastName,
-          hasMasterPin: ve?.hasMasterPin,
-          walletAddress: ve.wallets[0].address,
-        }),
-      );
+    if (!walletType || walletType === undefined) {
+      console.log('Logout fallback triggered');
+      localStorage.clear();
+      dispatch(setUserAuthState(false));
+      return;
     }
-    // if (ve.userId && ve?.email) {
-    //   dispatch(setUserAuthState(true));
-    //   dispatch(
-    //     setUserProfile({
-    //       userId: ve?.userId,
-    //       email: ve?.email,
-    //       firstName: ve?.firstName,
-    //       lastName: ve?.lastName,
-    //       hasMasterPin: ve?.hasMasterPin,
-    //     }),
-    //   );
-    // }
-  };
-  const handleLogout = async () => {
-    await venlyHelpers.logOut();
-    const isAuth = await venlyHelpers.checkAuth();
-    localStorage.setItem('dstoken', isAuth?.isAuthenticated);
-    return await venlyHelpers.logOut();
+
+    alert(`NavigationBar.js:handleLogout --> Wallet type ${walletType} not recognised`);
   };
 
   return (
@@ -123,9 +84,6 @@ const NavigationBar = () => {
                     <a href="https://www.dropstar.org/faq" className="faq-link" target="_blank">
                       FAQ
                     </a>
-                    {/* <NavLink className="faq-link" to="/faq">
-                     <Nav.Link className='common' href='/faq'>FAQ</Nav.Link>
-                    </NavLink> */}
                     {isUserAuthenticated && (
                       <NavLink className="profile-link" to="/profile">
                         <Nav.Link className="common" href="/profile">
@@ -134,15 +92,19 @@ const NavigationBar = () => {
                       </NavLink>
                     )}
                     {!isUserAuthenticated && (
-                      <div className="login-link" onClick={handleLogin}>
-                        Login
-                      </div>
+                      <NavLink className="profile-link" to="/profile" onClick={handleLogin}>
+                        <Nav.Link className="common" href="/profile">
+                          Login
+                        </Nav.Link>
+                      </NavLink>
                     )}
                   </Nav>
                   {isUserAuthenticated && (
-                    <div className="logout-link" onClick={handleLogout}>
-                      Log out
-                    </div>
+                    <NavLink className="logout-link" to="/profile" onClick={handleLogout}>
+                      <Nav.Link className="common" href="/profile">
+                        Log out
+                      </Nav.Link>
+                    </NavLink>
                   )}
                 </div>
               </div>
