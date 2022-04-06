@@ -138,7 +138,7 @@ const App = () => {
     console.log({ ethers });
 
     if (window.ethereum === undefined) {
-      alert('You do not have metamask installed...');
+      alert('Browser wallet not installed, use WalletConnect');
       console.log('delete wallet type because you do not have metamask installed');
       localStorage.removeItem('walletType');
       return;
@@ -323,7 +323,7 @@ const App = () => {
         contentLabel="Ask Email Modal">
         <h1 className="top-heading-title">Login</h1>
         <hr className="horizontal-line" />
-        <p>Input your email* to be notified about updates on the auctions you participate in.</p>
+        <p>Input your email to be notified about updates on the auctions you participate in.</p>
         <div className="ms-4 py-2 pe-md-5">
           <Form>
             <Form.Group>
