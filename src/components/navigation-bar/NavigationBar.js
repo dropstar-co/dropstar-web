@@ -36,6 +36,13 @@ const NavigationBar = () => {
       return;
     }
 
+    if (walletType === undefined || localStorage.getItem('walletType') === null) {
+      console.log('Logout fallback triggered');
+      localStorage.clear();
+      dispatch(setUserAuthState(false));
+      return;
+    }
+
     alert(`Wallet type ${walletType} not recognised`);
   };
 
