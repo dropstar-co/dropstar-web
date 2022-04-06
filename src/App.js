@@ -38,21 +38,25 @@ const App = () => {
   const [metamaskEmail, setMetamaskEmail] = useState('');
   const [walletAddress, setWalletAddress] = useState('');
 
-  console.log(`walletTypeSelector: ${walletTypeSelector}`);
-
   useEffect(() => {
     setLoading(true);
     const gets = async () => {
-      const walletTypeLS = localStorage.getItem('walletType');
-      if (!walletTypeLS || walletTypeLS === '') {
+      const walletType = localStorage.getItem('walletType');
+      console.log('initial load of the page');
+      console.log({ walletType });
+      if (
+        walletType === 'undefined' ||
+        walletType === undefined ||
+        walletType === '' ||
+        !walletType
+      ) {
+        localStorage.clear();
         return;
       }
-      dispatch(setWalletType(walletTypeLS));
 
-      if (walletTypeLS === 'venly') {
+      if (walletType === 'venly') {
         const isAuth = await venlyHelpers.checkAuth();
 
-        console.log(`localStorage.getItem('walletType') ${localStorage.getItem('walletType')}`);
         if (isAuth.isAuthenticated) {
           dispatch(setUserAuthState(isAuth?.isAuthenticated));
           dispatch(
@@ -62,28 +66,30 @@ const App = () => {
             }),
           );
           isAuth && localStorage.setItem('dstoken', isAuth?.isAuthenticated);
+          dispatch(setWalletType('venly'));
         } else {
+          console.log('delete wallet type because user is not auth with venly');
           localStorage.removeItem('walletType');
         }
 
         return;
       }
 
-      if (localStorage.getItem('walletType') === 'metamask') {
+      if (walletType === 'metamask') {
         console.log('Login with Metamask wallet detected');
         dispatch(setWalletType('metamask'));
         handleMetamaskLoginSelected();
         return;
       }
 
-      if (localStorage.getItem('walletType') === 'walletconnect') {
+      if (walletType === 'walletconnect') {
         console.log('Login with walletconnect wallet detected');
         dispatch(setWalletType('walletconnect'));
         handleWalletConnectLoginSelected();
         return;
       }
 
-      alert(`Wallet type '${walletTypeLS}' not recognised`);
+      alert(`App.js: Wallet type '${walletType}' not recognised`);
     };
     gets();
     setLoading(false);
@@ -122,9 +128,9 @@ const App = () => {
       );
 
       dispatch(setWalletType('venly'));
+      localStorage.setItem('walletType', 'venly');
       dispatch(setOpenLoginDialog(false));
     }
-    localStorage.setItem('walletType', 'venly');
   };
 
   const handleMetamaskLoginSelected = async function () {
@@ -133,6 +139,7 @@ const App = () => {
 
     if (window.ethereum === undefined) {
       alert('You do not have metamask installed...');
+      console.log('delete wallet type because you do not have metamask installed');
       localStorage.removeItem('walletType');
       return;
     }
@@ -152,14 +159,12 @@ const App = () => {
     const walletAddress = accounts[0];
 
     setWalletAddress(walletAddress);
+    dispatch(setWalletType('metamask'));
 
     //TODO
     //dispatch(setMetamaskSigner(provider));
-
     try {
-      await fetchUserByWalletAddressAndUpdateState(walletAddress);
-
-      dispatch(setWalletType('metamask'));
+      await fetchUserByWalletAddressAndUpdateState(walletAddress, 'metamask');
     } catch (err) {
       dispatch(setOpenAskEmailDialog(true));
     }
@@ -240,11 +245,11 @@ const App = () => {
 
     const walletAddress = accounts[0];
 
-    setWalletAddress(walletAddress);
-
     //TODO
     //dispatch(setMetamaskSigner(provider));
 
+    setWalletAddress(walletAddress);
+    dispatch(setWalletType('walletconnect'));
     try {
       await fetchUserByWalletAddressAndUpdateState(walletAddress, 'walletconnect');
     } catch (err) {

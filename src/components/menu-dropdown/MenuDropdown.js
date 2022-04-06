@@ -10,9 +10,9 @@ import { setWalletType } from '../../store/actions/wallet';
 
 const MenuDropdown = ({ history }) => {
   const dispatch = useDispatch();
+  const walletType = useSelector(getWalletType);
 
   const handleLogout = async () => {
-    const walletType = localStorage.getItem('walletType');
     if (walletType === 'venly') {
       await venlyHelpers.logOut();
       const isAuth = await venlyHelpers.checkAuth();
@@ -26,14 +26,14 @@ const MenuDropdown = ({ history }) => {
       return;
     }
 
-    if (walletType === undefined || localStorage.getItem('walletType') === null) {
+    if (!walletType || walletType === undefined || walletType === null) {
       console.log('Logout fallback triggered');
       localStorage.clear();
       dispatch(setUserAuthState(false));
       return;
     }
 
-    alert(`Wallet type ${walletType} not recognised`);
+    alert(`MenuDropdown.js:handleLogout --> Wallet type ${walletType} not recognised`);
   };
 
   return (
