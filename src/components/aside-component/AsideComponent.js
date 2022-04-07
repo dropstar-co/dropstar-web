@@ -26,17 +26,12 @@ const AsideComponent = ({ title, data }) => {
                   <div>{`${datum.name}  `}</div>
                   <div style={{ color: 'red' }}>Sold</div>
                 </div>
-              ) : Date.parse(datum.EndDate) - Date.now() > 60 * 60 * 24 ? (
+              ) : (
                 <div>
                   <div>{`${datum.name}  `}</div>
                   <div style={{ color: 'green' }}>
                     {humanizeDuration(Date.parse(datum.EndDate) - Date.now(), { largest: 2 })}
                   </div>
-                </div>
-              ) : (
-                <div>
-                  <div>{`${datum.name}  `}</div>
-                  <div style={{ color: 'green' }}>Auction is live</div>
                 </div>
               )}
             </Accordion.Header>
