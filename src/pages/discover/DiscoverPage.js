@@ -18,6 +18,7 @@ const DiscoverPage = () => {
   const currentArtist = useSelector(getCurrentArtist);
   const [imageToShow, setImageToShow] = useState(``);
   const [nameToShow, setNameToShow] = useState(``);
+  const [idToShow, setIdToShow] = useState(``);
 
   console.log({ currentArtist });
 
@@ -26,40 +27,48 @@ const DiscoverPage = () => {
 
     const date = new Date(new Date().getTime() - 19 * 60 * 60 * 1000);
     const day = date.getDay();
-    let url, name;
+    let url, name, clickID;
 
     switch (day) {
       case 1:
         name = 'Faded System';
         url = `url(${process.env.PUBLIC_URL}/images/GuttoSerta_Crickets.jpg)`;
+        clickID = '3';
         break;
       case 2:
         name = 'Tyrd Eye';
         url = `url(${process.env.PUBLIC_URL}/images/GuttoSerta_thyrd_eye.jpg)`;
+        clickID = '4';
         break;
       case 3:
         name = 'Crickets';
         url = `url(${process.env.PUBLIC_URL}/images/GuttoSerta_Crickets.jpg)`;
+        clickID = '5';
         break;
       case 4:
         name = 'Plastik Bodies';
         url = `url(${process.env.PUBLIC_URL}/images/GuttoSerta_Crickets.jpg)`;
+        clickID = '6';
         break;
       case 5:
         name = 'Plastik Bodies Masterpiece I';
         url = `url(${process.env.PUBLIC_URL}/images/master7.jpg)`;
+        clickID = '7';
         break;
       case 6:
         name = 'Plastik Bodies Masterpiece II';
         url = `url(${process.env.PUBLIC_URL}/images/Master4-4.jpg)`;
+        clickID = '8';
         break;
       default:
         name = 'Collection';
         url = `url(${process.env.PUBLIC_URL}/images/GuttoSerta_Crickets.jpg)`;
+        clickID = '5';
     }
 
     setImageToShow(url);
     setNameToShow(name);
+    setIdToShow(clickID);
   }, []);
 
   if (loading) {
@@ -73,7 +82,7 @@ const DiscoverPage = () => {
         <div className="right-container ms-md-3">
           <div
             className="background-image-container"
-            onClick={() => history.push(`/nfts/${currentArtist?.id}`)}
+            onClick={() => history.push(`/nfts/${idToShow}`)}
             style={{ backgroundImage: imageToShow }}
             // {{backgroundImage:
           >
