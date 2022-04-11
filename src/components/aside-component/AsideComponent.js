@@ -24,7 +24,7 @@ const AsideComponent = ({ title, data }) => {
               {Date.parse(datum.EndDate) < Date.now() ? (
                 <div>
                   <div>{`${datum.name}  `}</div>
-                  <div style={{ color: 'red' }}>Sold</div>
+                  <div style={{ color: 'red' }}>Auction ended</div>
                 </div>
               ) : (
                 <div>
