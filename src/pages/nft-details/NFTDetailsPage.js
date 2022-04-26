@@ -33,6 +33,8 @@ const NFTDetailsPage = ({ match }) => {
   const isUserAuthenticated = useSelector(getUserAuthState);
   const user = useSelector(getBEUser);
 
+  console.log({ nftsId });
+
   const handleLogin = () => dispatch(setOpenLoginDialog(true));
 
   const getCurrentBid = () => {
@@ -102,6 +104,12 @@ const NFTDetailsPage = ({ match }) => {
     return <Loader />;
   }
 
+  const handleOpenSea = () => {
+    return window.open(
+      'https://opensea.io/assets/matic/0x996d135b24f72856fd0c3cd65d2130074cc3293c/' + (nftsId - 3),
+    );
+  };
+
   return (
     <>
       <div className="nft-page">
@@ -123,36 +131,7 @@ const NFTDetailsPage = ({ match }) => {
             allowFullScreen></iframe>
           <NFTPageCarousel data={nftsBids} details={nftsDetails} />
           <div className="bid-wrapper  mt-3">
-            <div className="me-sm-5">
-              {nftsBids && nftsBids.length !== 0 ? (
-                <div>
-                  {nftsBids[0].userID === user.id ? (
-                    <div className="mb-1">You are the current bid Winner</div>
-                  ) : (
-                    <div className="mb-1">Current Bid</div>
-                  )}
-
-                  <div className="bold-text">{nftsBids && getCurrentBid()} MATIC</div>
-                  <div>
-                    {nftsBids && maticPrice > 0
-                      ? maticPrice
-                      : Math.round(nftsDetails.minimumBidETH * maticEUR * 100) / 100}{' '}
-                    EURO
-                  </div>
-                </div>
-              ) : (
-                <div>
-                  <div className="mb-1">Be the first!</div>
-                  <div className="bold-text">{nftsDetails.minimumBidETH} MATIC</div>
-                  <div>
-                    {nftsBids && maticPrice > 0
-                      ? maticPrice
-                      : Math.round(nftsDetails.minimumBidETH * maticEUR * 100) / 100}{' '}
-                    EURO
-                  </div>
-                </div>
-              )}
-            </div>
+            <div className="me-sm-5"></div>
             <div className="text22">
               <div className="mb-1">
                 Auction ending:{' '}
@@ -177,7 +156,9 @@ const NFTDetailsPage = ({ match }) => {
                   Authenticate to Bid
                 </Button>
               ) : (
-                <Button variant="secondary">Auction Ended</Button>
+                <Button variant="secondary" onClick={handleOpenSea}>
+                  Check on OpenSea
+                </Button>
               )}
             </div>
           )}
