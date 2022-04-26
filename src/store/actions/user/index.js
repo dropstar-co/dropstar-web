@@ -28,12 +28,11 @@ export const fetchLoggedInUser = data => {
     try {
       const response = await axios(axiosPayload(`${BASE_URL}user/info`, data, 'post'));
       if (response && response.status === 200) {
-        console.log(response.data.data);
         localStorage.setItem('userId', response.data.data.id);
         dispatch(setLoggedInUserData(response.data.data));
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 };
@@ -46,14 +45,12 @@ export const getUserBids = id => {
         dispatch(getUserBidsI(response.data.data));
       }
     } catch (error) {
-      console.log('logging my error');
+      console.error('logging my error');
     }
   };
 };
 
 export const updateUser = async data => {
-  console.log('updateUser');
-  console.log({ data });
   try {
     const response = await axios(
       axiosPayload(
@@ -66,14 +63,7 @@ export const updateUser = async data => {
         'post',
       ),
     );
-
-    if (response && response.status >= 200 && response.status < 300) {
-      console.log('updateUser ' + response.status);
-    } else {
-      console.log('updateUser errored');
-      console.log({ response });
-    }
   } catch (error) {
-    console.log('logging my error');
+    console.error(error);
   }
 };

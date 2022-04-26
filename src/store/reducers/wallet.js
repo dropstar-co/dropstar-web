@@ -12,7 +12,6 @@ const INITIAL_STATE = {
 
 const walletReducer = (state = INITIAL_STATE, action) => {
   const { payload } = action;
-  console.log(action.type);
   switch (action.type) {
     case SET_WALLET_TYPE:
       return {

@@ -61,15 +61,11 @@ const NFTDetailsPage = ({ match }) => {
       setMaticPrice(data);
       setMaticEUR(EUR);
 
-      //console.log({ current, data, EUR });
-
       return setMaticPrice(data);
     } catch (err) {
-      console.log(err);
+      console.err(err);
     }
   };
-
-  //console.log({ maticEUR, maticPrice, minBid: nftsDetails.minimumBidETH, user });
 
   useEffect(() => {
     getCurrentMaticToEuro();
@@ -85,7 +81,6 @@ const NFTDetailsPage = ({ match }) => {
       if (amount > getCurrentBid()) {
         if (amount > 0) {
           if (amount >= nftsDetails.minimumBidETH && amount > 0.01) {
-            console.log(`amount=${amount} minimumBidMatic=${nftsDetails.minimumBidETH}`);
             return false;
           }
           return true;

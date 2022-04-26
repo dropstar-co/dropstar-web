@@ -42,8 +42,6 @@ const App = () => {
     setLoading(true);
     const gets = async () => {
       const walletType = localStorage.getItem('walletType');
-      console.log('initial load of the page');
-      console.log({ walletType });
       if (
         walletType === 'undefined' ||
         walletType === undefined ||
@@ -68,7 +66,6 @@ const App = () => {
           isAuth && localStorage.setItem('dstoken', isAuth?.isAuthenticated);
           dispatch(setWalletType('venly'));
         } else {
-          console.log('delete wallet type because user is not auth with venly');
           localStorage.removeItem('walletType');
         }
 
@@ -76,14 +73,12 @@ const App = () => {
       }
 
       if (walletType === 'metamask') {
-        console.log('Login with Metamask wallet detected');
         dispatch(setWalletType('metamask'));
         handleMetamaskLoginSelected();
         return;
       }
 
       if (walletType === 'walletconnect') {
-        console.log('Login with walletconnect wallet detected');
         dispatch(setWalletType('walletconnect'));
         handleWalletConnectLoginSelected();
         return;
@@ -96,14 +91,9 @@ const App = () => {
   }, []);
 
   const loginVenly = async () => {
-    console.log({ window });
     const ve = await venlyHelpers.login();
-
-    console.log({ ve });
     if (ve === undefined) return;
-
     const wallets = await venlyHelpers.getWallets();
-
     await updateUser(ve);
 
     if (ve.userId && ve?.email && ve?.wallets?.length >= 1) {
@@ -135,11 +125,9 @@ const App = () => {
 
   const handleMetamaskLoginSelected = async function () {
     const ethers = require('ethers');
-    console.log({ ethers });
 
     if (window.ethereum === undefined) {
       alert('Browser wallet not installed, use WalletConnect');
-      console.log('delete wallet type because you do not have metamask installed');
       localStorage.removeItem('walletType');
       return;
     }
@@ -151,9 +139,7 @@ const App = () => {
       window.ethereum.enable();
     } else return;
 
-    console.log('Create write provider');
     const provider = new ethers.providers.Web3Provider(window.ethereum, 'any');
-    console.log('created');
     const accounts = await provider.send('eth_requestAccounts', []);
 
     const walletAddress = accounts[0];
@@ -188,12 +174,9 @@ const App = () => {
       ),
     );
     if (response && response.status === 201) {
-      console.log({ response });
-
       localStorage.setItem('userId', response.data.user.id);
       localStorage.setItem('walletType', 'metamask');
     } else {
-      console.log({ response });
       throw 'Errored when creating user';
     }
 
@@ -268,13 +251,11 @@ const App = () => {
     localStorage.setItem('walletType', walletType);
     dispatch(setWalletType(walletType));
 
-    console.log({ user: response.data.data });
     dispatch(setLoggedInUserData(response.data.data));
 
     dispatch(setUserAuthState(true));
 
     const ethers = require('ethers');
-    console.log({ ethers });
     const walletAddressUser = ethers.utils.getAddress(walletAddress);
     const ve = {
       email: walletAddressUser.substr(0, 6) + '...' + walletAddressUser.substr(38),

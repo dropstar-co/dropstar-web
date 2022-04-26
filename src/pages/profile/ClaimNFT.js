@@ -29,8 +29,6 @@ const ClaimNFT = ({ bid, saleVoucher }) => {
   const isUserAuthenticated = useSelector(getUserAuthState);
   const user = useSelector(getBEUser);
 
-  console.log({ nftsDetails, user, isUserAuthenticated });
-
   const getCurrentBid = () => {
     return nftsBids.reduce((acc, shot) => (acc = acc > shot.AmountETH ? acc : shot.AmountETH), 0);
   };
@@ -43,7 +41,6 @@ const ClaimNFT = ({ bid, saleVoucher }) => {
       if (amount > getCurrentBid()) {
         if (amount > 0) {
           if (amount >= nftsDetails.minimumBidETH && amount > 0.01) {
-            console.log(amount, nftsDetails.minimumBidETH);
             return false;
           }
           return true;

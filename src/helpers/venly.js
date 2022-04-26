@@ -23,31 +23,16 @@ const PSO_ADDRESS =
 class venlyHelpers {
   static async login() {
     try {
-      /*
-      console.log('login');
-      const loginObject = await venlyConnect.flows.authenticate({ windowMode: 'REDIRECT' });
-      console.log({ loginObject });
-      */
-
       const account = await venlyConnect.flows.getAccount(VENLY_CHAIN, { windowMode: 'REDIRECT' });
-      console.log({ account });
-
-      //alert(`Authenticated? ${account.isAuthenticated}`);
-
       if (account.auth === undefined) {
         throw 'Account.auth undefined';
       }
-
       const profile = await venlyConnect.api.getProfile();
       const wallets = await venlyConnect.api.getWallets({ secretType: VENLY_CHAIN });
-
       const ret = Object.assign(profile, { wallets, walletAddress: wallets[0].address });
-
-      console.log({ ret });
-      console.log('EEEEENDED');
       return ret;
     } catch (err) {
-      console.log({ err });
+      console.err({ err });
       return undefined;
     }
   }
@@ -56,11 +41,7 @@ class venlyHelpers {
     const signer = await venlyConnect.createSigner();
     const wallets = await venlyConnect.api.getWallets({ secretType: VENLY_CHAIN });
 
-    console.log({ wallets });
-
     //TODO: calculate the payable value
-
-    console.log({ saleVoucher });
 
     const inputs = [
       { type: 'uint256', value: saleVoucher._id },
@@ -84,8 +65,6 @@ class venlyHelpers {
       },
     ];
 
-    console.log({ inputs });
-
     const parameters = {
       secretType: VENLY_CHAIN,
       walletId: wallets[0].id,
@@ -94,10 +73,6 @@ class venlyHelpers {
       functionName: 'fulfillBid',
       inputs,
     };
-
-    console.log({ parameters });
-
-    console.log(JSON.stringify(parameters, null, 2));
 
     signer.executeContract(parameters);
   }
@@ -108,20 +83,14 @@ class venlyHelpers {
   }
 
   static async checkAuth() {
-    console.log('checkAuth called');
     const checkingauth = await venlyConnect.checkAuthenticated();
 
-    console.log({ checkingauth });
-
     checkingauth.authenticated(async function (auth) {
-      console.log('Authenticated!!!');
       const callbackWallets = await venlyConnect.api.getWallets({ secretType: VENLY_CHAIN });
-      console.log({ callbackWallets });
     });
 
     checkingauth.notAuthenticated(async function (auth) {
-      console.log('Not authenticated!!!');
-      console.log({ auth });
+      console.err('Not authenticated!!!');
     });
 
     return checkingauth;

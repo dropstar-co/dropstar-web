@@ -20,7 +20,14 @@ const DiscoverPage = () => {
   const [nameToShow, setNameToShow] = useState(``);
   const [idToShow, setIdToShow] = useState(``);
 
-  console.log({ currentArtist });
+  const auctionStateStrings = {
+    3: 'Sold',
+    4: 'Sold',
+    5: 'Sold',
+    6: 'Sold',
+    7: 'Auction ended',
+    8: 'Auction ended',
+  };
 
   useEffect(() => {
     dispatch(fetchArtists());
@@ -78,7 +85,7 @@ const DiscoverPage = () => {
     <>
       <h4 className="page-title">Discover</h4>
       <div className="discover-page">
-        <AsideComponent title="Discover" data={artists} />
+        <AsideComponent title="Discover" data={artists} auctionStateStrings={auctionStateStrings} />
         <div className="right-container ms-md-3">
           <div
             className="background-image-container"

@@ -6,11 +6,10 @@ import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import humanizeDuration from 'humanize-duration';
 
-const AsideComponent = ({ title, data }) => {
+const AsideComponent = ({ title, data, auctionStateStrings }) => {
   const dispatch = useDispatch();
   const history = useHistory();
 
-  console.log({ hd: humanizeDuration(32846000) });
   return (
     <div className="aside-page">
       <h4 className="title">{title}</h4>
@@ -24,7 +23,7 @@ const AsideComponent = ({ title, data }) => {
               {Date.parse(datum.EndDate) < Date.now() ? (
                 <div>
                   <div>{`${datum.name}  `}</div>
-                  <div style={{ color: 'grey' }}>Auction ended</div>
+                  <div style={{ color: 'grey' }}>{auctionStateStrings[datum.id]}</div>
                 </div>
               ) : (
                 <div>

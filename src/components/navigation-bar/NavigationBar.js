@@ -37,7 +37,6 @@ const NavigationBar = () => {
     }
 
     if (!walletType || walletType === undefined) {
-      console.log('Logout fallback triggered');
       localStorage.clear();
       dispatch(setUserAuthState(false));
       return;

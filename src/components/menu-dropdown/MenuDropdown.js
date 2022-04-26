@@ -27,7 +27,6 @@ const MenuDropdown = ({ history }) => {
     }
 
     if (!walletType || walletType === undefined || walletType === null) {
-      console.log('Logout fallback triggered');
       localStorage.clear();
       dispatch(setUserAuthState(false));
       return;
