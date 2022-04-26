@@ -25,8 +25,8 @@ const DiscoverPage = () => {
     4: 'Sold',
     5: 'Sold',
     6: 'Sold',
-    7: 'Auction ended',
-    8: 'Auction ended',
+    7: '',
+    8: '',
   };
 
   useEffect(() => {
