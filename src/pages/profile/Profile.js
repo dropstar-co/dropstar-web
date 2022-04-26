@@ -28,8 +28,6 @@ const Profile = () => {
     for (i = 0; i < userBidsList.length; i++) {
       const bid = userBidsList[i];
       const saleVoucher = await fetchBidSaleVoucher(bid.id);
-
-      //console.log({ saleVoucher });
       newSaleVoucher.push(saleVoucher);
     }
 

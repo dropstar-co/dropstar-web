@@ -96,7 +96,6 @@ class venlyHelpers {
     return checkingauth;
   }
   static async logOut() {
-    console.log('delete dstokena dn userId because venly logout was called');
     localStorage.removeItem('dstoken');
     localStorage.removeItem('userId');
     const authObj = venlyConnect.checkAuthenticated();

@@ -63,11 +63,7 @@ const ClaimNFT = ({ bid, saleVoucher }) => {
   }
 
   const handleVenlyClaimNFT = async function () {
-    console.log({ user });
-
-    //console.log({ userProfile, user, userBidsList });
     await venlyHelpers.claimNFT(saleVoucher);
-
     return;
 
     /*
