@@ -104,9 +104,11 @@ const NFTDetailsPage = ({ match }) => {
     return <Loader />;
   }
 
-  const handleOpenSea = () => {
+  const openCollectionOnFeaturedMarketplace = () => {
     return window.open(
-      'https://opensea.io/assets/matic/0x996d135b24f72856fd0c3cd65d2130074cc3293c/' + (nftsId - 3),
+      `https://rarible.com/token/polygon/0x996d135b24f72856fd0c3cd65d2130074cc3293c:${
+        nftsId - 3
+      }?tab=owners`,
     );
   };
 
@@ -156,8 +158,8 @@ const NFTDetailsPage = ({ match }) => {
                   Authenticate to Bid
                 </Button>
               ) : (
-                <Button variant="secondary" onClick={handleOpenSea}>
-                  Check on OpenSea
+                <Button variant="secondary" onClick={openCollectionOnFeaturedMarketplace}>
+                  Check on Rarible
                 </Button>
               )}
             </div>
